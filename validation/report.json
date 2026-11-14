@@ -1,7 +1,7 @@
 {
  "schema_version": "skyshift.validation/1",
- "generated_utc": "2026-11-14T15:00:15Z",
- "source_hash": "42f6574456c6dc94998dd01585ef8f9bf6fddb561369e3ffd96833f74e87bf58",
+ "generated_utc": "2026-11-14T17:30:03Z",
+ "source_hash": "8b3b66fc9dfd8380f84a78c2cb94875a9c2d15b4fad954a4c54e21a15e56ef03",
  "current_source_hash": null,
  "stale": null,
  "environment": {
@@ -23,23 +23,23 @@
   {
    "suite": "pytest",
    "ran": true,
-   "started_utc": "2026-11-14T14:57:31Z",
-   "duration_s": 67.40805180001189,
+   "started_utc": "2026-11-14T17:26:37Z",
+   "duration_s": 89.44293289998313,
    "counts": {
-    "total": 93,
-    "passed": 93
+    "total": 118,
+    "passed": 118
    },
    "command": "pytest -q",
-   "note": null
+   "note": "live archive tests requested"
   },
   {
    "suite": "vitest",
    "ran": true,
-   "started_utc": "2026-11-14T14:58:39Z",
-   "duration_s": 5.013490599987563,
+   "started_utc": "2026-11-14T17:28:06Z",
+   "duration_s": 3.7783572000043932,
    "counts": {
-    "total": 79,
-    "passed": 79
+    "total": 87,
+    "passed": 87
    },
    "command": "vitest run",
    "note": null
@@ -47,11 +47,11 @@
   {
    "suite": "playwright",
    "ran": true,
-   "started_utc": "2026-11-14T14:58:44Z",
-   "duration_s": 88.26849550000043,
+   "started_utc": "2026-11-14T17:28:10Z",
+   "duration_s": 110.66763020001235,
    "counts": {
-    "total": 16,
-    "passed": 16
+    "total": 22,
+    "passed": 22
    },
    "command": "playwright test",
    "note": null
@@ -64,7 +64,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.1352,
+   "duration_s": 0.1776,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -74,7 +74,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.061,
+   "duration_s": 0.051,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -84,7 +84,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0633,
+   "duration_s": 0.0478,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -94,7 +94,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.2522,
+   "duration_s": 0.1879,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -104,7 +104,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0288,
+   "duration_s": 0.0215,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -114,7 +114,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.2866,
+   "duration_s": 0.2704,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -124,7 +124,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0205,
+   "duration_s": 0.0132,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -134,7 +134,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.1532,
+   "duration_s": 0.1291,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -144,17 +144,17 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0409,
+   "duration_s": 0.0426,
    "message": null,
    "file": "test_api_evidence.py"
   },
   {
    "id": "tests/test_api_evidence.py::test_provider_statuses_are_honest",
-   "name": "All five providers listed; no status claims 'tested'; archive providers are documented with live checks not run.",
+   "name": "All five providers listed; 'tested' appears only for SPHEREx live checks recorded in the report; others are documented, not run.",
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0023,
+   "duration_s": 0.0394,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -174,13 +174,13 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0105,
+   "duration_s": 0.0071,
    "message": null,
    "file": "test_api_evidence.py"
   },
   {
    "id": "tests/test_api_evidence.py::test_spherex_extension_check",
-   "name": "Extensions are checked by name (case-insensitive); missing documented extensions are reported.",
+   "name": "Extensions are checked by name (case-insensitive) against the R7 (DR1/QR3) layout verified on real files (EPSF, not PSF).",
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
@@ -194,7 +194,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.2577,
+   "duration_s": 0.2372,
    "message": null,
    "file": "test_api_evidence.py"
   },
@@ -204,7 +204,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0518,
+   "duration_s": 0.0376,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -214,7 +214,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0401,
+   "duration_s": 0.0467,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -224,7 +224,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0322,
+   "duration_s": 0.0366,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -234,7 +234,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0512,
+   "duration_s": 0.0432,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -244,7 +244,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0199,
+   "duration_s": 0.0281,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -254,7 +254,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0733,
+   "duration_s": 0.0606,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -264,7 +264,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1592,
+   "duration_s": 0.1313,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -274,7 +274,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 8.2846,
+   "duration_s": 6.7386,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -284,7 +284,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.203,
+   "duration_s": 0.1666,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -294,7 +294,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.3702,
+   "duration_s": 0.3277,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -304,7 +304,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.5195,
+   "duration_s": 0.4494,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -314,7 +314,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1132,
+   "duration_s": 0.1221,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -324,7 +324,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1325,
+   "duration_s": 0.1224,
    "message": null,
    "file": "test_astrometry.py"
   },
@@ -334,7 +334,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0177,
+   "duration_s": 0.0162,
    "message": null,
    "file": "test_catalog.py"
   },
@@ -344,7 +344,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0052,
+   "duration_s": 0.0038,
    "message": null,
    "file": "test_catalog.py"
   },
@@ -354,7 +354,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0155,
+   "duration_s": 0.0095,
    "message": null,
    "file": "test_catalog.py"
   },
@@ -374,7 +374,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0117,
+   "duration_s": 0.0111,
    "message": null,
    "file": "test_catalog.py"
   },
@@ -384,7 +384,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0094,
+   "duration_s": 0.0056,
    "message": null,
    "file": "test_catalog.py"
   },
@@ -414,7 +414,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0017,
+   "duration_s": 0.0013,
    "message": null,
    "file": "test_coords.py"
   },
@@ -424,7 +424,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0011,
+   "duration_s": 0.0007,
    "message": null,
    "file": "test_coords.py"
   },
@@ -434,7 +434,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0009,
+   "duration_s": 0.0008,
    "message": null,
    "file": "test_coords.py"
   },
@@ -444,7 +444,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0016,
+   "duration_s": 0.0017,
    "message": null,
    "file": "test_coords.py"
   },
@@ -454,7 +454,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0022,
+   "duration_s": 0.002,
    "message": null,
    "file": "test_coords.py"
   },
@@ -464,7 +464,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0034,
+   "duration_s": 0.0024,
    "message": null,
    "file": "test_coords.py"
   },
@@ -474,7 +474,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0012,
+   "duration_s": 0.0019,
    "message": null,
    "file": "test_coords.py"
   },
@@ -484,7 +484,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0015,
+   "duration_s": 0.002,
    "message": null,
    "file": "test_coords.py"
   },
@@ -494,7 +494,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0052,
+   "duration_s": 0.0016,
    "message": null,
    "file": "test_coords.py"
   },
@@ -504,7 +504,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0038,
+   "duration_s": 0.0036,
    "message": null,
    "file": "test_coords.py"
   },
@@ -514,7 +514,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0279,
+   "duration_s": 0.0264,
    "message": null,
    "file": "test_coords.py"
   },
@@ -524,7 +524,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0023,
+   "duration_s": 0.002,
    "message": null,
    "file": "test_coords.py"
   },
@@ -534,7 +534,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0336,
+   "duration_s": 0.0345,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -544,7 +544,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0081,
+   "duration_s": 0.0053,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -554,7 +554,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0025,
+   "duration_s": 0.0029,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -564,7 +564,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0075,
+   "duration_s": 0.0063,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -574,7 +574,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0044,
+   "duration_s": 0.0055,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -584,7 +584,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0067,
+   "duration_s": 0.005,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -594,7 +594,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 2.2699,
+   "duration_s": 1.897,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -604,7 +604,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0149,
+   "duration_s": 0.0094,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -614,7 +614,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0206,
+   "duration_s": 0.016,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -624,7 +624,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0094,
+   "duration_s": 0.0085,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -634,7 +634,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.2301,
+   "duration_s": 0.1983,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -644,7 +644,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0118,
+   "duration_s": 0.0107,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -654,7 +654,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0101,
+   "duration_s": 0.009,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -664,7 +664,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 1.1569,
+   "duration_s": 0.9486,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -674,7 +674,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0073,
+   "duration_s": 0.0054,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -684,7 +684,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0036,
+   "duration_s": 0.0026,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -694,7 +694,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.3645,
+   "duration_s": 0.2543,
    "message": null,
    "file": "test_imaging.py"
   },
@@ -704,9 +704,259 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0229,
+   "duration_s": 0.0166,
    "message": null,
    "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_sia_query_names_one_collection_and_is_bounded",
+   "name": "[archive] The SIA2 URL names one explicit collection and a small cone; QR2/unknown collections and wide cones are refused.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.0014,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_recorded_sia_response_parses_by_column_name",
+   "name": "[archive] The recorded live DR1 response parses by name into 239 rows consistent with file names, bands and documented ranges.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.612,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_duplicate_processing_versions_are_reported_not_merged",
+   "name": "[archive] Two processing versions of one exposure/detector: the newer is kept by the stated rule and the other is reported.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.3115,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_manifest_records_the_live_retrieval",
+   "name": "[archive] The manifest records the exact query, every screened image and each download (status, bytes, sha256, time).",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.0008,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_fixture_validates_against_documented_r7_format",
+   "name": "[archive] A real DR1 cutout passes every documented-format check (units, flags, variance, WCS, WCS-WAVE, timing, DQA, EPSF).",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.1288,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_extensions_are_read_by_name_not_position",
+   "name": "[archive] Reordering the HDUs leaves every array and the flag definitions unchanged.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.2658,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_flag_definitions_come_from_the_file",
+   "name": "[archive] Flag names/bits are read from MSKN/MSKM keywords and match ES Table 16; a renamed bit fails the check.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.411,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_unit_and_extension_changes_are_detected",
+   "name": "[archive] A changed BUNIT fails the units check; a missing ZODI extension is refused before interpretation.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.5405,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_legacy_psf_cube_files_are_refused",
+   "name": "[archive] A pre-R7 layout (PSF image cube instead of the EPSF table, VERSION 6.5.6) raises UnsupportedSpherexProduct.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.5614,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_flags_near_position_use_the_documented_radius",
+   "name": "[archive] Flags are summarised within 2.5 px: a bit 2.4 px away is reported, one 2.6 px away is not.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.0015,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_wcs_wave_astropy_and_independent_bilinear_agree",
+   "name": "[math] astropy's -TAB evaluation and an independent bilinear lookup agree everywhere and reproduce the table nodes exactly.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 2.6363,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_wavelength_lies_within_archive_band_metadata",
+   "name": "[archive] The WCS-WAVE wavelength over the whole cutout lies within the SIA em_min..em_max of its detector band.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.0017,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_cutout_and_full_file_screening_agree",
+   "name": "[archive] Two request paths (full-file byte ranges vs IBE cutout) give the same detector pixel and local wavelength.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.001,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_detector_number_alone_does_not_establish_compatibility",
+   "name": "[math] Same detector with a 0.5-bandwidth offset is incompatible; equal wavelengths on different detectors are incompatible.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0008,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_groups_are_pairwise_compatible_and_order_independent",
+   "name": "[math] Every returned group is pairwise compatible, groups partition the input, and input order does not matter.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0152,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_observed_dataset_keeps_native_arrays_and_separates_origins",
+   "name": "[archive] Native frames hold the delivered arrays bit-for-bit; display frames are labelled; no truth; analyses unavailable.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 3.0158,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_display_reprojection_matches_independent_resampling",
+   "name": "[registration] Display pixels equal a manual bilinear sample of the native image at the archive-WCS position; outside is NaN + NO_COVERAGE.",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.1675,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_blink_only_for_available_wavelength_compatible_groups",
+   "name": "[archive] Blinkable groups have >=2 available members that are pairwise compatible at the field centre; the contrast frame is not blinkable.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.0008,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_missing_cache_failed_downloads_and_hash_mismatch_are_explicit",
+   "name": "[archive] Absent cache -> 'missing' with the fetch command; failed download -> 'failed'; changed file -> 'failed'. Nothing substituted.",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 4.5458,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_api_serves_observed_pixels_and_refuses_analyses",
+   "name": "[api] Observed dataset: native/display pixels with units and uint32 flags; analyses answer 409 not_available; no truth.",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.2702,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_synthetic_pipeline_is_never_run_on_observed_data",
+   "name": "[pipeline] The synthetic investigation refuses observed datasets (no detection/registration on archive pixels).",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 0.0009,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_spherex_status_is_derived_from_recorded_checks",
+   "name": "[contracts] SPHEREx live capabilities are 'tested'/'failed' only when the validation report records that live test.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0547,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_live_sia_discovery_matches_manifest",
+   "name": "[live] SPHEREx: a live SIA2 query in spherex_dr1 returns the same 239 products as the recorded manifest (DR1 is a frozen release).",
+   "suite": "pytest",
+   "category": "live",
+   "status": "passed",
+   "duration_s": 7.7593,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_live_range_screening_matches_manifest",
+   "name": "[live] SPHEREx: byte-range reads of one full DR1 file reproduce the recorded detector pixel and local wavelength.",
+   "suite": "pytest",
+   "category": "live",
+   "status": "passed",
+   "duration_s": 0.8307,
+   "message": null,
+   "file": "test_spherex.py"
+  },
+  {
+   "id": "tests/test_spherex.py::test_live_cutout_download_validates",
+   "name": "[live] SPHEREx: a fresh IBE cutout download passes every format check (full 441-zone EPSF) and matches the recorded science arrays.",
+   "suite": "pytest",
+   "category": "live",
+   "status": "passed",
+   "duration_s": 3.4006,
+   "message": null,
+   "file": "test_spherex.py"
   },
   {
    "id": "tests/test_synthetic_pipeline.py::test_generation_is_deterministic",
@@ -714,7 +964,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 2.5823,
+   "duration_s": 1.9905,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -724,7 +974,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0006,
+   "duration_s": 0.0016,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -734,7 +984,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0112,
+   "duration_s": 0.0037,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -744,7 +994,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0284,
+   "duration_s": 0.0235,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -754,7 +1004,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -764,7 +1014,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0035,
+   "duration_s": 0.0026,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -774,7 +1024,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.8124,
+   "duration_s": 0.677,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -784,7 +1034,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0022,
+   "duration_s": 0.0027,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -794,7 +1044,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0752,
+   "duration_s": 0.0503,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -804,7 +1054,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0961,
+   "duration_s": 0.0776,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -814,7 +1064,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0006,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -824,7 +1074,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 2.8792,
+   "duration_s": 2.2199,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -834,7 +1084,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 2.3121,
+   "duration_s": 2.2593,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -844,7 +1094,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 13.4682,
+   "duration_s": 15.1664,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -854,7 +1104,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0017,
+   "duration_s": 0.0021,
    "message": null,
    "file": "test_synthetic_pipeline.py"
   },
@@ -864,7 +1114,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0011,
+   "duration_s": 0.0026,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -874,7 +1124,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0042,
+   "duration_s": 0.0103,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -884,7 +1134,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0031,
+   "duration_s": 0.0055,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -894,7 +1144,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0047,
+   "duration_s": 0.0081,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -904,7 +1154,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0189,
+   "duration_s": 0.0395,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -914,7 +1164,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0286,
+   "duration_s": 0.0643,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -924,7 +1174,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0005,
+   "duration_s": 0.0014,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -934,7 +1184,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0003,
+   "duration_s": 0.0007,
    "message": null,
    "file": "test_time_observer.py"
   },
@@ -954,7 +1204,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0004,
+   "duration_s": 0.0007,
    "message": null,
    "file": "test_validation_report.py"
   },
@@ -964,7 +1214,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0004,
+   "duration_s": 0.0007,
    "message": null,
    "file": "test_validation_report.py"
   },
@@ -974,7 +1224,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0011,
    "message": null,
    "file": "test_validation_report.py"
   },
@@ -984,9 +1234,39 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0227,
+   "duration_s": 0.0352,
    "message": null,
    "file": "test_validation_report.py"
+  },
+  {
+   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] match the backend reference lists (ES v2.1 Sect. 3.3) exactly",
+   "name": "[contracts] SPHEREx flag classes \u203a [contracts] match the backend reference lists (ES v2.1 Sect. 3.3) exactly",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.00936160000000001,
+   "message": null,
+   "file": "spherexFlags.test.ts"
+  },
+  {
+   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] classify by name from the file, never by bit number",
+   "name": "[contracts] SPHEREx flag classes \u203a [contracts] classify by name from the file, never by bit number",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0017479000000000155,
+   "message": null,
+   "file": "spherexFlags.test.ts"
+  },
+  {
+   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] overlay colours: SOURCE-only and coverage-only words stay transparent; bit 31 does not break masking",
+   "name": "[contracts] SPHEREx flag classes \u203a [contracts] overlay colours: SOURCE-only and coverage-only words stay transparent; bit 31 does not break masking",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0012350999999999886,
+   "message": null,
+   "file": "spherexFlags.test.ts"
   },
   {
    "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a generic field: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
@@ -994,7 +1274,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.007671199999999999,
+   "duration_s": 0.007527600000000007,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1004,7 +1284,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.001435600000000022,
+   "duration_s": 0.0015767999999999915,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1014,7 +1294,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0012087999999999966,
+   "duration_s": 0.0013192999999999983,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1024,7 +1304,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.001538599999999974,
+   "duration_s": 0.0016297000000000139,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1034,7 +1314,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.004410399999999982,
+   "duration_s": 0.0022445000000000164,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1044,7 +1324,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0020676999999999454,
+   "duration_s": 0.001900699999999972,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1054,7 +1334,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.00854970000000003,
+   "duration_s": 0.0036170999999999938,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1064,7 +1344,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0018057999999999766,
+   "duration_s": 0.0011292000000000257,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1074,7 +1354,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.002064200000000028,
+   "duration_s": 0.0018292999999999892,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1084,7 +1364,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.001314200000000028,
+   "duration_s": 0.0013727000000000088,
    "message": null,
    "file": "tanwcs.test.ts"
   },
@@ -1094,7 +1374,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.008346900000000004,
+   "duration_s": 0.007544300000000021,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1104,7 +1384,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0019630000000000793,
+   "duration_s": 0.0018835000000000264,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1114,7 +1394,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0013169000000000323,
+   "duration_s": 0.0012321999999999208,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1124,7 +1404,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0016490999999999758,
+   "duration_s": 0.0016079999999999471,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1134,7 +1414,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0015032999999999674,
+   "duration_s": 0.002870900000000006,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1144,7 +1424,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0011680999999999812,
+   "duration_s": 0.0008994999999999891,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1154,7 +1434,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.036523500000000014,
+   "duration_s": 0.023274999999999976,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1164,7 +1444,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.001479099999999903,
+   "duration_s": 0.0015721000000000914,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1174,7 +1454,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.3764351999999999,
+   "duration_s": 0.26747170000000003,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1184,7 +1464,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00483420000000001,
+   "duration_s": 0.0025542000000000373,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1194,7 +1474,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.10327319999999986,
+   "duration_s": 0.053337499999999975,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1204,7 +1484,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0010235999999999876,
+   "duration_s": 0.0006019000000000006,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1214,7 +1494,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.04299980000000005,
+   "duration_s": 0.02532420000000002,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1224,7 +1504,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.002098899999999958,
+   "duration_s": 0.0008577999999999974,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1234,7 +1514,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.006112599999999929,
+   "duration_s": 0.0022423,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1244,7 +1524,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.029675899999999956,
+   "duration_s": 0.01815689999999995,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1254,7 +1534,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0789699999999998,
+   "duration_s": 0.052404499999999986,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1264,7 +1544,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0011776999999999589,
+   "duration_s": 0.0007335000000000491,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1274,7 +1554,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0004306000000001404,
+   "duration_s": 0.00016089999999996962,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1284,7 +1564,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00034580000000005383,
+   "duration_s": 0.00010940000000005057,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1294,7 +1574,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00032159999999998944,
+   "duration_s": 8.950000000004366e-05,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1304,7 +1584,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00033570000000008807,
+   "duration_s": 9.580000000005384e-05,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1314,7 +1594,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.000308699999999817,
+   "duration_s": 8.910000000003038e-05,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1324,7 +1604,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0006237000000000989,
+   "duration_s": 0.0001974999999999909,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1334,7 +1614,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0004006000000001677,
+   "duration_s": 0.00012549999999998817,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1344,7 +1624,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0003130000000001019,
+   "duration_s": 0.00011259999999992942,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1354,7 +1634,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00030889999999999417,
+   "duration_s": 0.00013039999999989505,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1364,7 +1644,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0002838000000001557,
+   "duration_s": 9.259999999994761e-05,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1374,7 +1654,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0003466000000000804,
+   "duration_s": 0.00011459999999999582,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1384,7 +1664,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0002717000000000098,
+   "duration_s": 0.00012469999999996161,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1394,7 +1674,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0003260000000000218,
+   "duration_s": 0.0001367999999999938,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1404,7 +1684,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0022248999999999342,
+   "duration_s": 0.000974299999999971,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1414,7 +1694,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0010173999999999524,
+   "duration_s": 0.0004148999999999887,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1424,7 +1704,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0011763999999998304,
+   "duration_s": 0.0006654999999999518,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1434,7 +1714,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0009628000000000156,
+   "duration_s": 0.0009273000000000593,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1444,7 +1724,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.026534799999999904,
+   "duration_s": 0.010733999999999924,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1454,7 +1734,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.06411310000000003,
+   "duration_s": 0.030929199999999924,
    "message": null,
    "file": "kepler.test.ts"
   },
@@ -1464,7 +1744,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.011983499999999935,
+   "duration_s": 0.009260999999999967,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1474,7 +1754,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.048727300000000015,
+   "duration_s": 0.05011519999999996,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1484,7 +1764,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.13736619999999994,
+   "duration_s": 0.08515589999999998,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1494,7 +1774,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.11609799999999995,
+   "duration_s": 0.06309460000000001,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1504,7 +1784,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.05078090000000009,
+   "duration_s": 0.04589120000000003,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1514,7 +1794,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.013406399999999848,
+   "duration_s": 0.003747200000000021,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1524,7 +1804,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.001516399999999976,
+   "duration_s": 0.0009374000000000251,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1534,7 +1814,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0023916999999999008,
+   "duration_s": 0.001961300000000051,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1544,7 +1824,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0014656999999999698,
+   "duration_s": 0.0010568999999999277,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1554,7 +1834,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0019202999999999974,
+   "duration_s": 0.0011192999999999529,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1564,7 +1844,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.001786600000000135,
+   "duration_s": 0.001177599999999984,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1574,7 +1854,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0013018000000001848,
+   "duration_s": 0.0007444000000000415,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1584,7 +1864,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.001333799999999883,
+   "duration_s": 0.0007744999999999891,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1594,7 +1874,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0014463000000000648,
+   "duration_s": 0.000769800000000032,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1604,7 +1884,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0012845999999999548,
+   "duration_s": 0.0007177000000000361,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1614,7 +1894,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0013105000000000473,
+   "duration_s": 0.0006549999999999727,
    "message": null,
    "file": "nearbySource.test.ts"
   },
@@ -1624,7 +1904,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.004782400000000052,
+   "duration_s": 0.00423359999999991,
    "message": null,
    "file": "motion.handoff.test.ts"
   },
@@ -1634,7 +1914,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0011132000000000062,
+   "duration_s": 0.0010159999999999627,
    "message": null,
    "file": "motion.handoff.test.ts"
   },
@@ -1644,7 +1924,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0018106999999999971,
+   "duration_s": 0.0013208999999999378,
    "message": null,
    "file": "motion.handoff.test.ts"
   },
@@ -1654,7 +1934,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.03982490000000007,
+   "duration_s": 0.016949600000000033,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1664,7 +1944,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.009603399999999965,
+   "duration_s": 0.004082199999999944,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1674,7 +1954,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0017396999999999708,
+   "duration_s": 0.0014963000000000192,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1684,7 +1964,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0029759000000000244,
+   "duration_s": 0.0025680999999999586,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1694,7 +1974,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.002595399999999927,
+   "duration_s": 0.002405099999999948,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1704,7 +1984,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0011713999999999488,
+   "duration_s": 0.0008763000000000147,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1714,7 +1994,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.002151399999999967,
+   "duration_s": 0.0017331000000000358,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1724,7 +2004,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.020587200000000052,
+   "duration_s": 0.01621990000000005,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1734,7 +2014,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.003489000000000033,
+   "duration_s": 0.0042498999999999116,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1744,7 +2024,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0041761999999999945,
+   "duration_s": 0.0036561000000000375,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1754,7 +2034,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.011912999999999898,
+   "duration_s": 0.007641200000000026,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1764,7 +2044,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0172401000000001,
+   "duration_s": 0.00874369999999999,
    "message": null,
    "file": "notebook.test.ts"
   },
@@ -1774,9 +2054,59 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0025265000000000556,
+   "duration_s": 0.0018775000000000545,
    "message": null,
    "file": "notebook.test.ts"
+  },
+  {
+   "id": "observatory.observed.test.ts::[ui] observed-data helpers \u203a [ui] display frame: registered product first, archive-WCS display product otherwise",
+   "name": "[ui] observed-data helpers \u203a [ui] display frame: registered product first, archive-WCS display product otherwise",
+   "suite": "vitest",
+   "category": "ui",
+   "status": "passed",
+   "duration_s": 0.006690000000000054,
+   "message": null,
+   "file": "observatory.observed.test.ts"
+  },
+  {
+   "id": "observatory.observed.test.ts::[ui] observed-data helpers \u203a [ui] blink only for a compatibility group marked blinkable with two available members",
+   "name": "[ui] observed-data helpers \u203a [ui] blink only for a compatibility group marked blinkable with two available members",
+   "suite": "vitest",
+   "category": "ui",
+   "status": "passed",
+   "duration_s": 0.0029781000000000404,
+   "message": null,
+   "file": "observatory.observed.test.ts"
+  },
+  {
+   "id": "observatory.observed.test.ts::[ui] observed-data helpers \u203a [ui] synthetic bands (no compatibility record) keep their existing behaviour",
+   "name": "[ui] observed-data helpers \u203a [ui] synthetic bands (no compatibility record) keep their existing behaviour",
+   "suite": "vitest",
+   "category": "ui",
+   "status": "passed",
+   "duration_s": 0.0009669000000000097,
+   "message": null,
+   "file": "observatory.observed.test.ts"
+  },
+  {
+   "id": "observatory.observed.test.ts::[api] pixel transport \u203a [api] uint32 flag planes decode exactly, including bit 31",
+   "name": "[api] pixel transport \u203a [api] uint32 flag planes decode exactly, including bit 31",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.06310029999999994,
+   "message": null,
+   "file": "observatory.observed.test.ts"
+  },
+  {
+   "id": "observatory.observed.test.ts::[api] pixel transport \u203a [api] a payload whose length disagrees with its shape is rejected",
+   "name": "[api] pixel transport \u203a [api] a payload whose length disagrees with its shape is rejected",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.005490700000000061,
+   "message": null,
+   "file": "observatory.observed.test.ts"
   },
   {
    "id": "investigation.spec.ts::[browser] complete synthetic investigation \u203a fit -> explain in Motion lab carries rotated fit values and gates the distance",
@@ -1784,7 +2114,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.332,
+   "duration_s": 4.699,
    "message": null,
    "file": "investigation.spec.ts"
   },
@@ -1794,7 +2124,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 13.289,
+   "duration_s": 16.992,
    "message": null,
    "file": "investigation.spec.ts"
   },
@@ -1804,7 +2134,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.196,
+   "duration_s": 2.819,
    "message": null,
    "file": "investigation.spec.ts"
   },
@@ -1814,7 +2144,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.887,
+   "duration_s": 2.889,
    "message": null,
    "file": "investigation.spec.ts"
   },
@@ -1824,7 +2154,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.364,
+   "duration_s": 2.562,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1834,7 +2164,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.003,
+   "duration_s": 3.193,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1844,7 +2174,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 6.787,
+   "duration_s": 6.402,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1854,7 +2184,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.584,
+   "duration_s": 5.033,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1864,7 +2194,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 9.959,
+   "duration_s": 8.618,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1874,7 +2204,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.979,
+   "duration_s": 4.899,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1884,7 +2214,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.403,
+   "duration_s": 2.449,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1894,7 +2224,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.213,
+   "duration_s": 2.648,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1904,7 +2234,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.833,
+   "duration_s": 6.099,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1914,7 +2244,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.902,
+   "duration_s": 3.807,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1924,7 +2254,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.589,
+   "duration_s": 3.367,
    "message": null,
    "file": "observatory.spec.ts"
   },
@@ -1934,9 +2264,69 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.273,
+   "duration_s": 3.62,
    "message": null,
    "file": "observatory.spec.ts"
+  },
+  {
+   "id": "spherex.spec.ts::[browser] SPHEREx DR1 real-image viewer \u203a observed frames show date, local wavelength, flags, checks and provenance; no sources requested",
+   "name": "[browser] SPHEREx DR1 real-image viewer \u203a observed frames show date, local wavelength, flags, checks and provenance; no sources requested",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 3.376,
+   "message": null,
+   "file": "spherex.spec.ts"
+  },
+  {
+   "id": "spherex.spec.ts::[browser] SPHEREx DR1 real-image viewer \u203a blink runs only inside a wavelength-compatible group; the single-frame group explains why not",
+   "name": "[browser] SPHEREx DR1 real-image viewer \u203a blink runs only inside a wavelength-compatible group; the single-frame group explains why not",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 4.962,
+   "message": null,
+   "file": "spherex.spec.ts"
+  },
+  {
+   "id": "spherex.spec.ts::[browser] SPHEREx DR1 real-image viewer \u203a Analyze: compatibility, archive query and unavailable analyses; mode switch keeps the selection",
+   "name": "[browser] SPHEREx DR1 real-image viewer \u203a Analyze: compatibility, archive query and unavailable analyses; mode switch keeps the selection",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 4.657,
+   "message": null,
+   "file": "spherex.spec.ts"
+  },
+  {
+   "id": "spherex.spec.ts::[browser] SPHEREx DR1 real-image viewer \u203a a failed download stays explicit in the timeline and the table (nothing substituted)",
+   "name": "[browser] SPHEREx DR1 real-image viewer \u203a a failed download stays explicit in the timeline and the table (nothing substituted)",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 3.441,
+   "message": null,
+   "file": "spherex.spec.ts"
+  },
+  {
+   "id": "spherex.spec.ts::[browser] SPHEREx DR1 real-image viewer \u203a an unavailable provider is reported, with a way back to the training data (no synthetic fallback)",
+   "name": "[browser] SPHEREx DR1 real-image viewer \u203a an unavailable provider is reported, with a way back to the training data (no synthetic fallback)",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 3.687,
+   "message": null,
+   "file": "spherex.spec.ts"
+  },
+  {
+   "id": "spherex.spec.ts::[browser] SPHEREx DR1 real-image viewer \u203a phone-width layout has no horizontal overflow",
+   "name": "[browser] SPHEREx DR1 real-image viewer \u203a phone-width layout has no horizontal overflow",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 2.698,
+   "message": null,
+   "file": "spherex.spec.ts"
   }
  ],
  "available": true

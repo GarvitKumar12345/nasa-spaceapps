@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-CATEGORY_MARKERS = ("live", "math", "coords", "measurement", "registration", "catalog", "pipeline", "contracts", "api")
+CATEGORY_MARKERS = ("live", "archive", "math", "coords", "measurement", "registration", "catalog", "pipeline", "contracts", "api")
 
 _results: list[dict] = []
 _started = time.time()
@@ -113,3 +113,28 @@ def c1_id(investigation) -> str:
 @pytest.fixture(scope="session")
 def v1_id(investigation) -> str:
     return nearest_source_to_truth(investigation, "truth:V1")
+
+
+# ---------------------------------------------------------------- SPHEREx (observed data)
+
+SPHEREX_DATASET = "spherex-dr1-barnard"
+
+
+@pytest.fixture(scope="session")
+def spherex_manifest() -> dict:
+    from skyshift.providers.spherex.paths import manifest_path
+
+    return json.loads(manifest_path(SPHEREX_DATASET).read_text(encoding="utf-8"))
+
+
+@pytest.fixture(scope="session")
+def spherex_bundle(spherex_manifest):
+    """The observed dataset built from the committed manifest + local cache (skipped if the cache is absent)."""
+    from skyshift.providers.spherex.paths import cutout_path
+
+    missing = [d["file_name"] for d in spherex_manifest["downloads"] if d["status"] == "downloaded" and not cutout_path(SPHEREX_DATASET, d["file_name"]).exists()]
+    if missing:
+        pytest.skip(f"SPHEREx cutouts not in the local cache ({len(missing)} missing); run: cd backend && uv run python -m skyshift.providers.spherex.fetch --from-manifest")
+    from skyshift.providers.spherex import SpherexProvider
+
+    return SpherexProvider().load_dataset(SPHEREX_DATASET)

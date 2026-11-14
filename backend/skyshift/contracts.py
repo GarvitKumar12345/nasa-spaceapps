@@ -156,6 +156,26 @@ class ObserverModel(Contract):
 # ---------------------------------------------------------------------------
 
 
+class CompatibilityGroup(Contract):
+    """Observations that may be compared or blinked at one sky position (observed SPHEREx data).
+
+    Membership requires the same detector AND local wavelengths, evaluated at the
+    reference position, within the stated fraction of the local bandwidth.
+    """
+
+    rule: str
+    detector: int | None
+    reference_position: SkyPosition
+    max_delta_fraction: float = Field(gt=0.0, le=1.0)
+    lambda_min_um: float | None
+    lambda_max_um: float | None
+    min_bandwidth_um: float | None
+    wavelength_determination: Literal["position_lookup_visualization", "calibration_product"]
+    member_observation_ids: list[str]
+    blinkable: bool
+    reason: str
+
+
 class Band(Contract):
     id: str
     label: str
@@ -163,6 +183,7 @@ class Band(Contract):
     width_um: float | None = None
     wavelength_model: Literal["fixed_filter", "position_dependent", "unknown"]
     notes: list[str] = Field(default_factory=list)
+    compatibility: CompatibilityGroup | None = Field(None, description="Set when a 'band' is a local-wavelength group of observed frames")
 
 
 class PSFReference(Contract):
@@ -269,7 +290,10 @@ class FrameProduct(Contract):
     id: str
     observation_id: str
     dataset_id: str
-    kind: Literal["native", "registered"]
+    kind: Literal["native", "registered", "archive_wcs_reprojection"] = Field(
+        description="native: original arrays; registered: SkyShift-registered display product; "
+        "archive_wcs_reprojection: display product aligned only by the archive's header WCS (not registered by SkyShift)"
+    )
     shape: tuple[int, int] = Field(description="(ny, nx)")
     unit: str = Field(description="astropy unit string of the image plane, e.g. 'electron' or 'MJy / sr'")
     unit_kind: Literal["counts", "surface_brightness", "flux_density", "dimensionless"]
@@ -302,6 +326,45 @@ class ObservationTiming(Contract):
     raw: dict[str, float | int | str] = Field(default_factory=dict, description="Raw timing keywords as recorded")
 
 
+class FileCheck(Contract):
+    """One executed check of an archive file against its documented format."""
+
+    id: str
+    status: Literal["pass", "warn", "fail"]
+    detail: str
+    reference: str | None = None
+
+
+class ArchiveObservationInfo(Contract):
+    """Archive identity, local wavelength and file checks of one observed product."""
+
+    collection: str
+    release: str
+    obs_id: str
+    detector: int
+    bandpass_name: str
+    file_name: str
+    access_url: str
+    cutout_url: str | None
+    obs_publisher_did: str | None
+    processing_tag: str
+    pipeline_version: str | None
+    sha256: str | None
+    bytes: int | None
+    retrieved_utc: str | None
+    header_quality: dict[str, float | int | str | bool] = Field(default_factory=dict)
+    calibration_refs: dict[str, str] = Field(default_factory=dict, description="HISTORY [CALIB] product -> identifier")
+    query_pixel_detector: tuple[float, float] | None = Field(None, description="0-based detector pixel of the query position")
+    query_pixel_cutout: tuple[float, float] | None = Field(None, description="0-based cutout pixel of the query position")
+    edge_margin_px: float | None = None
+    local_wavelength_um: float | None
+    local_bandwidth_um: float | None
+    wavelength_method: str
+    wavelength_crosscheck_um: float | None = Field(None, description="|astropy -TAB - independent bilinear| at the query pixel")
+    flags_near_query: list[str] = Field(default_factory=list, description="Flag names set within the documented 2.5 px radius")
+    validation: list[FileCheck] = Field(default_factory=list)
+
+
 class Observation(Contract):
     id: str
     dataset_id: str
@@ -317,12 +380,44 @@ class Observation(Contract):
     frame_ids: list[str] = Field(default_factory=list, description="Native and registered product IDs")
     provenance: Provenance
     quality: Quality
+    archive: ArchiveObservationInfo | None = None
 
 
 class FieldDescription(Contract):
     center: SkyPosition
     fov_arcsec: float
     ecliptic_lat_deg: float | None = None
+
+
+AnalysisCapabilityId = Literal[
+    "source_detection", "source_measurement", "astrometric_fit", "difference_imaging", "catalog_overlay", "evidence_record", "registration"
+]
+
+
+class AnalysisCapability(Contract):
+    id: AnalysisCapabilityId
+    status: Literal["available", "unavailable"]
+    reason: str | None = None
+    requirements: list[str] = Field(default_factory=list, description="What must be implemented and validated first")
+
+
+class ArchiveQuerySummary(Contract):
+    """How an observed dataset was assembled from an archive (see its retrieval manifest)."""
+
+    provider: ProviderId
+    collection: str
+    query_url: str
+    retrieved_utc: str
+    n_rows: int
+    n_superseded: int
+    n_screened: int
+    n_screen_failed: int
+    n_selected: int
+    n_downloaded: int
+    n_failed: int
+    selection_rule: str
+    manifest_path: str
+    notes: list[str] = Field(default_factory=list)
 
 
 class Dataset(Contract):
@@ -345,6 +440,8 @@ class Dataset(Contract):
     generator_version: str | None = None
     scenario_parameters: dict[str, Any] | None = None
     limitations: list[str] = Field(default_factory=list)
+    capabilities: list[AnalysisCapability] = Field(default_factory=list, description="Empty = all analyses available")
+    archive_query: ArchiveQuerySummary | None = None
     provenance: Provenance
     quality: Quality
 
@@ -360,6 +457,8 @@ class DatasetSummary(Contract):
     bands: list[str]
     time_range_utc: tuple[str, str] | None
     description: str
+    availability: Literal["ready", "partial", "not_fetched"] = "ready"
+    availability_note: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -887,6 +986,7 @@ class ApiError(Contract):
         "invalid_request",
         "invalid_record",
         "not_synthetic",
+        "not_available",
         "internal_error",
     ]
     message: str

@@ -5,11 +5,11 @@ import { api, describeError, type PlaneData } from '../../api/client'
 
 const cache = new Map<string, Promise<PlaneData>>()
 
-export function loadPlane(datasetId: string, frameId: string): Promise<PlaneData> {
-  const key = `${datasetId}|${frameId}`
+export function loadPlane(datasetId: string, frameId: string, which: 'image' | 'mask' = 'image'): Promise<PlaneData> {
+  const key = `${datasetId}|${frameId}|${which}`
   let p = cache.get(key)
   if (!p) {
-    p = api.framePixels(datasetId, frameId, 'image')
+    p = api.framePixels(datasetId, frameId, which)
     cache.set(key, p)
     p.catch(() => cache.delete(key))
   }
@@ -18,7 +18,7 @@ export function loadPlane(datasetId: string, frameId: string): Promise<PlaneData
 
 export type PlaneState = { status: 'idle' | 'loading' } | { status: 'ready'; plane: PlaneData } | { status: 'error'; message: string }
 
-export function usePlane(datasetId: string | null, frameId: string | null): PlaneState {
+export function usePlane(datasetId: string | null, frameId: string | null, which: 'image' | 'mask' = 'image'): PlaneState {
   const [state, setState] = useState<PlaneState>({ status: 'idle' })
   useEffect(() => {
     if (!datasetId || !frameId) {
@@ -27,13 +27,13 @@ export function usePlane(datasetId: string | null, frameId: string | null): Plan
     }
     let alive = true
     setState({ status: 'loading' })
-    loadPlane(datasetId, frameId)
+    loadPlane(datasetId, frameId, which)
       .then((plane) => alive && setState({ status: 'ready', plane }))
       .catch((e) => alive && setState({ status: 'error', message: describeError(e) }))
     return () => {
       alive = false
     }
-  }, [datasetId, frameId])
+  }, [datasetId, frameId, which])
   return state
 }
 
@@ -109,4 +109,24 @@ export function differenceLimits(plane: PlaneData): StretchLimits {
   abs.sort((a, b) => a - b)
   const m = abs.length ? abs[Math.floor(0.995 * (abs.length - 1))] : 1
   return { lo: -m, hi: m }
+}
+
+/** RGBA overlay of flagged pixels (north up, like renderImageData): one colour per flag class,
+ * transparent elsewhere. `colourForWord` maps a pixel's flag word to an RGBA tuple or null. */
+export function renderMaskOverlay(mask: PlaneData, colourForWord: (word: number) => [number, number, number, number] | null): ImageData {
+  const [ny, nx] = mask.shape
+  const img = new ImageData(nx, ny)
+  for (let y = 0; y < ny; y++) {
+    const row = ny - 1 - y
+    for (let x = 0; x < nx; x++) {
+      const c = colourForWord(mask.data[y * nx + x])
+      if (!c) continue
+      const o = (row * nx + x) * 4
+      img.data[o] = c[0]
+      img.data[o + 1] = c[1]
+      img.data[o + 2] = c[2]
+      img.data[o + 3] = c[3]
+    }
+  }
+  return img
 }

@@ -605,6 +605,10 @@ def get_investigation(dataset_id: str, seed: int | None = None) -> Investigation
     from skyshift.providers.registry import load_dataset
     from skyshift.synthetic.generator import DEFAULT_SEED
 
+    from skyshift.providers.registry import dataset_provider
+
+    if dataset_provider(dataset_id) != "synthetic":
+        raise ValueError(f"{dataset_id} is an observed dataset; the synthetic investigation pipeline is never run on archive data")
     key = (dataset_id, DEFAULT_SEED if seed is None else int(seed))
     with _cache_lock:
         if key in _cache:

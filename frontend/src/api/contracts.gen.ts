@@ -80,6 +80,7 @@ export interface ApiError {
     | "invalid_request"
     | "invalid_record"
     | "not_synthetic"
+    | "not_available"
     | "internal_error";
   details: {
     [k: string]: unknown;
@@ -198,11 +199,50 @@ export interface BackgroundInfo {
  */
 export interface Band {
   center_um: number | null;
+  /**
+   * Set when a 'band' is a local-wavelength group of observed frames
+   */
+  compatibility: CompatibilityGroup | null;
   id: string;
   label: string;
   notes: string[];
   wavelength_model: "fixed_filter" | "position_dependent" | "unknown";
   width_um: number | null;
+}
+/**
+ * Observations that may be compared or blinked at one sky position (observed SPHEREx data).
+ *
+ * Membership requires the same detector AND local wavelengths, evaluated at the
+ * reference position, within the stated fraction of the local bandwidth.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "CompatibilityGroup".
+ */
+export interface CompatibilityGroup {
+  blinkable: boolean;
+  detector: number | null;
+  lambda_max_um: number | null;
+  lambda_min_um: number | null;
+  max_delta_fraction: number;
+  member_observation_ids: string[];
+  min_bandwidth_um: number | null;
+  reason: string;
+  reference_position: SkyPosition;
+  rule: string;
+  wavelength_determination: "position_lookup_visualization" | "calibration_product";
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "SkyPosition".
+ */
+export interface SkyPosition {
+  dec_deg: number;
+  /**
+   * Epoch of this position, required for moving sources
+   */
+  epoch: Epoch | null;
+  frame: "icrs";
+  ra_deg: number;
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
@@ -234,19 +274,6 @@ export interface CatalogOverlay {
   search_center: SkyPosition;
   search_radius_deg: number;
   sources: CatalogSource[];
-}
-/**
- * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
- * via the `definition` "SkyPosition".
- */
-export interface SkyPosition {
-  dec_deg: number;
-  /**
-   * Epoch of this position, required for moving sources
-   */
-  epoch: Epoch | null;
-  frame: "icrs";
-  ra_deg: number;
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
@@ -378,8 +405,13 @@ export interface CurveComponent {
  * via the `definition` "Dataset".
  */
 export interface Dataset {
+  archive_query: ArchiveQuerySummary | null;
   astrometric_calibration: AstrometricCalibration | null;
   bands: Band[];
+  /**
+   * Empty = all analyses available
+   */
+  capabilities: AnalysisCapability[];
   common_grid: WCSDescription;
   description: string;
   field: FieldDescription;
@@ -406,6 +438,48 @@ export interface Dataset {
   } | null;
   seed: number | null;
   title: string;
+}
+/**
+ * How an observed dataset was assembled from an archive (see its retrieval manifest).
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ArchiveQuerySummary".
+ */
+export interface ArchiveQuerySummary {
+  collection: string;
+  manifest_path: string;
+  n_downloaded: number;
+  n_failed: number;
+  n_rows: number;
+  n_screen_failed: number;
+  n_screened: number;
+  n_selected: number;
+  n_superseded: number;
+  notes: string[];
+  provider: "synthetic" | "spherex" | "gaia_dr3" | "wise" | "neossat";
+  query_url: string;
+  retrieved_utc: string;
+  selection_rule: string;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "AnalysisCapability".
+ */
+export interface AnalysisCapability {
+  id:
+    | "source_detection"
+    | "source_measurement"
+    | "astrometric_fit"
+    | "difference_imaging"
+    | "catalog_overlay"
+    | "evidence_record"
+    | "registration";
+  reason: string | null;
+  /**
+   * What must be implemented and validated first
+   */
+  requirements: string[];
+  status: "available" | "unavailable";
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
@@ -453,7 +527,10 @@ export interface FrameProduct {
    */
   display_only: boolean;
   id: string;
-  kind: "native" | "registered";
+  /**
+   * native: original arrays; registered: SkyShift-registered display product; archive_wcs_reprojection: display product aligned only by the archive's header WCS (not registered by SkyShift)
+   */
+  kind: "native" | "registered" | "archive_wcs_reprojection";
   mask_bits: MaskBit[];
   observation_id: string;
   planes: ("image" | "variance" | "mask")[];
@@ -581,6 +658,7 @@ export interface InstrumentDescription {
  * via the `definition` "Observation".
  */
 export interface Observation {
+  archive: ArchiveObservationInfo | null;
   band_id: string;
   dataset_id: string;
   detector: string | null;
@@ -601,6 +679,70 @@ export interface Observation {
   status: "available" | "missing" | "failed" | "pending";
   status_reason: string | null;
   timing: ObservationTiming;
+}
+/**
+ * Archive identity, local wavelength and file checks of one observed product.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ArchiveObservationInfo".
+ */
+export interface ArchiveObservationInfo {
+  access_url: string;
+  bandpass_name: string;
+  bytes: number | null;
+  /**
+   * HISTORY [CALIB] product -> identifier
+   */
+  calibration_refs: {
+    [k: string]: string;
+  };
+  collection: string;
+  cutout_url: string | null;
+  detector: number;
+  edge_margin_px: number | null;
+  file_name: string;
+  /**
+   * Flag names set within the documented 2.5 px radius
+   */
+  flags_near_query: string[];
+  header_quality: {
+    [k: string]: number | string | boolean;
+  };
+  local_bandwidth_um: number | null;
+  local_wavelength_um: number | null;
+  obs_id: string;
+  obs_publisher_did: string | null;
+  pipeline_version: string | null;
+  processing_tag: string;
+  /**
+   * 0-based cutout pixel of the query position
+   */
+  query_pixel_cutout: [number, number] | null;
+  /**
+   * 0-based detector pixel of the query position
+   */
+  query_pixel_detector: [number, number] | null;
+  release: string;
+  retrieved_utc: string | null;
+  sha256: string | null;
+  validation: FileCheck[];
+  /**
+   * |astropy -TAB - independent bilinear| at the query pixel
+   */
+  wavelength_crosscheck_um: number | null;
+  wavelength_method: string;
+}
+/**
+ * One executed check of an archive file against its documented format.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "FileCheck".
+ */
+export interface FileCheck {
+  detail: string;
+  id: string;
+  reference: string | null;
+  status: "pass" | "warn" | "fail";
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
@@ -655,6 +797,8 @@ export interface DatasetReference {
  * via the `definition` "DatasetSummary".
  */
 export interface DatasetSummary {
+  availability: "ready" | "partial" | "not_fetched";
+  availability_note: string | null;
   bands: string[];
   description: string;
   id: string;

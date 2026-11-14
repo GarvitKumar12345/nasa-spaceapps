@@ -42,6 +42,10 @@ export interface SkyCanvasProps {
   testId?: string
   minHeight?: number
   valueUnit?: string
+  /** Optional RGBA raster drawn over the image with the same geometry (e.g. archive flag overlay). */
+  overlayImage?: ImageData | null
+  /** Optional marker (common-grid pixel) with a label, e.g. the archive query position. */
+  marker?: { x: number; y: number; label: string } | null
 }
 
 const NICE_ARCSEC = [0.5, 1, 2, 5, 10, 15, 20, 30, 60, 120, 300]
@@ -88,6 +92,16 @@ export function SkyCanvas(props: SkyCanvasProps) {
     return c
   }, [plane, limits, stretch, mode])
 
+  const overlayCanvas = useMemo(() => {
+    const img = props.overlayImage
+    if (!img) return null
+    const c = document.createElement('canvas')
+    c.width = img.width
+    c.height = img.height
+    c.getContext('2d')!.putImageData(img, 0, 0)
+    return c
+  }, [props.overlayImage])
+
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -102,6 +116,10 @@ export function SkyCanvas(props: SkyCanvasProps) {
     ctx.imageSmoothingEnabled = zoom < 1.5
     const [sx0, sy0] = toScreen(-0.5, ny - 0.5)
     ctx.drawImage(offscreen, sx0, sy0, nx * zoom, ny * zoom)
+    if (overlayCanvas) {
+      ctx.imageSmoothingEnabled = false
+      ctx.drawImage(overlayCanvas, sx0, sy0, nx * zoom, ny * zoom)
+    }
   })
 
   const gridLines = useMemo(() => {
@@ -341,6 +359,22 @@ export function SkyCanvas(props: SkyCanvasProps) {
               <text x={x + 16} y={y - 14} className="sky-selected-label">
                 {sel.id}
               </text>
+            </g>
+          )
+        })()}
+        {props.marker && (() => {
+          const [x, y] = toScreen(props.marker.x, props.marker.y)
+          return (
+            <g data-testid="query-marker">
+              <line x1={x - 16} x2={x - 8} y1={y} y2={y} className="sky-query-tick" />
+              <line x1={x + 8} x2={x + 16} y1={y} y2={y} className="sky-query-tick" />
+              <line x1={x} x2={x} y1={y - 16} y2={y - 8} className="sky-query-tick" />
+              <line x1={x} x2={x} y1={y + 8} y2={y + 16} className="sky-query-tick" />
+              {showLabels && (
+                <text x={x + 18} y={y - 10} className="sky-query-label">
+                  {props.marker.label}
+                </text>
+              )}
             </g>
           )
         })()}

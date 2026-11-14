@@ -17,15 +17,20 @@ def synthetic_provider() -> SyntheticProvider:
     return SyntheticProvider()
 
 
+@lru_cache(maxsize=1)
+def spherex_provider() -> SpherexProvider:
+    return SpherexProvider()
+
+
 def image_providers() -> list:
-    return [synthetic_provider(), SpherexProvider(), WiseProvider(), NeossatProvider()]
+    return [synthetic_provider(), spherex_provider(), WiseProvider(), NeossatProvider()]
 
 
 def provider_statuses() -> list[ProviderStatus]:
     """Order: synthetic, spherex, gaia_dr3, wise, neossat."""
     return [
         synthetic_provider().status(),
-        SpherexProvider().status(),
+        spherex_provider().status(),
         GaiaDR3Provider().status(),
         WiseProvider().status(),
         NeossatProvider().status(),
@@ -42,13 +47,22 @@ def list_datasets() -> list[DatasetSummary]:
     return out
 
 
+def dataset_provider(dataset_id: str) -> str:
+    """'synthetic' or 'spherex' for a known dataset id; KeyError otherwise (no loading)."""
+    if any(s.id == dataset_id for s in synthetic_provider().list_datasets()):
+        return "synthetic"
+    if spherex_provider().owns(dataset_id):
+        return "spherex"
+    raise KeyError(dataset_id)
+
+
 def load_dataset(dataset_id: str, seed: int | None = None) -> DatasetBundle:
-    """Load a dataset from the provider that lists it. Unknown ids raise KeyError.
+    """Load a dataset from the provider that owns it. Unknown ids raise KeyError.
 
     Archive datasets are never substituted by synthetic data: an archive
     provider that cannot serve a dataset raises ProviderUnavailable.
     """
-    for summary in synthetic_provider().list_datasets():
-        if summary.id == dataset_id:
-            return synthetic_provider().load_dataset(dataset_id, seed)
-    raise KeyError(dataset_id)
+    owner = dataset_provider(dataset_id)
+    if owner == "synthetic":
+        return synthetic_provider().load_dataset(dataset_id, seed)
+    return spherex_provider().load_dataset(dataset_id)

@@ -46,6 +46,8 @@ export function AnalyzeTabs({ dataset }: { dataset: Dataset }) {
             <LoadingState label="Measuring the source in every frame…" />
           ) : s.measurements.status === 'error' ? (
             <ErrorState message={s.measurements.message} onRetry={() => s.selectSource(null)} />
+          ) : s.measurements.status === 'unavailable' ? (
+            <EmptyState title="Measurement unavailable">{s.measurements.message}</EmptyState>
           ) : tab === 'measurements' ? (
             <MeasurementsTab measurements={s.measurements.data.measurements} notes={s.measurements.data.notes} />
           ) : tab === 'fit' ? (
@@ -399,6 +401,7 @@ function CatalogTab() {
   }, [s.associations.status, s.selectedSourceId]) // eslint-disable-line react-hooks/exhaustive-deps
   if (s.associations.status === 'loading' || s.associations.status === 'idle') return <LoadingState label="Propagating catalog positions to each epoch…" />
   if (s.associations.status === 'error') return <ErrorState message={s.associations.message} onRetry={() => void s.loadAssociations()} />
+  if (s.associations.status === 'unavailable') return <EmptyState title="Catalog associations unavailable">{s.associations.message}</EmptyState>
   const assoc = s.associations.data
   const counts = assoc.reduce<Record<string, number>>((acc, a) => ({ ...acc, [a.status]: (acc[a.status] ?? 0) + 1 }), {})
   return (

@@ -43,7 +43,8 @@ test.describe('[browser] complete synthetic investigation', () => {
     await fitS003(page)
     await page.getByRole('tab', { name: 'Provenance & export' }).click()
     await page.getByTestId('analyze-save').click()
-    await expect(page.getByText('saved to the Evidence notebook')).toBeVisible()
+    // The same text is also announced in the sr-only live region; check the visible confirmation.
+    await expect(page.getByRole('status').filter({ hasText: 'saved to the Evidence notebook' }).filter({ hasText: 'Open notebook' })).toBeVisible()
     await page.getByTestId('nav-evidence').click()
     await expect(page.getByTestId('ev-record-list')).toContainText('S003')
     await expect(page.getByTestId('ev-detail').getByTestId('ev-record-label').first()).toContainText(/synthetic training record/i)
@@ -79,12 +80,14 @@ test.describe('[browser] complete synthetic investigation', () => {
   })
 
   test('Methods shows real provider statuses and never claims unrun live checks', async ({ page }) => {
+    // Gaia DR3 / WISE / NEOSSat stay documented with live checks not run; SPHEREx is implemented (its live checks come from the report).
     await page.goto('/#/methods')
     const providers = page.getByTestId('provider-table')
-    await expect(providers.locator('[data-provider="spherex"]')).toContainText('documented')
+    await expect(providers.locator('[data-provider="spherex"]')).toContainText('implemented')
     await expect(providers.locator('[data-provider="gaia_dr3"]')).toContainText('documented')
     await expect(page.getByTestId('live-group')).toContainText('not run')
-    await expect(page.getByTestId('limitations')).toContainText('Synthetic data only')
+    await expect(page.getByTestId('limitations')).toContainText('Measurements on synthetic data only')
+    await expect(page.locator('[data-group="Archive product checks (SPHEREx DR1)"]')).toBeVisible()
   })
 
   test('corrupted notebook storage is reported, not silently discarded', async ({ page }) => {

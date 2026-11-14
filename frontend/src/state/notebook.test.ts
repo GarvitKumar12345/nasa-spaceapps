@@ -132,6 +132,7 @@ function observation(visit: string, band: string, available = true): Observation
     dataset_id: DS,
     band_id: band,
     detector: null,
+    archive: null,
     frame_ids: available ? [nativeId(visit, band), registeredId(visit, band)] : [],
     instrument: 'GTI-1',
     observer: { kind: 'geocenter', ephemeris: 'astropy builtin (ERFA epv00)', approximation_note: null, max_position_error_km: null },

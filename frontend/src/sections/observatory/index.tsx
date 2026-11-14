@@ -12,6 +12,7 @@ import { Timeline } from '../../components/observatory/Timeline'
 import { Toolbar } from '../../components/observatory/Toolbar'
 import { catalogPoints, measurementAt, modelGeometry, sourcePointsAt, truthFor, truthPointAt, useBandLimits, useGridWcs } from '../../components/observatory/derive'
 import { differenceLimits, usePlane } from '../../components/observatory/pixels'
+import { ObservedObservatory } from './Observed'
 import './observatory.css'
 
 export function Observatory() {
@@ -29,6 +30,7 @@ export function Observatory() {
     )
   }
   if (s.dataset.status === 'error') {
+    const others = s.datasets.status === 'ready' ? s.datasets.data.filter((d) => d.id !== s.datasetId) : []
     return (
       <div className="page">
         <ErrorState
@@ -41,17 +43,32 @@ export function Observatory() {
             void s.selectDataset(id)
           }}
         />
+        {others.length > 0 && (
+          <div className="row" style={{ justifyContent: 'center', marginTop: 12 }}>
+            <button type="button" className="btn btn-sm" onClick={() => void s.selectDataset(others[0].id)} data-testid="open-other-dataset">
+              Open {others[0].title}
+            </button>
+          </div>
+        )}
       </div>
     )
   }
   if (s.dataset.status !== 'ready' || s.datasets.status !== 'ready' || s.providers.status !== 'ready') {
+    const summary = s.datasets.status === 'ready' ? s.datasets.data.find((d) => d.id === s.datasetId) : undefined
     return (
       <div className="page">
-        <LoadingState label="Preparing the synthetic investigation: generating frames, detecting sources, registering every epoch (about 10 s on first load)…" />
+        <LoadingState
+          label={
+            summary?.origin === 'observed'
+              ? 'Reading the cached SPHEREx cutouts, checking them against the manifest and reprojecting them for display (about 10 s on first load)…'
+              : 'Preparing the synthetic investigation: generating frames, detecting sources, registering every epoch (about 10 s on first load)…'
+          }
+        />
       </div>
     )
   }
-  return <ObservatoryReady dataset={s.dataset.data} active={section === 'observatory'} />
+  const active = section === 'observatory'
+  return s.dataset.data.origin === 'observed' ? <ObservedObservatory dataset={s.dataset.data} active={active} /> : <ObservatoryReady dataset={s.dataset.data} active={active} />
 }
 
 function ObservatoryReady({ dataset, active }: { dataset: Dataset; active: boolean }) {

@@ -24,7 +24,7 @@ export type PixelPlane = 'image' | 'variance' | 'mask'
 
 export interface PlaneData {
   /** Row-major, row 0 = pixel y 0. NaN = no coverage / masked (registered products). */
-  data: Float32Array | Uint16Array
+  data: Float32Array | Uint16Array | Uint32Array
   shape: [number, number] // [ny, nx]
   unit: string
   origin: string
@@ -118,7 +118,7 @@ async function plane(path: string): Promise<PlaneData> {
   if (!Number.isFinite(ny) || !Number.isFinite(nx)) {
     throw new ApiError(500, 'internal_error', 'Pixel response is missing its shape header.')
   }
-  const data = dtype === 'uint16' ? new Uint16Array(buffer) : new Float32Array(buffer)
+  const data = dtype === 'uint16' ? new Uint16Array(buffer) : dtype === 'uint32' ? new Uint32Array(buffer) : new Float32Array(buffer)
   if (data.length !== ny * nx) {
     throw new ApiError(500, 'internal_error', `Pixel payload has ${data.length} values; expected ${ny * nx}.`)
   }

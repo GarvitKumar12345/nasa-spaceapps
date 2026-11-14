@@ -31,7 +31,7 @@ _HASH_GLOBS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("fixtures", (".json",)),
 )
 
-_TAG = re.compile(r"\[(math|coords|measurement|registration|catalog|pipeline|contracts|api|ui|browser|live)\]", re.I)
+_TAG = re.compile(r"\[(math|coords|measurement|registration|catalog|pipeline|contracts|api|ui|browser|live|archive)\]", re.I)
 
 
 def source_hash(root: Path = REPO_ROOT) -> str:

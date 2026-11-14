@@ -481,3 +481,142 @@
     max-width: none;
   }
 }
+
+/* ---------- Observed (archive) data: read-only viewer ---------- */
+.sky-query-tick {
+  stroke: var(--blue);
+  stroke-width: 1.4;
+}
+.sky-query-label {
+  fill: var(--blue);
+  font: 600 10.5px var(--font-sans);
+  paint-order: stroke;
+  stroke: rgba(3, 5, 10, 0.85);
+  stroke-width: 3px;
+}
+.timeline-blink-reason {
+  margin: 4px 0 0;
+  color: var(--amber);
+  max-width: 90ch;
+}
+.obs-group-select {
+  max-width: min(320px, 100%);
+}
+.flag-chips {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.flag-chip {
+  display: inline-block;
+  font: 600 var(--fs-2xs) / 1.4 var(--font-mono);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+  background: var(--panel-2);
+}
+.flag-chip.flag-photometry_mask {
+  border-color: rgba(255, 92, 64, 0.6);
+  color: #ffb4a6;
+  background: var(--red-wash);
+}
+.flag-chip.flag-caution {
+  border-color: rgba(240, 181, 74, 0.55);
+  color: var(--amber);
+  background: var(--amber-wash);
+}
+.flag-chip.flag-informational {
+  border-color: var(--line);
+  color: var(--muted);
+}
+.flag-swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  vertical-align: -1px;
+  margin: 0 3px 0 6px;
+}
+.flag-swatch-mask {
+  background: rgb(255, 92, 64);
+}
+.flag-swatch-caution {
+  background: rgb(255, 196, 64);
+  opacity: 0.7;
+}
+.obs-details {
+  border-top: 1px solid var(--line);
+  margin-top: 8px;
+  padding-top: 6px;
+}
+.obs-details summary {
+  cursor: pointer;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.obs-list {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  display: grid;
+  gap: 4px;
+}
+.obs-pre {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  background: var(--panel-2);
+  border-radius: var(--radius-xs);
+  font: var(--fs-2xs) / 1.6 var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.obs-url {
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+.check-list,
+.cap-list {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.check-list li {
+  overflow-wrap: anywhere;
+}
+.cap-list > li {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--violet-strong);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.link-btn:hover {
+  text-decoration: underline;
+}
+.link-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border-radius: 2px;
+}
+tr.row-selected td {
+  background: var(--violet-wash);
+}
+/* Units and Greek symbols must not be uppercased (µm -> MM, λ -> Λ would change their meaning). */
+th.nocase,
+.nocase {
+  text-transform: none;
+}

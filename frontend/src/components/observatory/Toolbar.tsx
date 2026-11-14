@@ -13,7 +13,9 @@ export function Toolbar({ dataset, datasets, providers }: { dataset: Dataset; da
     e.preventDefault()
     void store.runSearch(text)
   }
-  const archive = providers.filter((p) => p.id !== 'synthetic' && p.role !== 'catalog')
+  // Placeholders only for image providers that have no dataset of their own in this build.
+  const archive = providers.filter((p) => p.id !== 'synthetic' && p.role !== 'catalog' && !datasets.some((d) => d.provider === p.id))
+  const observed = dataset.origin === 'observed'
   return (
     <div className="obs-toolbar">
       <div className="obs-heading">
@@ -35,7 +37,7 @@ export function Toolbar({ dataset, datasets, providers }: { dataset: Dataset; da
           >
             {datasets.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.title} ({d.release})
+                {d.title} ({d.release}){d.availability !== 'ready' ? ` — ${d.availability.replace('_', ' ')}` : ''}
               </option>
             ))}
             {archive.map((p) => (
@@ -55,7 +57,7 @@ export function Toolbar({ dataset, datasets, providers }: { dataset: Dataset; da
               className="input"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="S003 · 180.0019 34.9992 · 12:00:00.5 +34:59:57"
+              placeholder={observed ? 'Coordinates, e.g. 269.4463 4.7680' : 'S003 · 180.0019 34.9992 · 12:00:00.5 +34:59:57'}
               data-testid="search-input"
             />
             <button type="submit" className="btn btn-icon" aria-label="Search">
@@ -63,20 +65,39 @@ export function Toolbar({ dataset, datasets, providers }: { dataset: Dataset; da
             </button>
           </div>
         </form>
-        <div className="field">
-          <span className="field-label">Band (wavelength)</span>
-          <Segmented
-            ariaLabel="Band"
-            value={store.bandId ?? ''}
-            onChange={(v) => store.setBand(v)}
-            options={dataset.bands.map((b) => ({ value: b.id, label: `${b.id} ${b.center_um?.toFixed(2)} µm`, title: b.label }))}
-            testId="band-select"
-          />
-        </div>
+        {observed ? (
+          <label className="field">
+            <span className="field-label">Wavelength group (at field centre)</span>
+            <select className="select obs-group-select" value={store.bandId ?? ''} onChange={(e) => store.setBand(e.target.value)} aria-label="Wavelength group" data-testid="group-select">
+              {dataset.bands.map((b) => {
+                const n = b.compatibility?.member_observation_ids.length ?? 0
+                return (
+                  <option key={b.id} value={b.id}>
+                    {b.label} · {n} obs{b.compatibility && !b.compatibility.blinkable ? ' · no blink' : ''}
+                  </option>
+                )
+              })}
+            </select>
+          </label>
+        ) : (
+          <div className="field">
+            <span className="field-label">Band (wavelength)</span>
+            <Segmented
+              ariaLabel="Band"
+              value={store.bandId ?? ''}
+              onChange={(v) => store.setBand(v)}
+              options={dataset.bands.map((b) => ({ value: b.id, label: `${b.id} ${b.center_um?.toFixed(2)} µm`, title: b.label }))}
+              testId="band-select"
+            />
+          </div>
+        )}
         <div className="field">
           <span className="field-label">Field</span>
-          <span className="obs-static" title="Set by the synthetic dataset. Archive cutout sizes become selectable when an archive provider is connected.">
-            {dataset.field.fov_arcsec.toFixed(1)}″ · {dataset.release}
+          <span
+            className="obs-static"
+            title={observed ? 'Cutout size and archive collection recorded in the retrieval manifest.' : 'Set by the synthetic dataset.'}
+          >
+            {observed ? `${(dataset.field.fov_arcsec / 60).toFixed(1)}′` : `${dataset.field.fov_arcsec.toFixed(1)}″`} · {dataset.release}
           </span>
         </div>
         <div className="field">

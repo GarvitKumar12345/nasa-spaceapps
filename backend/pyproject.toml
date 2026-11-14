@@ -48,6 +48,7 @@ markers = [
   "contracts: schema, provenance, and export/import checks",
   "api: HTTP API checks",
   "slow: slower statistical checks (multiple seeds / Monte Carlo)",
+  "archive: real archive products (recorded SPHEREx files and responses) checked offline against documented formats",
   "live: requires network access to an external archive (not run by default)",
 ]
 filterwarnings = [

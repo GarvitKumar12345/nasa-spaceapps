@@ -51,7 +51,9 @@ def test_core_routes_return_contracts(client):
     """Health, providers, datasets, dataset and sources respond with contract-shaped JSON."""
     assert client.get("/api/health").json()["contracts_version"] == "skyshift.contracts/1"
     assert [p["id"] for p in client.get("/api/providers").json()] == ["synthetic", "spherex", "gaia_dr3", "wise", "neossat"]
-    assert [d["id"] for d in client.get("/api/datasets").json()] == ["syn-nb-01"]
+    listed = client.get("/api/datasets").json()
+    assert listed[0]["id"] == "syn-nb-01" and listed[0]["origin"] == "simulated"  # synthetic training data stays the default
+    assert all(d["origin"] == "observed" and d["provider"] == "spherex" for d in listed[1:])
     ds = client.get("/api/datasets/syn-nb-01").json()
     kinds = {f["kind"] for f in ds["frames"]}
     assert kinds == {"native", "registered"} and all(f["display_only"] for f in ds["frames"] if f["kind"] == "registered")
@@ -151,11 +153,16 @@ def test_evidence_csv_keeps_origin_units_and_rows(client, record):
 
 @pytest.mark.contracts
 def test_provider_statuses_are_honest():
-    """All five providers listed; no status claims 'tested'; archive providers are documented with live checks not run."""
+    """All five providers listed; 'tested' appears only for SPHEREx live checks recorded in the report; others are documented, not run."""
     statuses = [ProviderStatus.model_validate(s.model_dump()) for s in provider_statuses()]
     assert [s.id for s in statuses] == ["synthetic", "spherex", "gaia_dr3", "wise", "neossat"]
-    assert all(s.status != "tested" and all(c.status != "tested" for c in s.capabilities) for s in statuses)
-    for s in statuses[1:]:
+    assert all(s.status != "tested" for s in statuses)
+    for s in statuses:
+        for c in s.capabilities:
+            if c.status == "tested":
+                assert s.id == "spherex" and c.checked_utc and "live test" in c.detail
+    assert statuses[1].status == "implemented"
+    for s in statuses[2:]:
         assert s.status == "documented" and any(c.status == "not_run" for c in s.capabilities)
     for provider in (SpherexProvider(), WiseProvider(), NeossatProvider()):
         with pytest.raises(ProviderUnavailable):
@@ -191,9 +198,9 @@ def test_gaia_row_mapping_on_hand_constructed_rows():
 
 @pytest.mark.contracts
 def test_spherex_extension_check():
-    """Extensions are checked by name (case-insensitive); missing documented extensions are reported."""
-    assert check_extension_names(["image", "FLAGS", "VARIANCE", "ZODI", "PSF", "WCS-WAVE"]) == []
-    assert check_extension_names(["IMAGE", "FLAGS"]) == ["VARIANCE", "ZODI", "PSF", "WCS-WAVE"]
+    """Extensions are checked by name (case-insensitive) against the R7 (DR1/QR3) layout verified on real files (EPSF, not PSF)."""
+    assert check_extension_names(["image", "FLAGS", "VARIANCE", "ZODI", "EPSF", "WCS-WAVE"]) == []
+    assert check_extension_names(["IMAGE", "FLAGS"]) == ["VARIANCE", "ZODI", "EPSF", "WCS-WAVE"]
 
 
 @pytest.mark.api

@@ -2,7 +2,9 @@
 
 Run (from backend/):  uv run uvicorn skyshift.api.app:app --host 127.0.0.1 --port 8000
 Errors use {"detail": ApiError}. Pixel planes are raw little-endian bytes
-(float32 image/variance with NaN = no coverage in registered products; uint16 mask).
+(float32 image/variance with NaN = no coverage in display products; uint16 or uint32 mask,
+stated in X-SkyShift-Dtype). Observed datasets are read-only: analysis routes answer 409
+not_available with the dataset's stated reason.
 """
 
 from __future__ import annotations
@@ -43,8 +45,9 @@ from skyshift.contracts import (
 from skyshift.coords.wcs import description_to_wcs, sky_to_pixel
 from skyshift.notebook.evidence import record_to_csv, reproduce_record, validate_record
 from skyshift.pipeline.investigation import Investigation, get_investigation
+from skyshift.pipeline.observed import ObservedSession
 from skyshift.providers.base import ProviderUnavailable
-from skyshift.providers.registry import list_datasets, load_dataset, provider_statuses
+from skyshift.providers.registry import dataset_provider, list_datasets, load_dataset, provider_statuses
 from skyshift.science.astrometry import fit_astrometry
 from skyshift.validation.report import report_with_staleness
 from skyshift.versions import software_versions
@@ -63,11 +66,25 @@ def _provider_unavailable(_: Request, exc: ProviderUnavailable) -> JSONResponse:
     return JSONResponse(status_code=503, content={"detail": err.model_dump()})
 
 
-def _investigation(dataset_id: str) -> Investigation:
+def _session(dataset_id: str) -> Investigation | ObservedSession:
+    """Synthetic datasets get the full investigation; observed datasets a read-only session."""
     try:
-        return get_investigation(dataset_id)
+        owner = dataset_provider(dataset_id)
+        if owner == "synthetic":
+            return get_investigation(dataset_id)
+        return ObservedSession(load_dataset(dataset_id))
     except KeyError:
         raise ApiException(404, "not_found", f"Unknown dataset {dataset_id!r}.") from None
+
+
+def _investigation(dataset_id: str, capability: str = "source_detection") -> Investigation:
+    """The synthetic investigation, or 409 not_available for observed datasets (never a substitute)."""
+    sess = _session(dataset_id)
+    if isinstance(sess, ObservedSession):
+        cap = sess.capability(capability)
+        raise ApiException(409, "not_available", cap.reason or f"{capability} is unavailable for {dataset_id}.",
+                           {"capability": capability, "requirements": cap.requirements, "origin": "observed"})
+    return sess
 
 
 def _source_guard(inv: Investigation, source_id: str) -> None:
@@ -94,20 +111,24 @@ def datasets() -> list[DatasetSummary]:
 
 @app.get("/api/datasets/{dataset_id}", response_model=Dataset)
 def dataset(dataset_id: str) -> Dataset:
-    return _investigation(dataset_id).dataset
+    return _session(dataset_id).dataset
 
 
 @app.get("/api/datasets/{dataset_id}/frames/{frame_id}/pixels")
 def frame_pixels(dataset_id: str, frame_id: str, plane: str = Query("image", pattern="^(image|variance|mask)$")) -> Response:
-    inv = _investigation(dataset_id)
+    inv = _session(dataset_id)
     try:
         arr, product = inv.pixels(frame_id, plane)
     except KeyError:
         raise ApiException(404, "not_found", f"Unknown frame {frame_id!r}.") from None
     except ValueError as exc:
         raise ApiException(422, "invalid_request", str(exc)) from None
-    dtype = "uint16" if plane == "mask" else "float32"
-    data = np.ascontiguousarray(arr, dtype="<u2" if dtype == "uint16" else "<f4")
+    if plane == "mask":
+        dtype = "uint32" if arr.dtype == np.uint32 else "uint16"
+        data = np.ascontiguousarray(arr, dtype="<u4" if dtype == "uint32" else "<u2")
+    else:
+        dtype = "float32"
+        data = np.ascontiguousarray(arr, dtype="<f4")
     unit = "" if plane == "mask" else (product.unit if plane == "image" else (product.variance_unit or ""))
     headers = {
         "X-SkyShift-Shape": f"{data.shape[0]},{data.shape[1]}",
@@ -124,26 +145,26 @@ def frame_pixels(dataset_id: str, frame_id: str, plane: str = Query("image", pat
 
 @app.get("/api/datasets/{dataset_id}/sources", response_model=list[DetectedSource])
 def sources(dataset_id: str) -> list[DetectedSource]:
-    return _investigation(dataset_id).sources
+    return _investigation(dataset_id, "source_detection").sources
 
 
 @app.get("/api/datasets/{dataset_id}/sources/{source_id}/measurements", response_model=MeasurementSet)
 def measurements(dataset_id: str, source_id: str, method: str = Query("psf_gaussian_fit", pattern="^(psf_gaussian_fit|windowed_centroid)$")) -> MeasurementSet:
-    inv = _investigation(dataset_id)
+    inv = _investigation(dataset_id, "source_measurement")
     _source_guard(inv, source_id)
     return inv.measure(source_id, method)
 
 
 @app.get("/api/datasets/{dataset_id}/sources/{source_id}/associations", response_model=list[CatalogAssociation])
 def associations(dataset_id: str, source_id: str) -> list[CatalogAssociation]:
-    inv = _investigation(dataset_id)
+    inv = _investigation(dataset_id, "catalog_overlay")
     _source_guard(inv, source_id)
     return inv.associations(source_id)
 
 
 @app.get("/api/datasets/{dataset_id}/catalog", response_model=CatalogOverlay)
 def catalog(dataset_id: str, frame_id: str) -> CatalogOverlay:
-    inv = _investigation(dataset_id)
+    inv = _investigation(dataset_id, "catalog_overlay")
     try:
         return inv.catalog_overlay(frame_id)
     except KeyError:
@@ -151,7 +172,7 @@ def catalog(dataset_id: str, frame_id: str) -> CatalogOverlay:
 
 
 def _difference(dataset_id: str, a: str, b: str) -> tuple[DifferenceInfo, np.ndarray | None]:
-    inv = _investigation(dataset_id)
+    inv = _investigation(dataset_id, "difference_imaging")
     try:
         return inv.difference(a, b)
     except KeyError as exc:
@@ -186,7 +207,7 @@ def difference_pixels(dataset_id: str, a: str, b: str) -> Response:
 
 @app.get("/api/datasets/{dataset_id}/truth", response_model=SimulationTruth)
 def truth(dataset_id: str) -> SimulationTruth:
-    inv = _investigation(dataset_id)
+    inv = _session(dataset_id)
     if inv.bundle.truth is None:
         raise ApiException(404, "not_synthetic", f"{dataset_id} is not a simulated dataset; no simulation truth exists.")
     return inv.bundle.truth
@@ -203,7 +224,10 @@ def resolve(q: str = Query(..., min_length=1, max_length=200), dataset_id: str |
         ds = match.group("ds") or dataset_id
         sid = match.group("sid").upper()
         if ds:
-            inv = _investigation(ds)
+            sess = _session(ds)
+            if isinstance(sess, ObservedSession):
+                return ResolveResult(query=q, kind="unresolved", message=f"{ds} is observed archive data: SkyShift has no source detections there, so source IDs do not apply.")
+            inv = sess
             try:
                 src = inv.source(sid)
             except KeyError:
@@ -224,7 +248,7 @@ def resolve(q: str = Query(..., min_length=1, max_length=200), dataset_id: str |
         )
     in_field = None
     if dataset_id:
-        inv = _investigation(dataset_id)
+        inv = _session(dataset_id)
         w = description_to_wcs(inv.dataset.common_grid)
         x, y = sky_to_pixel(w, position.ra_deg, position.dec_deg)
         ny, nx = inv.dataset.common_grid.shape
@@ -235,7 +259,7 @@ def resolve(q: str = Query(..., min_length=1, max_length=200), dataset_id: str |
 
 @app.post("/api/fits/astrometric", response_model=ModelFit)
 def fit(request: FitRequest) -> ModelFit:
-    inv = _investigation(request.dataset_id)
+    inv = _investigation(request.dataset_id, "astrometric_fit")
     _source_guard(inv, request.source_id)
     extra = [
         "Synthetic dataset: positions are geometric (no aberration, light deflection, or light-time); "

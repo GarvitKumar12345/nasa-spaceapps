@@ -17,9 +17,11 @@ export interface TimelineProps {
   onSelectEpoch: (obsId: string) => void
   onStep: (delta: number) => void
   onPlayback: (p: Partial<Playback>) => void
+  /** When set, blink and playback are disabled and this reason is shown (e.g. no wavelength-compatible repeat). */
+  blinkDisabledReason?: string | null
 }
 
-export function Timeline({ dataset, bandId, epochObsId, compareObsId, displayedObsId, showCompare, playback, onSelectEpoch, onStep, onPlayback }: TimelineProps) {
+export function Timeline({ dataset, bandId, epochObsId, compareObsId, displayedObsId, showCompare, playback, onSelectEpoch, onStep, onPlayback, blinkDisabledReason = null }: TimelineProps) {
   const wrapRef = useRef<HTMLDivElement | null>(null)
   const [width, setWidth] = useState(800)
   useLayoutEffect(() => {
@@ -41,7 +43,7 @@ export function Timeline({ dataset, bandId, epochObsId, compareObsId, displayedO
   const current = dataset.observations.find((o) => o.id === displayedObsId) ?? null
   const years: number[] = []
   for (let y = Math.ceil(mjdTdbToJyear(tMin)); y <= mjdTdbToJyear(tMax); y++) years.push(y)
-  const disabled = avail.length < 2
+  const disabled = avail.length < 2 || !!blinkDisabledReason
 
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'ArrowRight') onStep(1)
@@ -85,7 +87,8 @@ export function Timeline({ dataset, bandId, epochObsId, compareObsId, displayedO
             aria-pressed={playback.blink}
             disabled={disabled || !compareObsId || compareObsId === epochObsId}
             onClick={() => onPlayback({ blink: !playback.blink, playing: false })}
-            title="Alternate between epoch A and comparison epoch B"
+            title={blinkDisabledReason ?? 'Alternate between epoch A and comparison epoch B'}
+            aria-describedby={blinkDisabledReason ? 'blink-reason' : undefined}
             data-testid="blink"
           >
             <Repeat size={14} /> Blink A/B
@@ -99,6 +102,11 @@ export function Timeline({ dataset, bandId, epochObsId, compareObsId, displayedO
             </select>
           </label>
         </div>
+        {blinkDisabledReason && (
+          <p id="blink-reason" className="timeline-blink-reason small" data-testid="blink-reason">
+            Blink unavailable: {blinkDisabledReason}
+          </p>
+        )}
         <div className="timeline-readout" aria-live="polite" data-testid="epoch-readout">
           {current ? (
             <>

@@ -1,5 +1,55 @@
 {
   "$defs": {
+    "AnalysisCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "enum": [
+            "source_detection",
+            "source_measurement",
+            "astrometric_fit",
+            "difference_imaging",
+            "catalog_overlay",
+            "evidence_record",
+            "registration"
+          ],
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "requirements": {
+          "description": "What must be implemented and validated first",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "unavailable"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "reason",
+        "requirements"
+      ],
+      "title": "AnalysisCapability",
+      "type": "object"
+    },
     "ApiError": {
       "additionalProperties": false,
       "properties": {
@@ -11,6 +61,7 @@
             "invalid_request",
             "invalid_record",
             "not_synthetic",
+            "not_available",
             "internal_error"
           ],
           "type": "string"
@@ -29,6 +80,330 @@
         "details"
       ],
       "title": "ApiError",
+      "type": "object"
+    },
+    "ArchiveObservationInfo": {
+      "additionalProperties": false,
+      "description": "Archive identity, local wavelength and file checks of one observed product.",
+      "properties": {
+        "access_url": {
+          "type": "string"
+        },
+        "bandpass_name": {
+          "type": "string"
+        },
+        "bytes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "calibration_refs": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "HISTORY [CALIB] product -> identifier",
+          "type": "object"
+        },
+        "collection": {
+          "type": "string"
+        },
+        "cutout_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "detector": {
+          "type": "integer"
+        },
+        "edge_margin_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "file_name": {
+          "type": "string"
+        },
+        "flags_near_query": {
+          "description": "Flag names set within the documented 2.5 px radius",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "header_quality": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "type": "object"
+        },
+        "local_bandwidth_um": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "local_wavelength_um": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "obs_id": {
+          "type": "string"
+        },
+        "obs_publisher_did": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pipeline_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "processing_tag": {
+          "type": "string"
+        },
+        "query_pixel_cutout": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "0-based cutout pixel of the query position"
+        },
+        "query_pixel_detector": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "0-based detector pixel of the query position"
+        },
+        "release": {
+          "type": "string"
+        },
+        "retrieved_utc": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "validation": {
+          "items": {
+            "$ref": "#/$defs/FileCheck"
+          },
+          "type": "array"
+        },
+        "wavelength_crosscheck_um": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "|astropy -TAB - independent bilinear| at the query pixel"
+        },
+        "wavelength_method": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "collection",
+        "release",
+        "obs_id",
+        "detector",
+        "bandpass_name",
+        "file_name",
+        "access_url",
+        "cutout_url",
+        "obs_publisher_did",
+        "processing_tag",
+        "pipeline_version",
+        "sha256",
+        "bytes",
+        "retrieved_utc",
+        "header_quality",
+        "calibration_refs",
+        "query_pixel_detector",
+        "query_pixel_cutout",
+        "edge_margin_px",
+        "local_wavelength_um",
+        "local_bandwidth_um",
+        "wavelength_method",
+        "wavelength_crosscheck_um",
+        "flags_near_query",
+        "validation"
+      ],
+      "title": "ArchiveObservationInfo",
+      "type": "object"
+    },
+    "ArchiveQuerySummary": {
+      "additionalProperties": false,
+      "description": "How an observed dataset was assembled from an archive (see its retrieval manifest).",
+      "properties": {
+        "collection": {
+          "type": "string"
+        },
+        "manifest_path": {
+          "type": "string"
+        },
+        "n_downloaded": {
+          "type": "integer"
+        },
+        "n_failed": {
+          "type": "integer"
+        },
+        "n_rows": {
+          "type": "integer"
+        },
+        "n_screen_failed": {
+          "type": "integer"
+        },
+        "n_screened": {
+          "type": "integer"
+        },
+        "n_selected": {
+          "type": "integer"
+        },
+        "n_superseded": {
+          "type": "integer"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "provider": {
+          "enum": [
+            "synthetic",
+            "spherex",
+            "gaia_dr3",
+            "wise",
+            "neossat"
+          ],
+          "type": "string"
+        },
+        "query_url": {
+          "type": "string"
+        },
+        "retrieved_utc": {
+          "type": "string"
+        },
+        "selection_rule": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "collection",
+        "query_url",
+        "retrieved_utc",
+        "n_rows",
+        "n_superseded",
+        "n_screened",
+        "n_screen_failed",
+        "n_selected",
+        "n_downloaded",
+        "n_failed",
+        "selection_rule",
+        "manifest_path",
+        "notes"
+      ],
+      "title": "ArchiveQuerySummary",
       "type": "object"
     },
     "AssociationCandidate": {
@@ -230,6 +605,18 @@
           ],
           "default": null
         },
+        "compatibility": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CompatibilityGroup"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when a 'band' is a local-wavelength group of observed frames"
+        },
         "id": {
           "type": "string"
         },
@@ -268,7 +655,8 @@
         "center_um",
         "width_um",
         "wavelength_model",
-        "notes"
+        "notes",
+        "compatibility"
       ],
       "title": "Band",
       "type": "object"
@@ -706,6 +1094,97 @@
       "title": "ChangeIndicator",
       "type": "object"
     },
+    "CompatibilityGroup": {
+      "additionalProperties": false,
+      "description": "Observations that may be compared or blinked at one sky position (observed SPHEREx data).\n\nMembership requires the same detector AND local wavelengths, evaluated at the\nreference position, within the stated fraction of the local bandwidth.",
+      "properties": {
+        "blinkable": {
+          "type": "boolean"
+        },
+        "detector": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lambda_max_um": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lambda_min_um": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_delta_fraction": {
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "type": "number"
+        },
+        "member_observation_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "min_bandwidth_um": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "reference_position": {
+          "$ref": "#/$defs/SkyPosition"
+        },
+        "rule": {
+          "type": "string"
+        },
+        "wavelength_determination": {
+          "enum": [
+            "position_lookup_visualization",
+            "calibration_product"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule",
+        "detector",
+        "reference_position",
+        "max_delta_fraction",
+        "lambda_min_um",
+        "lambda_max_um",
+        "min_bandwidth_um",
+        "wavelength_determination",
+        "member_observation_ids",
+        "blinkable",
+        "reason"
+      ],
+      "title": "CompatibilityGroup",
+      "type": "object"
+    },
     "Coverage": {
       "additionalProperties": false,
       "properties": {
@@ -782,6 +1261,17 @@
     "Dataset": {
       "additionalProperties": false,
       "properties": {
+        "archive_query": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArchiveQuerySummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "astrometric_calibration": {
           "anyOf": [
             {
@@ -796,6 +1286,13 @@
         "bands": {
           "items": {
             "$ref": "#/$defs/Band"
+          },
+          "type": "array"
+        },
+        "capabilities": {
+          "description": "Empty = all analyses available",
+          "items": {
+            "$ref": "#/$defs/AnalysisCapability"
           },
           "type": "array"
         },
@@ -934,6 +1431,8 @@
         "generator_version",
         "scenario_parameters",
         "limitations",
+        "capabilities",
+        "archive_query",
         "provenance",
         "quality"
       ],
@@ -1028,6 +1527,26 @@
     "DatasetSummary": {
       "additionalProperties": false,
       "properties": {
+        "availability": {
+          "default": "ready",
+          "enum": [
+            "ready",
+            "partial",
+            "not_fetched"
+          ],
+          "type": "string"
+        },
+        "availability_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "bands": {
           "items": {
             "type": "string"
@@ -1100,7 +1619,9 @@
         "n_available_frames",
         "bands",
         "time_range_utc",
-        "description"
+        "description",
+        "availability",
+        "availability_note"
       ],
       "title": "DatasetSummary",
       "type": "object"
@@ -1654,6 +2175,45 @@
       "title": "FieldDescription",
       "type": "object"
     },
+    "FileCheck": {
+      "additionalProperties": false,
+      "description": "One executed check of an archive file against its documented format.",
+      "properties": {
+        "detail": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "warn",
+            "fail"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "detail",
+        "reference"
+      ],
+      "title": "FileCheck",
+      "type": "object"
+    },
     "FitInputs": {
       "additionalProperties": false,
       "properties": {
@@ -1905,9 +2465,11 @@
           "type": "string"
         },
         "kind": {
+          "description": "native: original arrays; registered: SkyShift-registered display product; archive_wcs_reprojection: display product aligned only by the archive's header WCS (not registered by SkyShift)",
           "enum": [
             "native",
-            "registered"
+            "registered",
+            "archive_wcs_reprojection"
           ],
           "type": "string"
         },
@@ -2634,6 +3196,17 @@
     "Observation": {
       "additionalProperties": false,
       "properties": {
+        "archive": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArchiveObservationInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "band_id": {
           "type": "string"
         },
@@ -2733,7 +3306,8 @@
         "observer",
         "frame_ids",
         "provenance",
-        "quality"
+        "quality",
+        "archive"
       ],
       "title": "Observation",
       "type": "object"

@@ -4,7 +4,7 @@ import type { CatalogOverlay, Dataset, DetectedSource, ModelFit, Observation, Si
 import { angularSepArcsec } from '../../lib/sky'
 import { applyOffsetsMas } from '../../lib/tangent'
 import { TanWcs } from '../../lib/tanwcs'
-import { availableObservations, nativeFrameId, registeredFrameId } from '../../state/observatory'
+import { availableObservations, displayFrameId, nativeFrameId } from '../../state/observatory'
 import type { CanvasPoint } from './SkyCanvas'
 import { loadPlane, percentiles, type StretchLimits } from './pixels'
 
@@ -28,7 +28,7 @@ export function sourcePointsAt(sources: DetectedSource[] | null, nativeId: strin
 
 /** Display stretch limits for a band, from its first available frame (same limits for every epoch: no blink flicker). */
 export function useBandLimits(datasetId: string | null, dataset: Dataset | null, bandId: string | null, pLow: number, pHigh: number): StretchLimits | null {
-  const refFrame = useMemo(() => registeredFrameId(availableObservations(dataset, bandId)[0]), [dataset, bandId])
+  const refFrame = useMemo(() => displayFrameId(availableObservations(dataset, bandId)[0]), [dataset, bandId])
   const [limits, setLimits] = useState<StretchLimits | null>(null)
   useEffect(() => {
     if (!datasetId || !refFrame) return

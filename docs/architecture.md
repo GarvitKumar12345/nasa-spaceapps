@@ -125,6 +125,10 @@ docs/                    architecture.md, providers/*.md, demo-script.md
 7. Change indicators (derived statistics, threshold 5): static-model reduced χ² of positions; largest per-band reduced χ² of fluxes.
 8. `associations` (catalog propagated per epoch, resolution = band FWHM), `catalog_overlay`, `difference` (same band, both registered, overlap ≥ 50 %).
 
+`get_investigation` refuses observed datasets. Observed (archive) datasets use `pipeline/observed.py` (`ObservedSession`): dataset + original/display arrays only.
+
+`providers/spherex/` (session 2; details `docs/providers/spherex.md`): `reference.py` (documented facts + sources), `http.py` (bounded IRSA client: IRSA URLs only, ≤ 4 concurrent, retries for 429/502/503/504, byte limits, request log), `discovery.py` (SIA2 URL with explicit collection, VOTable by column name, duplicate-version rule), `screening.py` (byte ranges: IMAGE header + WCS-WAVE of full files), `wavelength.py` (WCS-WAVE via astropy `-TAB` and an independent bilinear evaluator; compatibility groups), `fitsfile.py` (read by EXTNAME, refuse pre-R7/legacy PSF cubes, `validate_spectral_image` → `FileCheck[]`), `fetch.py` (CLI: discover → screen → select → download → manifest), `dataset.py` (manifest + cache → `Dataset`: bands = compatibility groups, native + `archive_wcs_reprojection` display frames, explicit missing/failed statuses, `capabilities` all unavailable), `fields.py` (field presets).
+
 `notebook/evidence.py`: `validate_record` (schema, label vs origin, ids, truth only for simulated, fit freshness by recomputing `fit_input_hash`), `reproduce_record` (regenerate from seed, re-measure, re-fit; tolerances 1e-9 deg, 1e-6 relative flux, 1e-6 parameter units), `record_to_csv`.
 
 ## 5. HTTP API (FastAPI, prefix `/api`; JSON = contracts)
@@ -150,10 +154,10 @@ docs/                    architecture.md, providers/*.md, demo-script.md
 | POST | `/api/evidence/csv` | body `EvidenceRecord` → `text/csv` |
 | GET | `/api/validation` | `ValidationReport` (+ current source hash, `stale`) |
 
-Errors: HTTP 4xx/5xx with body `{"detail": ApiError}`. Provider stubs → 503 `provider_unavailable`.
+Errors: HTTP 4xx/5xx with body `{"detail": ApiError}`. Provider stubs → 503 `provider_unavailable`. Observed datasets: `sources`, `measurements`, `associations`, `catalog`, `difference/*` and `fits/astrometric` → 409 `not_available` with the dataset's stated reason and requirements; `truth` → 404 `not_synthetic`; display products provide `image` and `mask` planes only.
 
 ## 6. Binary pixel planes
-`GET .../pixels` returns raw little-endian bytes: `float32` for image/variance (registered products: NaN = no coverage or masked), `uint16` for mask. Headers: `X-SkyShift-Shape: ny,nx`, `X-SkyShift-Dtype: float32|uint16`, `X-SkyShift-Unit`, `X-SkyShift-Origin`, `X-SkyShift-Frame`, `X-SkyShift-Plane`, `X-SkyShift-Display-Only: true|false`. Row-major, row 0 = y 0 (bottom of the displayed image when north is up: the viewer flips vertically so +y is up).
+`GET .../pixels` returns raw little-endian bytes: `float32` for image/variance (registered products: NaN = no coverage or masked), `uint16` for synthetic masks and `uint32` for SPHEREx flags (bits from the file's FLAGS header; display products add bit 31 `SKYSHIFT_NO_COVERAGE`). Headers: `X-SkyShift-Shape: ny,nx`, `X-SkyShift-Dtype: float32|uint16|uint32`, `X-SkyShift-Unit`, `X-SkyShift-Origin`, `X-SkyShift-Frame`, `X-SkyShift-Plane`, `X-SkyShift-Display-Only: true|false`. Row-major, row 0 = y 0 (bottom of the displayed image when north is up: the viewer flips vertically so +y is up).
 
 ## 7. Frontend
 
@@ -180,7 +184,7 @@ Violet is reserved for primary actions and model curves; teal for the selected s
 `components/ui/*`: `OriginBadge`, `StatusPill`, `Panel`, `KV`, `EmptyState`, `ErrorState`, `LoadingState`, `Segmented`, `Toggle`, `Slider`, `NumberField`, `IconButton`. `components/plot/*`: `PlotFrame` (axes, ticks, labels), scales, `ErrorBarPoints`, `LinePath`, `Band`. `lib/format.ts`: sexagesimal, mas, dates, numbers with uncertainty.
 
 ## 8. Validation
-pytest markers = categories (`math`, `coords`, `measurement`, `registration`, `catalog`, `pipeline`, `contracts`, `api`, `slow`, `live`). `live` tests are deselected by default; their absence/skip is reported as "not run". `scripts/validate.py` runs pytest (JSON via conftest hook), vitest (`--reporter=json`), Playwright (`--reporter=json`), and merges to `validation/report.json` with UTC timestamp, environment and a source hash. Methods renders that file via `/api/validation`; with no file it shows "not run". Tolerances must be justified from noise models (e.g. 3σ of the reported uncertainty, or Monte-Carlo pull widths), not tuned to pass.
+pytest markers = categories (`math`, `coords`, `measurement`, `registration`, `catalog`, `pipeline`, `contracts`, `api`, `archive`, `slow`, `live`); `archive` = recorded real SPHEREx products checked offline. `live` tests are deselected by default; their absence/skip is reported as "not run". `scripts/validate.py` runs pytest (JSON via conftest hook), vitest (`--reporter=json`), Playwright (`--reporter=json`), and merges to `validation/report.json` with UTC timestamp, environment and a source hash. Methods renders that file via `/api/validation`; with no file it shows "not run". Tolerances must be justified from noise models (e.g. 3σ of the reported uncertainty, or Monte-Carlo pull widths), not tuned to pass.
 
-## 9. Provider status (session 1)
-Synthetic: implemented/tested. SPHEREx (IRSA), Gaia DR3 (ESA TAP), WISE/unWISE, NEOSSat (CADC): `documented` / `not_implemented`; every capability lists its documented access route and references; live checks `not_run`. Stubs raise `ProviderUnavailable` → API 503. Details: `docs/providers/*.md`.
+## 9. Provider status (session 2)
+Synthetic: implemented/tested. SPHEREx (IRSA): implemented as a read-only DR1 viewer; live capability statuses are derived from the recorded live tests in `validation/report.json`. Gaia DR3 (ESA TAP), WISE/unWISE, NEOSSat (CADC): `documented` / `not_implemented`; live checks `not_run`. Stubs raise `ProviderUnavailable` → API 503. Details: `docs/providers/*.md`.

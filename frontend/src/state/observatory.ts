@@ -4,6 +4,7 @@
 import { create } from 'zustand'
 import { api, describeError, type PlaneData } from '../api/client'
 import type {
+  AnalysisCapability,
   AstrometricModel,
   CatalogAssociation,
   CatalogOverlay,
@@ -28,6 +29,8 @@ export type Load<T> =
   | { status: 'loading' }
   | { status: 'ready'; data: T }
   | { status: 'error'; message: string }
+  /** The dataset declares this analysis unavailable (observed data); `message` is its stated reason. */
+  | { status: 'unavailable'; message: string }
 
 const idle = { status: 'idle' } as const
 const loading = { status: 'loading' } as const
@@ -48,6 +51,8 @@ export interface DisplaySettings {
   model: boolean
   truth: boolean
   catalog: boolean
+  /** Archive pixel-flag overlay (observed data only). */
+  flags: boolean
   compareView: CompareView
 }
 
@@ -126,6 +131,25 @@ export function nativeFrameId(obs: Observation | undefined | null): string | nul
   return obs?.frame_ids.find((id) => id.endsWith(':native')) ?? null
 }
 
+/** Frame shown on the common grid: SkyShift-registered (synthetic) or archive-WCS reprojection (observed). */
+export function displayFrameId(obs: Observation | undefined | null): string | null {
+  return registeredFrameId(obs) ?? obs?.frame_ids.find((id) => id.endsWith(':display')) ?? null
+}
+
+/** A dataset-declared analysis capability, or null when the dataset declares none (all available). */
+export function capability(dataset: Dataset | null, id: AnalysisCapability['id']): AnalysisCapability | null {
+  return dataset?.capabilities.find((c) => c.id === id) ?? null
+}
+
+/** Whether blink/compare is allowed for a band, with the reason when it is not. */
+export function blinkState(dataset: Dataset | null, bandId: string | null): { ok: boolean; reason: string | null } {
+  const band = dataset?.bands.find((b) => b.id === bandId)
+  const avail = availableObservations(dataset, bandId)
+  if (band?.compatibility && !band.compatibility.blinkable) return { ok: false, reason: band.compatibility.reason }
+  if (avail.length < 2) return { ok: false, reason: 'Fewer than two available observations in this band.' }
+  return { ok: true, reason: null }
+}
+
 export function observationForFrame(dataset: Dataset | null, frameId: string | null): Observation | null {
   if (!dataset || !frameId) return null
   return dataset.observations.find((o) => o.frame_ids.includes(frameId) || o.id === frameId) ?? null
@@ -152,6 +176,7 @@ const DEFAULT_DISPLAY: DisplaySettings = {
   model: true,
   truth: false,
   catalog: false,
+  flags: true,
   compareView: 'side-by-side',
 }
 
@@ -222,14 +247,21 @@ export const useObservatoryStore = create<ObservatoryState>((set, get) => {
       if (get().datasetId === id && get().dataset.status === 'ready') return
       set({ datasetId: id, dataset: loading, sources: loading, selectedSourceId: null, epochObsId: null, compareObsId: null, truth: idle, catalogOverlay: idle, difference: idle, ...resetSourceState })
       try {
-        const [dataset, sources] = await Promise.all([api.dataset(id), api.sources(id)])
+        const dataset = await api.dataset(id)
+        if (get().datasetId !== id) return
+        // Observed datasets declare detection unavailable: never request (or invent) sources for them.
+        const detection = capability(dataset, 'source_detection')
+        const sources: Load<DetectedSource[]> =
+          detection?.status === 'unavailable'
+            ? { status: 'unavailable', message: detection.reason ?? 'Source detection is unavailable for this dataset.' }
+            : { status: 'ready', data: await api.sources(id) }
         if (get().datasetId !== id) return
         const bandId = dataset.bands[0]?.id ?? null
         const avail = availableObservations(dataset, bandId)
         const [ny, nx] = dataset.common_grid.shape
         set({
           dataset: { status: 'ready', data: dataset },
-          sources: { status: 'ready', data: sources },
+          sources,
           bandId,
           epochObsId: avail[0]?.id ?? null,
           compareObsId: avail[avail.length - 1]?.id ?? null,
@@ -251,7 +283,12 @@ export const useObservatoryStore = create<ObservatoryState>((set, get) => {
       const nearest = avail.reduce<Observation | null>((best, o) => (!best || Math.abs(o.timing.mid.mjd_tdb - t) < Math.abs(best.timing.mid.mjd_tdb - t) ? o : best), null)
       const cmp = ds.observations.find((o) => o.id === get().compareObsId)
       const ct = cmp?.timing.mid.mjd_tdb ?? avail[avail.length - 1]?.timing.mid.mjd_tdb ?? 0
-      const nearestCmp = avail.reduce<Observation | null>((best, o) => (!best || Math.abs(o.timing.mid.mjd_tdb - ct) < Math.abs(best.timing.mid.mjd_tdb - ct) ? o : best), null)
+      let nearestCmp = avail.reduce<Observation | null>((best, o) => (!best || Math.abs(o.timing.mid.mjd_tdb - ct) < Math.abs(best.timing.mid.mjd_tdb - ct) ? o : best), null)
+      // Keep a usable comparison: if B collapsed onto A, take the frame farthest in time from A.
+      if (nearest && nearestCmp?.id === nearest.id && avail.length > 1) {
+        const ta = nearest.timing.mid.mjd_tdb
+        nearestCmp = avail.reduce<Observation | null>((best, o) => (o.id !== nearest.id && (!best || Math.abs(o.timing.mid.mjd_tdb - ta) > Math.abs(best.timing.mid.mjd_tdb - ta)) ? o : best), null)
+      }
       set({ bandId, epochObsId: nearest?.id ?? null, compareObsId: nearestCmp?.id ?? null, difference: idle, catalogOverlay: idle })
     },
 

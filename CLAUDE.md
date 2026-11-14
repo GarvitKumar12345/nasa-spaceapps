@@ -9,12 +9,13 @@ Design background: `planning/SkyShift_Project_Blueprint.md`, `planning/skyshift-
 - First time: `cd backend && uv sync` · `cd frontend && npm install` · `npm install` (repo root)
 - Dev (both servers): `npm run dev` at repo root → http://127.0.0.1:5173 (API on :8000, proxied at `/api`)
 - Backend only: `cd backend && uv run uvicorn skyshift.api.app:app --host 127.0.0.1 --port 8000`
+- SPHEREx DR1 cutouts (real data; local cache `backend/cache/spherex/`, not committed): `cd backend && uv run python -m skyshift.providers.spherex.fetch --field spherex-dr1-barnard --from-manifest`. The API never downloads; the manifest `fixtures/spherex/<field>/manifest.json` is the committed retrieval record (details: `docs/providers/spherex.md`).
 
 ## Test
-- Python: `cd backend && uv run pytest` (markers: math, coords, measurement, registration, catalog, pipeline, contracts, api, slow; `-m live` for archive tests, skipped by default)
+- Python: `cd backend && uv run pytest` (markers: math, coords, measurement, registration, catalog, pipeline, contracts, api, archive, slow; `-m live` for IRSA tests, skipped by default; SPHEREx dataset tests skip if the cutout cache is absent)
 - TypeScript: `cd frontend && npm run test` (vitest) · `npm run typecheck` · `npm run build`
 - Browser: `cd frontend && npm run e2e` (Playwright, system Chrome; starts servers if needed)
-- Full validation report for Methods: `npm run validate` (repo root) → `validation/report.json`
+- Full validation report for Methods: `npm run validate` (repo root) → `validation/report.json`; add live IRSA checks with `cd backend && uv run python scripts/validate.py --live`
 - After editing `backend/skyshift/contracts.py`: `cd frontend && npm run gen:contracts`
 - Parity fixtures (commit them): `cd backend && uv run python scripts/make_wcs_fixtures.py && uv run python scripts/make_motion_fixtures.py`
 - Extra dev/e2e instances: set `SKYSHIFT_API_PORT` / `SKYSHIFT_WEB_PORT` (Vite proxy and Playwright read them)
@@ -28,5 +29,6 @@ Design background: `planning/SkyShift_Project_Blueprint.md`, `planning/skyshift-
 - Every result carries an origin: observed / simulated / simulation_truth / derived_measurement / model_prediction / catalog. Truth never enters measurement tables.
 - Measure only native original arrays (image/variance/mask). Reprojected frames are display-only. Missing data stays missing; never substitute synthetic data for a failed archive request.
 - Never invert weak/negative parallax into a distance; report underconstrained fits as such.
-- Live archive integrations (SPHEREx/IRSA, Gaia DR3, WISE, NEOSSat/CADC) are not implemented yet: keep their status honest (`backend/skyshift/providers/`, `docs/providers/`).
+- SPHEREx is read-only: explicit collection (`spherex_dr1`), extensions read by EXTNAME, flag bits from each file's FLAGS header, units MJy/sr (surface brightness incl. zodi), times UTC (`MJD-AVG`). Blink/compare only within a compatibility group (same detector AND |Δλ| ≤ 0.25 × bandwidth at the field centre, WCS-WAVE). Measurement, registration, fits and differences stay unavailable for observed data (`Dataset.capabilities`, API 409 `not_available`) until validated.
+- Gaia DR3, WISE and NEOSSat/CADC live integrations are not implemented: keep their status honest (`backend/skyshift/providers/`, `docs/providers/`).
 - Tests must check behaviour against independent methods or noise-justified tolerances, not restate the implementation.
