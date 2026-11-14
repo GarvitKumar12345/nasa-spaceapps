@@ -1,0 +1,85 @@
+/* Motion lab */
+.ml-page .page-head .sub {
+  max-width: 70ch;
+}
+.ml-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--s4);
+  align-items: start;
+}
+.ml-scenes,
+.ml-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s3);
+}
+.ml-panel-body {
+  padding: 10px 12px 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.ml-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s3);
+}
+.ml-scene-wrap {
+  width: 100%;
+  min-width: 0;
+}
+.ml-svg {
+  display: block;
+  border-radius: var(--radius-sm);
+}
+.ml-label {
+  fill: var(--text-2);
+  font: 600 11px var(--font-sans);
+  paint-order: stroke;
+  stroke: var(--sky);
+  stroke-width: 3px;
+}
+.ml-label-teal {
+  fill: var(--teal-strong);
+}
+.ml-label-faint {
+  fill: var(--muted);
+  font: 10.5px var(--font-sans);
+  paint-order: stroke;
+  stroke: var(--sky);
+  stroke-width: 3px;
+}
+.ml-band-label {
+  fill: var(--muted);
+  font: 10px var(--font-sans);
+}
+.ml-transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ml-selects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.ml-list {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+.ml-handoff .callout > div {
+  width: 100%;
+}
+@media (max-width: 1000px) {
+  .ml-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .ml-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

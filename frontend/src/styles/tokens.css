@@ -1,0 +1,86 @@
+/* SkyShift design tokens. Dark observatory theme.
+ * Colour is never the only carrier of meaning: pair with shape and text.
+ *   violet  -> primary actions, model predictions
+ *   teal    -> selected source, derived measurements
+ *   amber   -> simulated data, simulation truth, caution
+ *   blue    -> catalog values
+ */
+:root {
+  color-scheme: dark;
+
+  --bg: #0a0d13;
+  --panel: #10141c;
+  --panel-2: #151a24;
+  --panel-3: #1b2130;
+  --line: #232a38;
+  --line-strong: #313a4c;
+
+  --text: #e8ecf3;
+  --text-2: #b8c0ce;
+  --muted: #8f99ab;
+  --faint: #677184;
+
+  --sky: #03050a;
+  --sky-edge: #0b1018;
+  --grid: rgba(150, 172, 214, 0.17);
+  --grid-label: rgba(184, 196, 220, 0.62);
+  --nodata: #161b24;
+
+  --violet: #8f7cff;
+  --violet-strong: #a99cff;
+  --violet-ink: #0e0a26;
+  --violet-wash: rgba(143, 124, 255, 0.14);
+
+  --teal: #2fd4c0;
+  --teal-strong: #6be6d6;
+  --teal-wash: rgba(47, 212, 192, 0.12);
+
+  --amber: #f0b54a;
+  --amber-wash: rgba(240, 181, 74, 0.12);
+
+  --blue: #6ea8ff;
+  --blue-wash: rgba(110, 168, 255, 0.12);
+
+  --red: #ff6f6f;
+  --red-wash: rgba(255, 111, 111, 0.12);
+  --green: #62d394;
+  --green-wash: rgba(98, 211, 148, 0.12);
+
+  /* Plot marks: validated with the dataviz palette validator (dark, all pairs,
+   * surfaces #10141c and #151a24): OKLCH L 0.62-0.67, CVD dE >= 11, normal dE >= 20.
+   * Lighter --teal/--violet/--amber above are for text and canvas annotations. */
+  --plot-measured: #00aa98;
+  --plot-model: #8470e5;
+  --plot-truth: #c48525;
+  --plot-excluded: #5d6678;
+  --plot-band: rgba(132, 112, 229, 0.13);
+  --plot-catalog: #aab6ca; /* neutral; catalog marks are squares + labels, never colour alone */
+
+  --radius: 8px;
+  --radius-sm: 5px;
+  --radius-xs: 3px;
+
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+
+  --fs-2xs: 10.5px;
+  --fs-xs: 11.5px;
+  --fs-sm: 12.5px;
+  --fs-md: 13.5px;
+  --fs-lg: 15px;
+  --fs-xl: 18px;
+  --fs-2xl: 22px;
+
+  --font-sans: 'Inter Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'Cascadia Mono', ui-monospace, Consolas, monospace;
+
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--violet-strong);
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+
+  --topbar-h: 52px;
+  --inspector-w: 328px;
+}

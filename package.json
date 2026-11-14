@@ -1,0 +1,18 @@
+{
+  "name": "skyshift",
+  "private": true,
+  "description": "SkyShift local development runner (backend: FastAPI in backend/, frontend: Vite in frontend/)",
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c magenta,cyan \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "cd backend && uv run uvicorn skyshift.api.app:app --host 127.0.0.1 --port 8000",
+    "dev:web": "npm --prefix frontend run dev",
+    "test": "npm run test:py && npm run test:web",
+    "test:py": "cd backend && uv run pytest",
+    "test:web": "npm --prefix frontend run test",
+    "e2e": "npm --prefix frontend run e2e",
+    "validate": "cd backend && uv run python scripts/validate.py"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7"
+  }
+}

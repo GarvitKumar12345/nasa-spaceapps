@@ -1,0 +1,1943 @@
+{
+ "schema_version": "skyshift.validation/1",
+ "generated_utc": "2026-11-14T15:00:15Z",
+ "source_hash": "42f6574456c6dc94998dd01585ef8f9bf6fddb561369e3ffd96833f74e87bf58",
+ "current_source_hash": null,
+ "stale": null,
+ "environment": {
+  "skyshift": "0.1.0",
+  "python": "3.13.5",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "astropy": "8.0.2",
+  "pydantic": "2.14.3",
+  "fastapi": "0.162.7",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "os": "Windows-11-10.0.26300-SP0",
+  "node": "v22.17.0",
+  "npm": "10.9.2",
+  "uv": "uv 0.11.14 (3fdfdc7d4 2026-05-12 x86_64-pc-windows-msvc)",
+  "browser": "system Chrome via Playwright channel 'chrome'"
+ },
+ "suites": [
+  {
+   "suite": "pytest",
+   "ran": true,
+   "started_utc": "2026-11-14T14:57:31Z",
+   "duration_s": 67.40805180001189,
+   "counts": {
+    "total": 93,
+    "passed": 93
+   },
+   "command": "pytest -q",
+   "note": null
+  },
+  {
+   "suite": "vitest",
+   "ran": true,
+   "started_utc": "2026-11-14T14:58:39Z",
+   "duration_s": 5.013490599987563,
+   "counts": {
+    "total": 79,
+    "passed": 79
+   },
+   "command": "vitest run",
+   "note": null
+  },
+  {
+   "suite": "playwright",
+   "ran": true,
+   "started_utc": "2026-11-14T14:58:44Z",
+   "duration_s": 88.26849550000043,
+   "counts": {
+    "total": 16,
+    "passed": 16
+   },
+   "command": "playwright test",
+   "note": null
+  }
+ ],
+ "results": [
+  {
+   "id": "tests/test_api_evidence.py::test_core_routes_return_contracts",
+   "name": "Health, providers, datasets, dataset and sources respond with contract-shaped JSON.",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.1352,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_pixel_planes_binary_format",
+   "name": "Pixel planes: shape/dtype headers match the payload; registered images use NaN outside coverage; masks are uint16.",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.061,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_error_responses",
+   "name": "Unknown ids -> 404 not_found; incompatible difference -> 409; archive stubs -> 503 (never synthetic data).",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0633,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_resolve_coordinates_source_ids_and_names",
+   "name": "Decimal and sexagesimal coordinates parse; source ids resolve; target names are honestly unresolved.",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.2522,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_truth_is_separate_endpoint",
+   "name": "Simulation truth is served only by /truth, labelled simulation_truth.",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0288,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_evidence_validate_reproduce_and_stale_detection",
+   "name": "A record built from API output validates as current, reproduces from its seed, and goes stale when inputs change.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.2866,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_evidence_round_trip_preserves_everything",
+   "name": "JSON export -> import round trip is lossless (origins, units, uncertainties, assumptions, provenance).",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0205,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_evidence_rejects_bad_records",
+   "name": "Unsupported schema, wrong label for the origin, and dangling included ids are rejected with reasons.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.1532,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_evidence_csv_keeps_origin_units_and_rows",
+   "name": "CSV export: header comments state the label, origin and units; one row per measurement with origin and included flag.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0409,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_provider_statuses_are_honest",
+   "name": "All five providers listed; no status claims 'tested'; archive providers are documented with live checks not run.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0023,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_gaia_query_is_explicit_and_bounded",
+   "name": "The ADQL query names gaiadr3.gaia_source explicitly with TOP and refuses unbounded radii.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0006,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_gaia_row_mapping_on_hand_constructed_rows",
+   "name": "Hand-constructed rows (not a live response): 2/5/6-parameter solutions, NaN -> None, missing RV -> None, J2016.0 TCB kept.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0105,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_spherex_extension_check",
+   "name": "Extensions are checked by name (case-insensitive); missing documented extensions are reported.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0004,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_api_evidence.py::test_validation_endpoint_reports_staleness_fields",
+   "name": "The validation endpoint always returns a current source hash and never fabricates results when no report exists.",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.2577,
+   "message": null,
+   "file": "test_api_evidence.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_zero_motion_limits",
+   "name": "Zero proper motion and parallax give zero offsets in both the linear and rigorous (vector) models.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0518,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_ra_cosine_convention_matches_astropy[60.0]",
+   "name": "pmra = dRA/dt cos(Dec): the coordinate-RA rate is pmra/cos(Dec), as in astropy apply_space_motion.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0401,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_ra_cosine_convention_matches_astropy[85.0]",
+   "name": "pmra = dRA/dt cos(Dec): the coordinate-RA rate is pmra/cos(Dec), as in astropy apply_space_motion.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0322,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_linear_model_agrees_with_rigorous_vector_geometry",
+   "name": "Linear parallax-factor model vs independent vector propagation (6 pc, 1.28\"/yr, 3 yr): agreement < 0.05 mas.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0512,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_parallax_ellipse_geometry_with_circular_observer",
+   "name": "Circular 1 AU observer: an ecliptic-pole source traces a circle of radius = parallax; an ecliptic-plane source a line.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0199,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_parallax_amplitude_scales_as_inverse_distance",
+   "name": "Doubling the distance halves the parallactic excursion (vector method, no proper motion).",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0733,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_fit_recovers_injected_motion_from_independent_model",
+   "name": "Noisy positions from the rigorous model: fitted pm and parallax within 3 sigma; static/pm-only models rejected.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.1592,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_fit_uncertainties_are_calibrated_monte_carlo",
+   "name": "Over 200 noise realisations the parameter pulls have std in [0.85, 1.15] and mean chi2 ~ dof.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 8.2846,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_identifiability_insufficient_and_underconstrained_cases",
+   "name": "2 epochs -> insufficient data; 3 epochs in 2 months -> parallax not constrained; 1.000-yr spacing -> degenerate.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.203,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_distance_only_from_significant_positive_parallax",
+   "name": "Distance is derived only for parallax/sigma >= 10; negative or weak parallax never becomes a distance.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.3702,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_exclusions_and_input_hash",
+   "name": "Excluded measurements are not fitted but get residuals; any input change changes the hash; repeat fits are identical.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.5195,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_unusable_measurements_are_reported_not_used",
+   "name": "Pending or position-less measurements are skipped with a warning, never silently fitted.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.1132,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_astrometry.py::test_geocenter_model_is_used_by_default",
+   "name": "The fit records the observer it used (geocentre, builtin ephemeris).",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.1325,
+   "message": null,
+   "file": "test_astrometry.py"
+  },
+  {
+   "id": "tests/test_catalog.py::test_space_motion_propagation_matches_astropy",
+   "name": "Space-motion part (no observer parallax) equals astropy apply_space_motion to < 0.1 mas over ~10 yr.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0177,
+   "message": null,
+   "file": "test_catalog.py"
+  },
+  {
+   "id": "tests/test_catalog.py::test_observer_parallax_added_separately",
+   "name": "The observer-parallax term equals parallax x parallax factors at the observation epoch.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0052,
+   "message": null,
+   "file": "test_catalog.py"
+  },
+  {
+   "id": "tests/test_catalog.py::test_covariance_propagation_matches_monte_carlo_with_correlation",
+   "name": "Propagated sigma (incl. ra_pmra_corr = 0.6) matches Monte-Carlo sampling of the catalog covariance to 5%.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0155,
+   "message": null,
+   "file": "test_catalog.py"
+  },
+  {
+   "id": "tests/test_catalog.py::test_two_parameter_solution_not_propagated",
+   "name": "A 2-parameter solution keeps its catalog position and inflates the uncertainty by the stated allowance.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0011,
+   "message": null,
+   "file": "test_catalog.py"
+  },
+  {
+   "id": "tests/test_catalog.py::test_association_statuses_and_no_invented_counterpart",
+   "name": "Unique counterpart -> matched; two within resolution -> ambiguous; none -> unmatched with a cautionary note.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0117,
+   "message": null,
+   "file": "test_catalog.py"
+  },
+  {
+   "id": "tests/test_catalog.py::test_epoch_propagation_is_required_for_high_proper_motion",
+   "name": "A 1.28\"/yr source observed 10 yr after J2016.0 matches only after propagation (not with the raw catalog position).",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0094,
+   "message": null,
+   "file": "test_catalog.py"
+  },
+  {
+   "id": "tests/test_catalog.py::test_padded_search_radius",
+   "name": "Search radius >= field radius + max_pm x |dt| so sources moving into the field are retrieved.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0004,
+   "message": null,
+   "file": "test_catalog.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_ra_wrap_edge_cases",
+   "name": "RA wraps into [0, 360) for negative, >360, exact-360 and -0.0 inputs.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0008,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_tangent_projection_across_ra_zero",
+   "name": "Points straddling RA 0/360 project to small symmetric east offsets (not ~360 deg) and round-trip.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0017,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_separation_across_wrap_matches_small_angle",
+   "name": "Great-circle separation across RA 0 equals the small-angle value (Vincenty).",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0011,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_declination_conventions",
+   "name": "|Dec| > 90 or non-finite declinations are rejected; +north is +eta.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0009,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_gnomonic_round_trip_and_undefined_hemisphere",
+   "name": "Gnomonic round trip agrees to < 1e-6 mas; points >= 90 deg from the tangent point raise.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0016,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_pixel_origin_convention",
+   "name": "0-based pixel centre (CRPIX - 1) maps to CRVAL; astropy origin 0 vs 1 differ by exactly 1 px.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0022,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_orientation_north_up_east_left_and_rotation_sign",
+   "name": "+x is west (east left), +y is north; rotation is the PA of +y measured east of north.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0034,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_wcs_round_trip_near_poles[89.99]",
+   "name": "Pixel -> sky -> pixel round trip < 1e-6 px at and next to the poles (numerical round trip only).",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0012,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_wcs_round_trip_near_poles[-89.99]",
+   "name": "Pixel -> sky -> pixel round trip < 1e-6 px at and next to the poles (numerical round trip only).",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0015,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_wcs_round_trip_near_poles[90.0]",
+   "name": "Pixel -> sky -> pixel round trip < 1e-6 px at and next to the poles (numerical round trip only).",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0052,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_sip_distortion_numerical_round_trip_and_effect",
+   "name": "SIP WCS: pixel->sky->pixel < 1e-6 px (numerical), and positions move by the A/B polynomial amounts.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0038,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_wcs_description_round_trip_including_sip",
+   "name": "Serialised header -> WCS reproduces positions (< 1e-6 mas) for TAN and SIP headers.",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0279,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_coords.py::test_local_jacobian_equals_cd_matrix",
+   "name": "At the reference pixel the finite-difference Jacobian equals the CD matrix (mas/px, east = +RA).",
+   "suite": "pytest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0023,
+   "message": null,
+   "file": "test_coords.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_pixel_integration_matches_supersampling",
+   "name": "Pixel-integrated Gaussian equals 50x-supersampled numerical integration (<1e-4 relative) and sums to the flux.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0336,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_zero_based_pixel_convention",
+   "name": "A source at x=10, y=20 peaks at numpy index [20, 10] and fits back to (10, 20).",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0081,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_noiseless_subpixel_recovery[20.0-20.0]",
+   "name": "Noiseless pixel-integrated sources are recovered to < 1e-4 px at sub-pixel offsets.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0025,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_noiseless_subpixel_recovery[20.25-19.6]",
+   "name": "Noiseless pixel-integrated sources are recovered to < 1e-4 px at sub-pixel offsets.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0075,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_noiseless_subpixel_recovery[19.5-20.5]",
+   "name": "Noiseless pixel-integrated sources are recovered to < 1e-4 px at sub-pixel offsets.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0044,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_noiseless_subpixel_recovery[20.9-20.1]",
+   "name": "Noiseless pixel-integrated sources are recovered to < 1e-4 px at sub-pixel offsets.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0067,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_reported_uncertainties_match_monte_carlo_scatter",
+   "name": "Over 400 Poisson+read-noise realisations: bias < 0.1 sigma and pull std in [0.9, 1.1] for x, y and flux.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 2.2699,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_masked_pixel_does_not_bias_fit",
+   "name": "A huge value in a masked pixel next to the source leaves the fitted position unchanged within 0.05 sigma.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0149,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_quality_flags_edge_low_snr_and_too_few_pixels",
+   "name": "Edge truncation is flagged, faint sources get LOW_SNR, and fully masked windows are rejected.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0206,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_windowed_centroid_agrees_with_psf_fit",
+   "name": "The secondary windowed centroid agrees with the PSF fit within their combined uncertainties.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0094,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_detection_completeness_false_positives_and_masks",
+   "name": "Isolated bright sources are all detected; masked hot pixels/cosmic rays never seed detections; pure noise gives <= 1 false positive.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.2301,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_blended_pair_is_flagged_not_silently_measured",
+   "name": "Two sources 1.1 FWHM apart are not separable by a single-PSF fit: the fit is flagged POOR_PSF_FIT.",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0118,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_similarity_fit_exact_and_outlier_rejection",
+   "name": "Noiseless points recover a known similarity exactly; a single 30-sigma mover is clipped.",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.0101,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_similarity_covariance_is_calibrated",
+   "name": "Over 300 trials the transform-parameter pulls have std in [0.85, 1.15] (covariance is consistent with scatter).",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 1.1569,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_offset_voting_finds_large_shift",
+   "name": "Offset voting recovers a 25 px shift with 30% unmatched points on each side.",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.0073,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_registered_wcs_folding_is_exact",
+   "name": "Folding the similarity into CRPIX/CD reproduces the composed mapping to < 1e-6 mas.",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.0036,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_register_frame_recovers_truth_wcs_from_star_images",
+   "name": "Real registration accuracy: stars rendered through a truth WCS, measured, and matched through a header WCS",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.3645,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_imaging.py::test_reprojection_identity_shift_coverage_and_masks",
+   "name": "Identity reprojection is exact; an integer shift is exact; outside coverage and masked pixels become NaN.",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.0229,
+   "message": null,
+   "file": "test_imaging.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_generation_is_deterministic",
+   "name": "Same seed -> identical arrays and Dataset JSON; a different seed changes the pixels.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 2.5823,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_schedule_ids_statuses_and_timing",
+   "name": "22 band-visits; missing/failed observations keep their reasons and have no frames; mid = start + 90 s; G2 starts 240 s later.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0006,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_dataset_contains_no_truth_and_declares_origin",
+   "name": "The Dataset served to the UI carries no simulation-truth values or origins; frames are 'simulated' electrons with sky included.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0112,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_variance_from_data_and_masks",
+   "name": "Variance = read_noise^2 + max(image, 0) from the noisy data; hot pixels flagged identically in every frame.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0284,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_simulated_catalog_conventions",
+   "name": "Simulated catalog: J2016.0 TCB epoch, origin 'simulated', C1 5-parameter, V1 2-parameter, some negative parallaxes.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 0.0007,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_truth_motion_matches_hand_written_estimate",
+   "name": "C1 truth displacement between two epochs equals pm*dt + parallax-factor change (written here independently) within 1 mas.",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 0.0035,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_registration_recovers_truth_wcs_in_every_frame",
+   "name": "Real registration accuracy per frame: registered-vs-truth WCS error at grid points is within 4.5 sigma of the",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.8124,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_moving_source_measured_from_pixels_matches_truth",
+   "name": "C1 is tracked in all 18 frames; image-measured positions vs truth have pulls with |mean| < 0.5 and std in [0.7, 1.4].",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 0.0022,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_stationary_isolated_star_pulls_are_unit_normal",
+   "name": "Isolated stationary stars (no truth neighbour within 3\"): position pulls vs truth have std in [0.8, 1.25] \u2014 uncertainties are calibrated.",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 0.0752,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_full_fit_recovers_injected_motion_and_parallax",
+   "name": "Fit of image-derived positions recovers the injected pm and parallax within 3 sigma with an acceptable chi2 (p > 0.001).",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 0.0961,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_change_indicators_flag_motion_and_variability",
+   "name": "Derived indicators: C1 displacement significant, V1 flux variation significant, most stationary stars not flagged.",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 0.0006,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_moving_source_matches_its_catalog_entry_after_propagation",
+   "name": "C1 matches its simulated-catalog counterpart at every epoch once catalog astrometry is propagated from J2016.0.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 2.8792,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_close_pair_is_kept_ambiguous_in_wide_psf_band",
+   "name": "The 1.1\" close pair is never reported as a clean unique match in G2 (PSF 1.4\"): the blend stays 'ambiguous'.",
+   "suite": "pytest",
+   "category": "catalog",
+   "status": "passed",
+   "duration_s": 2.3121,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_measurements_never_read_truth",
+   "name": "The pipeline gives identical measurements when the truth is removed from the bundle.",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 13.4682,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_synthetic_pipeline.py::test_difference_requires_same_band_and_registration",
+   "name": "Difference previews are allowed only for registered, same-band frames; G1 vs G2 is refused with a reason.",
+   "suite": "pytest",
+   "category": "pipeline",
+   "status": "passed",
+   "duration_s": 0.0017,
+   "message": null,
+   "file": "test_synthetic_pipeline.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_utc_to_tt_offset_uses_leap_seconds",
+   "name": "TT - UTC = 32.184 s + 37 leap seconds (in force since 2017) for a 2025 epoch.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0011,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_tdb_minus_tt_is_bounded",
+   "name": "|TDB - TT| < 2 ms (periodic terms ~1.66 ms) across the synthetic schedule.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0042,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_gaia_epoch_tcb_to_tdb_matches_iau_b3",
+   "name": "J2016.0 TCB -> TDB agrees with IAU 2006 Res. B3 (TDB = TCB - L_B(JD_TCB - T0)86400 s + TDB0) to < 1 ms; convention kept.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0031,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_julian_year_conversions_and_add_seconds",
+   "name": "J2000.0 is MJD 51544.5 TDB; Julian years are 365.25 d; start + 90 s keeps the scale.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0047,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_geocenter_distance_and_annual_period",
+   "name": "Builtin Earth barycentric distance stays within 0.97-1.03 AU and repeats after one sidereal year.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0189,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_circular_approximation_within_declared_bound",
+   "name": "The circular 1 AU teaching observer stays within its declared bound of the builtin ephemeris (1990-2030).",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0286,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_barycenter_and_unsupported_observers",
+   "name": "Barycentric observer gives no parallax; spacecraft ephemerides are refused rather than approximated silently.",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0005,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_time_observer.py::test_geocenter_suitability_bound",
+   "name": "Geocentre approximation error = parallax * r / 1 AU (165 mas, 7100 km -> < 10 microarcsec).",
+   "suite": "pytest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0003,
+   "message": null,
+   "file": "test_time_observer.py"
+  },
+  {
+   "id": "tests/test_validation_report.py::test_pytest_payload_maps_status_and_category",
+   "name": "pytest hook output keeps each test's real outcome and category marker.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0005,
+   "message": null,
+   "file": "test_validation_report.py"
+  },
+  {
+   "id": "tests/test_validation_report.py::test_vitest_payload_uses_bracket_category_tags",
+   "name": "Vitest results take their category from a [tag] in the describe/test title.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0004,
+   "message": null,
+   "file": "test_validation_report.py"
+  },
+  {
+   "id": "tests/test_validation_report.py::test_playwright_payload_walks_nested_suites",
+   "name": "Playwright JSON is walked recursively; timeouts count as failures.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0004,
+   "message": null,
+   "file": "test_validation_report.py"
+  },
+  {
+   "id": "tests/test_validation_report.py::test_missing_report_is_not_a_pass",
+   "name": "With no report file the API reports 'unavailable', never passed checks.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0007,
+   "message": null,
+   "file": "test_validation_report.py"
+  },
+  {
+   "id": "tests/test_validation_report.py::test_staleness_detects_source_change",
+   "name": "A report generated before a source edit is flagged stale.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0227,
+   "message": null,
+   "file": "test_validation_report.py"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a generic field: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a generic field: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.007671199999999999,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a RA wrap near 0: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a RA wrap near 0: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.001435600000000022,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a near north pole: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a near north pole: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0012087999999999966,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a south, rotated: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a south, rotated: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.001538599999999974,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a refuses distorted or non-TAN headers instead of approximating them",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a refuses distorted or non-TAN headers instead of approximating them",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.004410399999999982,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (180, 35): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (180, 35): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0020676999999999454,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (0.0005, -10): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (0.0005, -10): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.00854970000000003,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (250, 89.95): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (250, 89.95): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0018057999999999766,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (90, -89.9): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (90, -89.9): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.002064200000000028,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a wraps RA into [0, 360)",
+   "name": "[coords] gnomonic projection parity with Python \u203a wraps RA into [0, 360)",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.001314200000000028,
+   "message": null,
+   "file": "tanwcs.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a circular, 1 AU, 1 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a circular, 1 AU, 1 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.008346900000000004,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.3, a = 2.5 AU, 0.5 Msun: states over 2.9 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.3, a = 2.5 AU, 0.5 Msun: states over 2.9 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0019630000000000793,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.7, a = 5.2 AU, 1 Msun: states over 3.4 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.7, a = 5.2 AU, 1 Msun: states over 3.4 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0013169000000000323,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 17.8 AU, 2 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 17.8 AU, 2 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0016490999999999758,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 0.8 AU, 0.3 Msun: states over 3.7 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 0.8 AU, 0.3 Msun: states over 3.7 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0015032999999999674,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a the comparison is sensitive: a 1e-6 rad error in omega would exceed the budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a the comparison is sensitive: a 1e-6 rad error in omega would exceed the budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0011680999999999812,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a residual |E - e sin E - M| < 1e-13 over a grid of M in [-4 pi, 4 pi] and e up to 0.999",
+   "name": "[math] Kepler's equation solver \u203a residual |E - e sin E - M| < 1e-13 over a grid of M in [-4 pi, 4 pi] and e up to 0.999",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.036523500000000014,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a handles the hard corners: tiny M at e -> 1, M near pi, exact multiples of pi",
+   "name": "[math] Kepler's equation solver \u203a handles the hard corners: tiny M at e -> 1, M near pi, exact multiples of pi",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.001479099999999903,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a E(M) is continuous and increasing across revolutions (E(M + 2 pi) = E(M) + 2 pi)",
+   "name": "[math] Kepler's equation solver \u203a E(M) is continuous and increasing across revolutions (E(M + 2 pi) = E(M) + 2 pi)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.3764351999999999,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a true anomaly matches the direction of the position vector",
+   "name": "[math] Kepler's equation solver \u203a true anomaly matches the direction of the position vector",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00483420000000001,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a vis-viva energy v^2/2 - mu/r = -mu/(2a) and angular momentum x vy - y vx = sqrt(mu a (1 - e^2)) are constant",
+   "name": "[math] conservation laws and periods \u203a vis-viva energy v^2/2 - mu/r = -mu/(2a) and angular momentum x vy - y vx = sqrt(mu a (1 - e^2)) are constant",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.10327319999999986,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a period follows Kepler III: one Gaussian year (365.2568983 d) for a = 1 AU around 1 Msun, scaling as a^1.5 / sqrt(M)",
+   "name": "[math] conservation laws and periods \u203a period follows Kepler III: one Gaussian year (365.2568983 d) for a = 1 AU around 1 Msun, scaling as a^1.5 / sqrt(M)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0010235999999999876,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a the dynamical period does not depend on e: successive perihelion passages are one period(a, mu) apart for every e",
+   "name": "[math] conservation laws and periods \u203a the dynamical period does not depend on e: successive perihelion passages are one period(a, mu) apart for every e",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.04299980000000005,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a the state is periodic: orbitState(t + P) = orbitState(t) for every e",
+   "name": "[math] conservation laws and periods \u203a the state is periodic: orbitState(t + P) = orbitState(t) for every e",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.002098899999999958,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a e = 0 moves with uniform angular speed n at constant radius a",
+   "name": "[math] conservation laws and periods \u203a e = 0 moves with uniform angular speed n at constant radius a",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.006112599999999929,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] equal areas in equal times (Kepler's second law) \u203a equal dt near perihelion and near aphelion sweep equal areas = (h/2) dt, though the arcs differ greatly",
+   "name": "[math] equal areas in equal times (Kepler's second law) \u203a equal dt near perihelion and near aphelion sweep equal areas = (h/2) dt, though the arcs differ greatly",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.029675899999999956,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] equal areas in equal times (Kepler's second law) \u203a the 12 equal-time marker intervals each sweep pi a b / 12 (total = ellipse area)",
+   "name": "[math] equal areas in equal times (Kepler's second law) \u203a the 12 equal-time marker intervals each sweep pi a b / 12 (total = ellipse area)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0789699999999998,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":0}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":0}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0011776999999999589,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":-2}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":-2}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0004306000000001404,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00034580000000005383,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"Infinity\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"Infinity\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00032159999999998944,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":-0.01}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":-0.01}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00033570000000008807,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.000308699999999817,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1.4}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1.4}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0006237000000000989,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0004006000000001677,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":0}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":0}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0003130000000001019,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":-1}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":-1}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00030889999999999417,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0002838000000001557,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"omegaRad\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"omegaRad\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0003466000000000804,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"M0Rad\":\"Infinity\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"M0Rad\":\"Infinity\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0002717000000000098,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"t0Days\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"t0Days\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0003260000000000218,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a rejects non-finite times, unbound e in the solver, bad observers and marker counts",
+   "name": "[math] invalid orbits are rejected \u203a rejects non-finite times, unbound e in the solver, bad observers and marker counts",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0022248999999999342,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a points from the observer to the target in the common frame",
+   "name": "[coords] line of sight = target - observer \u203a points from the observer to the target in the common frame",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0010173999999999524,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a is reported as undefined (never NaN) when target and observer coincide",
+   "name": "[coords] line of sight = target - observer \u203a is reported as undefined (never NaN) when target and observer coincide",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0011763999999998304,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a the series skips (and counts) undefined samples when the target shares the observer orbit and phase",
+   "name": "[coords] line of sight = target - observer \u203a the series skips (and counts) undefined samples when the target shares the observer orbit and phase",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0009628000000000156,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] apparent retrograde motion seen by a moving observer \u203a retrograde intervals are centred on oppositions, last the closed-form duration and recur at the synodic period",
+   "name": "[math] apparent retrograde motion seen by a moving observer \u203a retrograde intervals are centred on oppositions, last the closed-form duration and recur at the synodic period",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.026534799999999904,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "kepler.test.ts::[math] apparent retrograde motion seen by a moving observer \u203a unwrapped longitude is continuous and its numerical derivative matches the reported rate sign",
+   "name": "[math] apparent retrograde motion seen by a moving observer \u203a unwrapped longitude is continuous and its numerical derivative matches the reported rate sign",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.06411310000000003,
+   "message": null,
+   "file": "kepler.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a zero-motion limit: with proper motion and parallax both off the source stays at the reference direction",
+   "name": "[math] nearby source: limits and geometry \u203a zero-motion limit: with proper motion and parallax both off the source stays at the reference direction",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.011983499999999935,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a an ecliptic-pole source traces a circle of radius = parallax, once per Julian year, displaced away from the observer",
+   "name": "[math] nearby source: limits and geometry \u203a an ecliptic-pole source traces a circle of radius = parallax, once per Julian year, displaced away from the observer",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.048727300000000015,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a an ecliptic-plane source moves only east-west under parallax (no north excursion)",
+   "name": "[math] nearby source: limits and geometry \u203a an ecliptic-plane source moves only east-west under parallax (no north excursion)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.13736619999999994,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a parallax amplitude scales as 1/d (semi-major axis x d = 1000 mas pc)",
+   "name": "[math] nearby source: limits and geometry \u203a parallax amplitude scales as 1/d (semi-major axis x d = 1000 mas pc)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.11609799999999995,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a the parallax ellipse has semi-minor axis = parallax * |sin beta| along north",
+   "name": "[math] nearby source: limits and geometry \u203a the parallax ellipse has semi-minor axis = parallax * |sin beta| along north",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.05078090000000009,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a proper motion alone is a straight line through the origin with slope mu (east = mu_E t, north = mu_N t)",
+   "name": "[math] nearby source: limits and geometry \u203a proper motion alone is a straight line through the origin with slope mu (east = mu_E t, north = mu_N t)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.013406399999999848,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a the parallax-only path repeats after one Julian year",
+   "name": "[math] nearby source: limits and geometry \u203a the parallax-only path repeats after one Julian year",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.001516399999999976,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a total motion = proper motion + parallax up to the second-order perspective term |pm offset| * parallax(rad)",
+   "name": "[math] nearby source: limits and geometry \u203a total motion = proper motion + parallax up to the second-order perspective term |pm offset| * parallax(rad)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0023916999999999008,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a transverse speed: 1 arcsec/yr at 1 pc is 1 AU/yr = 4.74047 km/s",
+   "name": "[math] nearby source: limits and geometry \u203a transverse speed: 1 arcsec/yr at 1 pc is 1 AU/yr = 4.74047 km/s",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0014656999999999698,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a rejects invalid declared geometry",
+   "name": "[math] nearby source: limits and geometry \u203a rejects invalid declared geometry",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0019202999999999974,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 10 pc, beta = 30 deg, pm = (120, -80) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 10 pc, beta = 30 deg, pm = (120, -80) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.001786600000000135,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 1.3 pc, beta = 0 deg, pm = (-3000, 1500) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 1.3 pc, beta = 0 deg, pm = (-3000, 1500) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0013018000000001848,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 50 pc, beta = 90 deg, pm = (10, 25) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 50 pc, beta = 90 deg, pm = (10, 25) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.001333799999999883,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 4 pc, beta = -62 deg, pm = (500, 700) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 4 pc, beta = -62 deg, pm = (500, 700) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0014463000000000648,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 250 pc, beta = -90 deg, pm = (0, 0) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 250 pc, beta = -90 deg, pm = (0, 0) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0012845999999999548,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 2.5 pc, beta = 12 deg, pm = (-800, -1200) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 2.5 pc, beta = 12 deg, pm = (-800, -1200) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0013105000000000473,
+   "message": null,
+   "file": "nearbySource.test.ts"
+  },
+  {
+   "id": "motion.handoff.test.ts::[coords] Observatory -> Motion lab hand-off frame rotation \u203a ecliptic-north position angle agrees with astropy to 0.02 deg",
+   "name": "[coords] Observatory -> Motion lab hand-off frame rotation \u203a ecliptic-north position angle agrees with astropy to 0.02 deg",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.004782400000000052,
+   "message": null,
+   "file": "motion.handoff.test.ts"
+  },
+  {
+   "id": "motion.handoff.test.ts::[coords] Observatory -> Motion lab hand-off frame rotation \u203a rotating equatorial proper motion into ecliptic components preserves its magnitude",
+   "name": "[coords] Observatory -> Motion lab hand-off frame rotation \u203a rotating equatorial proper motion into ecliptic components preserves its magnitude",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0011132000000000062,
+   "message": null,
+   "file": "motion.handoff.test.ts"
+  },
+  {
+   "id": "motion.handoff.test.ts::[coords] Observatory -> Motion lab hand-off frame rotation \u203a copies rotated motion and inverts only a significant positive parallax",
+   "name": "[coords] Observatory -> Motion lab hand-off frame rotation \u203a copies rotated motion and inverts only a significant positive parallax",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0018106999999999971,
+   "message": null,
+   "file": "motion.handoff.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] buildEvidenceRecord \u203a [contracts] produces a record that satisfies the generated EvidenceRecord schema (no unknown fields)",
+   "name": "[contracts] buildEvidenceRecord \u203a [contracts] produces a record that satisfies the generated EvidenceRecord schema (no unknown fields)",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.03982490000000007,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] buildEvidenceRecord \u203a [contracts] labels simulated datasets as synthetic training records and observed ones as candidates for review",
+   "name": "[contracts] buildEvidenceRecord \u203a [contracts] labels simulated datasets as synthetic training records and observed ones as candidates for review",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.009603399999999965,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] buildEvidenceRecord \u203a [contracts] keeps every measurement but includes only measured, non-excluded ones",
+   "name": "[contracts] buildEvidenceRecord \u203a [contracts] keeps every measurement but includes only measured, non-excluded ones",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0017396999999999708,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] buildEvidenceRecord \u203a [contracts] sets fit_status none / current / stale and copies the fit assumptions",
+   "name": "[contracts] buildEvidenceRecord \u203a [contracts] sets fit_status none / current / stale and copies the fit assumptions",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0029759000000000244,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] buildEvidenceRecord \u203a [contracts] filters simulation truth to the one source nearest the detection (within 0.5\u2033) and to the selected frames",
+   "name": "[contracts] buildEvidenceRecord \u203a [contracts] filters simulation truth to the one source nearest the detection (within 0.5\u2033) and to the selected frames",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.002595399999999927,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] buildEvidenceRecord \u203a [contracts] keeps no truth source when none lies within 0.5\u2033, and no truth when none was loaded",
+   "name": "[contracts] buildEvidenceRecord \u203a [contracts] keeps no truth source when none lies within 0.5\u2033, and no truth when none was loaded",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0011713999999999488,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] buildEvidenceRecord \u203a [contracts] looks up observation ids and mid-exposure epochs for the selected frames",
+   "name": "[contracts] buildEvidenceRecord \u203a [contracts] looks up observation ids and mid-exposure epochs for the selected frames",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.002151399999999967,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] notebook persistence \u203a [contracts] round-trips records through localStorage under skyshift.notebook.v1",
+   "name": "[contracts] notebook persistence \u203a [contracts] round-trips records through localStorage under skyshift.notebook.v1",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.020587200000000052,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] notebook persistence \u203a [contracts] reports corrupted storage, starts empty, and never overwrites it before a reset",
+   "name": "[contracts] notebook persistence \u203a [contracts] reports corrupted storage, starts empty, and never overwrites it before a reset",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.003489000000000033,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] notebook persistence \u203a [contracts] treats a foreign format or a malformed record as unreadable",
+   "name": "[contracts] notebook persistence \u203a [contracts] treats a foreign format or a malformed record as unreadable",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0041761999999999945,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] notebook persistence \u203a [contracts] surfaces a full storage quota and does not keep a record the browser refused",
+   "name": "[contracts] notebook persistence \u203a [contracts] surfaces a full storage quota and does not keep a record the browser refused",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.011912999999999898,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] notebook persistence \u203a [contracts] imports validated records, keeps both on an id conflict, and recomputes fit status",
+   "name": "[contracts] notebook persistence \u203a [contracts] imports validated records, keeps both on an id conflict, and recomputes fit status",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0172401000000001,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "notebook.test.ts::[contracts] notebook persistence \u203a [contracts] rejects records the backend marks invalid and unparseable files",
+   "name": "[contracts] notebook persistence \u203a [contracts] rejects records the backend marks invalid and unparseable files",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0025265000000000556,
+   "message": null,
+   "file": "notebook.test.ts"
+  },
+  {
+   "id": "investigation.spec.ts::[browser] complete synthetic investigation \u203a fit -> explain in Motion lab carries rotated fit values and gates the distance",
+   "name": "[browser] complete synthetic investigation \u203a fit -> explain in Motion lab carries rotated fit values and gates the distance",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 5.332,
+   "message": null,
+   "file": "investigation.spec.ts"
+  },
+  {
+   "id": "investigation.spec.ts::[browser] complete synthetic investigation \u203a save -> notebook persists across reload -> export JSON/CSV -> validate, reproduce, import",
+   "name": "[browser] complete synthetic investigation \u203a save -> notebook persists across reload -> export JSON/CSV -> validate, reproduce, import",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 13.289,
+   "message": null,
+   "file": "investigation.spec.ts"
+  },
+  {
+   "id": "investigation.spec.ts::[browser] complete synthetic investigation \u203a Methods shows real provider statuses and never claims unrun live checks",
+   "name": "[browser] complete synthetic investigation \u203a Methods shows real provider statuses and never claims unrun live checks",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 2.196,
+   "message": null,
+   "file": "investigation.spec.ts"
+  },
+  {
+   "id": "investigation.spec.ts::[browser] complete synthetic investigation \u203a corrupted notebook storage is reported, not silently discarded",
+   "name": "[browser] complete synthetic investigation \u203a corrupted notebook storage is reported, not silently discarded",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 2.887,
+   "message": null,
+   "file": "investigation.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a loads the synthetic investigation with explicit origin labels and gaps",
+   "name": "[browser] Observatory \u203a loads the synthetic investigation with explicit origin labels and gaps",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 2.364,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a selects a source by search and by clicking it on the canvas",
+   "name": "[browser] Observatory \u203a selects a source by search and by clicking it on the canvas",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 4.003,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a steps, plays and blinks only through real frames",
+   "name": "[browser] Observatory \u203a steps, plays and blinks only through real frames",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 6.787,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a Explore <-> Analyze preserves dataset, band, epoch, source and view",
+   "name": "[browser] Observatory \u203a Explore <-> Analyze preserves dataset, band, epoch, source and view",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 5.584,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a Analyze: fit, stale detection after changing inputs, plots and catalog",
+   "name": "[browser] Observatory \u203a Analyze: fit, stale detection after changing inputs, plots and catalog",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 9.959,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a difference preview shows its compatibility checks and display-only label",
+   "name": "[browser] Observatory \u203a difference preview shows its compatibility checks and display-only label",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 3.979,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a shows an error state when the API is unreachable",
+   "name": "[browser] Observatory \u203a shows an error state when the API is unreachable",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 2.403,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] Observatory \u203a name search is honestly unresolved; coordinates outside the field are flagged",
+   "name": "[browser] Observatory \u203a name search is honestly unresolved; coordinates outside the field are flagged",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 3.213,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] responsive layout \u203a observatory: usable at 390 px without horizontal page scroll",
+   "name": "[browser] responsive layout \u203a observatory: usable at 390 px without horizontal page scroll",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 5.833,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] responsive layout \u203a motion: usable at 390 px without horizontal page scroll",
+   "name": "[browser] responsive layout \u203a motion: usable at 390 px without horizontal page scroll",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 3.902,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] responsive layout \u203a evidence: usable at 390 px without horizontal page scroll",
+   "name": "[browser] responsive layout \u203a evidence: usable at 390 px without horizontal page scroll",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 3.589,
+   "message": null,
+   "file": "observatory.spec.ts"
+  },
+  {
+   "id": "observatory.spec.ts::[browser] responsive layout \u203a methods: usable at 390 px without horizontal page scroll",
+   "name": "[browser] responsive layout \u203a methods: usable at 390 px without horizontal page scroll",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 4.273,
+   "message": null,
+   "file": "observatory.spec.ts"
+  }
+ ],
+ "available": true
+}

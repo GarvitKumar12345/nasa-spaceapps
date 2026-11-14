@@ -1,0 +1,92 @@
+/* Methods */
+.me-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s4);
+  max-width: 1180px;
+}
+.me-details {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.me-details summary {
+  cursor: pointer;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.me-caps,
+.me-results,
+.me-refs,
+.me-origins,
+.me-list {
+  margin: 8px 0 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.me-list {
+  padding-left: 18px;
+  list-style: disc;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.me-refs {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  font-size: var(--fs-sm);
+}
+.me-results li,
+.me-caps li {
+  font-size: var(--fs-sm);
+  overflow-wrap: anywhere;
+}
+.me-msg {
+  margin: 4px 0 2px;
+  padding: 6px 8px;
+  background: var(--panel-2);
+  border-radius: var(--radius-xs);
+  font-size: var(--fs-2xs);
+  white-space: pre-wrap;
+  max-height: 160px;
+  overflow: auto;
+}
+.me-group {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.me-group h3 {
+  font-size: var(--fs-md);
+}
+.me-summary {
+  gap: 6px;
+}
+.me-science {
+  display: grid;
+  gap: var(--s4);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.me-science h3 {
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.me-science p {
+  max-width: 95ch;
+  margin-bottom: 6px;
+}
+.me-science code {
+  color: var(--text);
+  background: var(--panel-2);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.me-origins li {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
