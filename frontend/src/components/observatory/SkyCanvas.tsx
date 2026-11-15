@@ -10,6 +10,16 @@ export interface CanvasPoint {
   id: string
   x: number // common-grid pixel
   y: number
+  /** Text for hover/selection labels (defaults to id). */
+  label?: string
+}
+
+/** Catalogue prediction marker (model): hollow square; role and limitations set the style. */
+export interface PredictionMarker {
+  id: string
+  x: number
+  y: number
+  kind: 'used' | 'rejected' | 'saturated' | 'no_motion' | 'other'
 }
 
 export interface CanvasOverlays {
@@ -17,6 +27,12 @@ export interface CanvasOverlays {
   modelNow?: [number, number] | null
   truthNow?: [number, number] | null
   catalog?: { id: string; x: number; y: number }[] | null
+  /** Gaia DR3 predictions at the frame epoch (model predictions, observed data). */
+  predictions?: PredictionMarker[] | null
+  /** ePSF image measurements of reference candidates (derived measurements). */
+  measured?: CanvasPoint[] | null
+  /** Magnified measured-minus-predicted residuals (grid pixels). */
+  vectors?: { id: string; x0: number; y0: number; x1: number; y1: number }[] | null
 }
 
 export interface SkyCanvasProps {
@@ -318,6 +334,25 @@ export function SkyCanvas(props: SkyCanvasProps) {
           const [x, y] = toScreen(c.x, c.y)
           return <rect key={c.id} x={x - 5} y={y - 5} width={10} height={10} className="sky-catalog" />
         })}
+        {overlays?.predictions?.map((c) => {
+          const [x, y] = toScreen(c.x, c.y)
+          if (c.kind === 'no_motion') return <circle key={c.id} cx={x} cy={y} r={6} className="sky-gaia sky-gaia-no_motion" data-kind={c.kind} />
+          return (
+            <g key={c.id} className={`sky-gaia sky-gaia-${c.kind}`} data-kind={c.kind}>
+              <rect x={x - 5} y={y - 5} width={10} height={10} />
+              {c.kind === 'saturated' && <path d={`M${x - 5} ${y - 5} L${x + 5} ${y + 5} M${x + 5} ${y - 5} L${x - 5} ${y + 5}`} />}
+            </g>
+          )
+        })}
+        {overlays?.vectors?.map((v) => {
+          const [x0, y0] = toScreen(v.x0, v.y0)
+          const [x1, y1] = toScreen(v.x1, v.y1)
+          return <line key={v.id} x1={x0} y1={y0} x2={x1} y2={y1} className="sky-residual-vector" />
+        })}
+        {overlays?.measured?.map((m) => {
+          const [x, y] = toScreen(m.x, m.y)
+          return <path key={m.id} d={`M${x - 4} ${y} L${x + 4} ${y} M${x} ${y - 4} L${x} ${y + 4}`} className="sky-measured" />
+        })}
         {modelPath && modelPath.length > 1 && (
           <path className="sky-model-path" d={modelPath.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join('')} />
         )}
@@ -342,7 +377,7 @@ export function SkyCanvas(props: SkyCanvasProps) {
             <g>
               <circle cx={x} cy={y} r={9} className="sky-hover" />
               <text x={x + 12} y={y - 9} className="sky-hover-label">
-                {hov.id}
+                {hov.label ?? hov.id}
               </text>
             </g>
           )
@@ -357,7 +392,7 @@ export function SkyCanvas(props: SkyCanvasProps) {
               <line x1={x} x2={x} y1={y - 19} y2={y - 14} className="sky-selected-tick" />
               <line x1={x} x2={x} y1={y + 14} y2={y + 19} className="sky-selected-tick" />
               <text x={x + 16} y={y - 14} className="sky-selected-label">
-                {sel.id}
+                {sel.label ?? sel.id}
               </text>
             </g>
           )

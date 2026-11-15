@@ -1,5 +1,119 @@
 {
   "$defs": {
+    "AlignmentReport": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog": {
+          "type": "string"
+        },
+        "convention": {
+          "$ref": "#/$defs/PredictionConvention"
+        },
+        "convention_test": {
+          "$ref": "#/$defs/ConventionTest"
+        },
+        "dataset_id": {
+          "type": "string"
+        },
+        "field_assessment": {
+          "type": "string"
+        },
+        "frames": {
+          "items": {
+            "$ref": "#/$defs/FrameAlignment"
+          },
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "method": {
+          "type": "string"
+        },
+        "method_version": {
+          "type": "string"
+        },
+        "n_frames_insufficient": {
+          "type": "integer"
+        },
+        "n_frames_not_validated": {
+          "type": "integer"
+        },
+        "n_frames_ok": {
+          "type": "integer"
+        },
+        "pooled": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResidualStatistics"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pooled_over": {
+          "description": "Which frames' references enter the pooled statistics and the convention test",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "reason_texts": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "release": {
+          "type": "string"
+        },
+        "selection_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "unavailable"
+          ],
+          "type": "string"
+        },
+        "status_reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset_id",
+        "catalog",
+        "release",
+        "method",
+        "method_version",
+        "status",
+        "status_reason",
+        "convention",
+        "convention_test",
+        "selection_criteria",
+        "reason_texts",
+        "frames",
+        "pooled",
+        "n_frames_ok",
+        "n_frames_insufficient",
+        "n_frames_not_validated",
+        "pooled_over",
+        "field_assessment",
+        "limitations",
+        "provenance"
+      ],
+      "title": "AlignmentReport",
+      "type": "object"
+    },
     "AnalysisCapability": {
       "additionalProperties": false,
       "properties": {
@@ -11,7 +125,9 @@
             "difference_imaging",
             "catalog_overlay",
             "evidence_record",
-            "registration"
+            "registration",
+            "alignment_diagnostics",
+            "photometry"
           ],
           "type": "string"
         },
@@ -991,6 +1107,18 @@
         "reference_epoch": {
           "$ref": "#/$defs/Epoch"
         },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The catalog's own identifier as an exact decimal string (a Gaia source_id is a 64-bit integer; never sent as a JSON number)"
+        },
         "uncertainty_status": {
           "enum": [
             "estimated",
@@ -1004,6 +1132,7 @@
       },
       "required": [
         "id",
+        "source_id",
         "catalog",
         "catalog_release",
         "origin",
@@ -1183,6 +1312,120 @@
         "reason"
       ],
       "title": "CompatibilityGroup",
+      "type": "object"
+    },
+    "ConventionTest": {
+      "additionalProperties": false,
+      "properties": {
+        "chi2_apparent_frame": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "chi2_catalog_frame": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "decision": {
+          "type": "string"
+        },
+        "dof": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_aberration_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_frame_offset_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Largest per-frame mean residual among the frames tested"
+        },
+        "min_aberration_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "n_frames": {
+          "type": "integer"
+        },
+        "p_apparent_frame": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "p_catalog_frame": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "n_frames",
+        "dof",
+        "chi2_catalog_frame",
+        "chi2_apparent_frame",
+        "p_catalog_frame",
+        "p_apparent_frame",
+        "max_aberration_arcsec",
+        "min_aberration_arcsec",
+        "max_frame_offset_arcsec",
+        "decision"
+      ],
+      "title": "ConventionTest",
       "type": "object"
     },
     "Coverage": {
@@ -1918,6 +2161,119 @@
       "title": "Epoch",
       "type": "object"
     },
+    "ErrorBudgetTerm": {
+      "additionalProperties": false,
+      "properties": {
+        "bound_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Upper bound of the term's positional effect, if one is stated"
+        },
+        "note": {
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "term": {
+          "type": "string"
+        },
+        "treatment": {
+          "enum": [
+            "included",
+            "neglected",
+            "absorbed_by_wcs",
+            "dominant_uncertainty",
+            "excluded_by_selection"
+          ],
+          "type": "string"
+        },
+        "typical_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "term",
+        "bound_arcsec",
+        "typical_arcsec",
+        "treatment",
+        "note",
+        "source"
+      ],
+      "title": "ErrorBudgetTerm",
+      "type": "object"
+    },
+    "EstimatorValidation": {
+      "additionalProperties": false,
+      "properties": {
+        "criteria": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "near_saturated": {
+          "description": "S/N ~ 40 injections binned by distance from the saturated source",
+          "items": {
+            "$ref": "#/$defs/RadialInjectionBin"
+          },
+          "type": "array"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "per_target": {
+          "items": {
+            "$ref": "#/$defs/InjectionSummary"
+          },
+          "type": "array"
+        },
+        "pixel_noise_median": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "method",
+        "passed",
+        "criteria",
+        "pixel_noise_median",
+        "per_target",
+        "near_saturated"
+      ],
+      "title": "EstimatorValidation",
+      "type": "object"
+    },
     "EvidenceRecord": {
       "additionalProperties": false,
       "properties": {
@@ -2431,6 +2787,136 @@
       "title": "FitResidual",
       "type": "object"
     },
+    "FrameAlignment": {
+      "additionalProperties": false,
+      "properties": {
+        "aberration_if_apparent_arcsec": {
+          "description": "(east, north) offset expected if the WCS mapped to apparent directions",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "band_id": {
+          "type": "string"
+        },
+        "detector": {
+          "type": "integer"
+        },
+        "epoch": {
+          "$ref": "#/$defs/Epoch"
+        },
+        "estimator": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EstimatorValidation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "frame_id": {
+          "type": "string"
+        },
+        "n_candidates": {
+          "type": "integer"
+        },
+        "n_fainter_than_limit": {
+          "description": "Predictions fainter than the candidate magnitude limit (not reference candidates)",
+          "type": "integer"
+        },
+        "n_in_frame": {
+          "description": "Gaia predictions inside the native cutout",
+          "type": "integer"
+        },
+        "n_rejected": {
+          "description": "Candidates rejected, by reason below",
+          "type": "integer"
+        },
+        "n_used": {
+          "type": "integer"
+        },
+        "observation_id": {
+          "type": "string"
+        },
+        "rejected_by_reason": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "type": "object"
+        },
+        "residuals": {
+          "items": {
+            "$ref": "#/$defs/ReferenceStarResidual"
+          },
+          "type": "array"
+        },
+        "saturated_source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "statistics": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResidualStatistics"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "insufficient_reference_stars",
+            "estimator_not_validated",
+            "not_available"
+          ],
+          "type": "string"
+        },
+        "status_reason": {
+          "type": "string"
+        },
+        "translation": {
+          "$ref": "#/$defs/TranslationEvaluation"
+        }
+      },
+      "required": [
+        "frame_id",
+        "observation_id",
+        "band_id",
+        "detector",
+        "epoch",
+        "status",
+        "status_reason",
+        "n_in_frame",
+        "n_fainter_than_limit",
+        "n_candidates",
+        "n_used",
+        "n_rejected",
+        "rejected_by_reason",
+        "statistics",
+        "translation",
+        "estimator",
+        "aberration_if_apparent_arcsec",
+        "saturated_source_ids",
+        "residuals"
+      ],
+      "title": "FrameAlignment",
+      "type": "object"
+    },
     "FrameProduct": {
       "additionalProperties": false,
       "properties": {
@@ -2636,6 +3122,314 @@
       "title": "FrameTruth",
       "type": "object"
     },
+    "GaiaFrameOverlay": {
+      "additionalProperties": false,
+      "properties": {
+        "adql": {
+          "type": "string"
+        },
+        "catalog": {
+          "type": "string"
+        },
+        "convention": {
+          "$ref": "#/$defs/PredictionConvention"
+        },
+        "dataset_id": {
+          "type": "string"
+        },
+        "epoch": {
+          "$ref": "#/$defs/Epoch"
+        },
+        "frame_id": {
+          "description": "Frame the overlay is drawn on (display frame)",
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "n_catalog_rows": {
+          "type": "integer"
+        },
+        "n_in_frame": {
+          "type": "integer"
+        },
+        "native_frame_id": {
+          "type": "string"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "observation_id": {
+          "type": "string"
+        },
+        "predictions": {
+          "items": {
+            "$ref": "#/$defs/GaiaPrediction"
+          },
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "release": {
+          "type": "string"
+        },
+        "retrieved_utc": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset_id",
+        "frame_id",
+        "native_frame_id",
+        "observation_id",
+        "epoch",
+        "catalog",
+        "release",
+        "retrieved_utc",
+        "adql",
+        "n_catalog_rows",
+        "n_in_frame",
+        "predictions",
+        "convention",
+        "label",
+        "notes",
+        "provenance"
+      ],
+      "title": "GaiaFrameOverlay",
+      "type": "object"
+    },
+    "GaiaPrediction": {
+      "additionalProperties": false,
+      "description": "One Gaia DR3 source predicted at one exposure (a model prediction, never an image measurement).",
+      "properties": {
+        "bp_rp": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "corr_ra_dec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dec_deg": {
+          "type": "number"
+        },
+        "flags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "g_mag": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "in_native": {
+          "type": "boolean"
+        },
+        "origin": {
+          "const": "model_prediction",
+          "default": "model_prediction",
+          "type": "string"
+        },
+        "ra_deg": {
+          "type": "number"
+        },
+        "reference_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reference_status": {
+          "default": "not_candidate",
+          "enum": [
+            "used",
+            "rejected",
+            "not_candidate"
+          ],
+          "type": "string"
+        },
+        "sigma_dec_mas": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sigma_ra_cosdec_mas": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "solution": {
+          "enum": [
+            "2-parameter",
+            "5-parameter",
+            "6-parameter",
+            "unknown"
+          ],
+          "type": "string"
+        },
+        "source_id": {
+          "description": "Gaia DR3 source_id as an exact decimal string",
+          "type": "string"
+        },
+        "x_display": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "0-based pixel on the display grid (TAN), where the frame is shown"
+        },
+        "x_native": {
+          "description": "0-based native cutout pixel through the archive WCS (incl. SIP)",
+          "type": "number"
+        },
+        "y_display": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "y_native": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "source_id",
+        "ra_deg",
+        "dec_deg",
+        "sigma_ra_cosdec_mas",
+        "sigma_dec_mas",
+        "corr_ra_dec",
+        "x_native",
+        "y_native",
+        "x_display",
+        "y_display",
+        "in_native",
+        "g_mag",
+        "bp_rp",
+        "solution",
+        "flags",
+        "reference_status",
+        "reference_reason",
+        "origin"
+      ],
+      "title": "GaiaPrediction",
+      "type": "object"
+    },
+    "GaiaSourceDetail": {
+      "additionalProperties": false,
+      "description": "Everything known about one Gaia source in one frame, with catalogue values and predictions kept apart.",
+      "properties": {
+        "dataset_id": {
+          "type": "string"
+        },
+        "frame_id": {
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "measurement": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferenceStarResidual"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Image measurement (derived), if this source was a reference candidate"
+        },
+        "prediction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GaiaPrediction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "propagated": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PropagatedParameters"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/CatalogSource"
+        }
+      },
+      "required": [
+        "dataset_id",
+        "frame_id",
+        "source",
+        "prediction",
+        "propagated",
+        "measurement",
+        "limitations"
+      ],
+      "title": "GaiaSourceDetail",
+      "type": "object"
+    },
     "HealthStatus": {
       "additionalProperties": false,
       "properties": {
@@ -2770,6 +3564,139 @@
         "messages"
       ],
       "title": "IdentifiabilityReport",
+      "type": "object"
+    },
+    "InjectionSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "bias_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "bias_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "n_injected": {
+          "type": "integer"
+        },
+        "n_recovered": {
+          "type": "integer"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "rms_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rms_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "robust_pull_x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "robust_pull_y": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "se_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "se_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "snr_median": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "snr_target": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "snr_target",
+        "n_injected",
+        "n_recovered",
+        "snr_median",
+        "bias_x_px",
+        "bias_y_px",
+        "se_x_px",
+        "se_y_px",
+        "rms_x_px",
+        "rms_y_px",
+        "robust_pull_x",
+        "robust_pull_y",
+        "passed"
+      ],
+      "title": "InjectionSummary",
       "type": "object"
     },
     "InstrumentDescription": {
@@ -3489,6 +4416,60 @@
       "title": "PSFReference",
       "type": "object"
     },
+    "PredictionConvention": {
+      "additionalProperties": false,
+      "description": "What a catalogue prediction on an archive frame represents, and how that was established.",
+      "properties": {
+        "error_budget": {
+          "items": {
+            "$ref": "#/$defs/ErrorBudgetTerm"
+          },
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "excludes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "frame": {
+          "type": "string"
+        },
+        "includes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "approximate"
+          ],
+          "type": "string"
+        },
+        "wcs_convention": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "frame",
+        "includes",
+        "excludes",
+        "wcs_convention",
+        "status",
+        "evidence",
+        "error_budget"
+      ],
+      "title": "PredictionConvention",
+      "type": "object"
+    },
     "PredictionCurve": {
       "additionalProperties": false,
       "properties": {
@@ -3565,6 +4546,130 @@
         "note"
       ],
       "title": "PredictionCurve",
+      "type": "object"
+    },
+    "PropagatedParameters": {
+      "additionalProperties": false,
+      "description": "All six astrometric parameters at the exposure epoch with uncertainties (model prediction).",
+      "properties": {
+        "corr_ra_dec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dec_deg": {
+          "type": "number"
+        },
+        "epoch": {
+          "$ref": "#/$defs/Epoch"
+        },
+        "method": {
+          "type": "string"
+        },
+        "mu_r_mas_yr": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observer_parallax_offset_mas": {
+          "description": "(east, north) observer-parallax displacement applied once",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "origin": {
+          "const": "model_prediction",
+          "default": "model_prediction",
+          "type": "string"
+        },
+        "parallax_mas": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "perspective_bound_mas": {
+          "description": "Bound on the error from an unknown radial velocity (|v_r| <= 500 km/s); 0 if v_r is catalogued",
+          "type": "number"
+        },
+        "pmdec_mas_yr": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pmra_mas_yr": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ra_deg": {
+          "type": "number"
+        },
+        "radial_velocity_assumed": {
+          "type": "boolean"
+        },
+        "radial_velocity_used_km_s": {
+          "type": "number"
+        },
+        "sigmas": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "ra_cosdec/dec/parallax (mas), pmra/pmdec/mu_r (mas/yr)",
+          "type": "object"
+        }
+      },
+      "required": [
+        "epoch",
+        "ra_deg",
+        "dec_deg",
+        "parallax_mas",
+        "pmra_mas_yr",
+        "pmdec_mas_yr",
+        "mu_r_mas_yr",
+        "sigmas",
+        "corr_ra_dec",
+        "observer_parallax_offset_mas",
+        "radial_velocity_used_km_s",
+        "radial_velocity_assumed",
+        "perspective_bound_mas",
+        "method",
+        "origin"
+      ],
+      "title": "PropagatedParameters",
       "type": "object"
     },
     "PropagatedPosition": {
@@ -3964,6 +5069,104 @@
       "title": "Quality",
       "type": "object"
     },
+    "RadialInjectionBin": {
+      "additionalProperties": false,
+      "description": "Injection-recovery in an annulus around the saturated source (justifies the exclusion radius).",
+      "properties": {
+        "bias_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "bias_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "n_injected": {
+          "type": "integer"
+        },
+        "n_recovered": {
+          "type": "integer"
+        },
+        "r_max_px": {
+          "type": "number"
+        },
+        "r_min_px": {
+          "type": "number"
+        },
+        "rms_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rms_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "robust_pull_x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "robust_pull_y": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "r_min_px",
+        "r_max_px",
+        "n_injected",
+        "n_recovered",
+        "bias_x_px",
+        "bias_y_px",
+        "rms_x_px",
+        "rms_y_px",
+        "robust_pull_x",
+        "robust_pull_y"
+      ],
+      "title": "RadialInjectionBin",
+      "type": "object"
+    },
     "Reference": {
       "additionalProperties": false,
       "properties": {
@@ -3979,6 +5182,251 @@
         "url"
       ],
       "title": "Reference",
+      "type": "object"
+    },
+    "ReferenceStarResidual": {
+      "additionalProperties": false,
+      "description": "An ePSF image measurement of a Gaia reference candidate and its residual from the prediction.",
+      "properties": {
+        "chi2_red": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dist_saturated_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "epsf_zone": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "frame_id": {
+          "type": "string"
+        },
+        "g_mag": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "measured_x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "measured_y": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "n_masked": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "origin": {
+          "const": "derived_measurement",
+          "default": "derived_measurement",
+          "type": "string"
+        },
+        "predicted_x": {
+          "type": "number"
+        },
+        "predicted_y": {
+          "type": "number"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "residual_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "measured minus predicted, RA*cos(Dec)"
+        },
+        "residual_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "snr": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "used",
+            "rejected"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "frame_id",
+        "status",
+        "reason",
+        "reason_text",
+        "detail",
+        "g_mag",
+        "predicted_x",
+        "predicted_y",
+        "measured_x",
+        "measured_y",
+        "sigma_x_px",
+        "sigma_y_px",
+        "snr",
+        "chi2_red",
+        "n_masked",
+        "epsf_zone",
+        "dist_saturated_px",
+        "residual_east_arcsec",
+        "residual_north_arcsec",
+        "sigma_east_arcsec",
+        "sigma_north_arcsec",
+        "origin"
+      ],
+      "title": "ReferenceStarResidual",
       "type": "object"
     },
     "RegistrationSummary": {
@@ -4168,6 +5616,296 @@
         "software"
       ],
       "title": "ReproductionReport",
+      "type": "object"
+    },
+    "ResidualStatistics": {
+      "additionalProperties": false,
+      "properties": {
+        "chi2_mean": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "chi2_zero": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dof_mean": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dof_zero": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "extra_scatter_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Scatter beyond the formal errors (chi2 about the mean = dof)"
+        },
+        "mean_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mean_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "median_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "median_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "n": {
+          "type": "integer"
+        },
+        "n_outliers_5sigma": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rms_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rms_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rms_total_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "robust_sigma_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "robust_sigma_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "se_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "se_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "std_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "std_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "wmean_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "wmean_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "wse_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "wse_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "n",
+        "mean_east_arcsec",
+        "mean_north_arcsec",
+        "se_east_arcsec",
+        "se_north_arcsec",
+        "wmean_east_arcsec",
+        "wmean_north_arcsec",
+        "wse_east_arcsec",
+        "wse_north_arcsec",
+        "std_east_arcsec",
+        "std_north_arcsec",
+        "rms_east_arcsec",
+        "rms_north_arcsec",
+        "rms_total_arcsec",
+        "median_east_arcsec",
+        "median_north_arcsec",
+        "robust_sigma_east_arcsec",
+        "robust_sigma_north_arcsec",
+        "extra_scatter_arcsec",
+        "chi2_zero",
+        "dof_zero",
+        "chi2_mean",
+        "dof_mean",
+        "n_outliers_5sigma"
+      ],
+      "title": "ResidualStatistics",
       "type": "object"
     },
     "ResolveResult": {
@@ -4886,6 +6624,13 @@
         "name": {
           "type": "string"
         },
+        "notes": {
+          "description": "Recorded observations that are not failures, e.g. a changed archive row count",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "status": {
           "enum": [
             "passed",
@@ -4913,7 +6658,8 @@
         "status",
         "duration_s",
         "message",
-        "file"
+        "file",
+        "notes"
       ],
       "title": "TestResult",
       "type": "object"
@@ -4966,6 +6712,139 @@
         "dec_deg"
       ],
       "title": "TrackPoint",
+      "type": "object"
+    },
+    "TranslationEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "chi2": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "decision": {
+          "type": "string"
+        },
+        "evaluated": {
+          "type": "boolean"
+        },
+        "extra_scatter_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "heldout_rms_corrected_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "heldout_rms_uncorrected_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "justified": {
+          "type": "boolean"
+        },
+        "n": {
+          "type": "integer"
+        },
+        "offset_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "offset_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "p_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "evaluated",
+        "justified",
+        "n",
+        "decision",
+        "offset_east_arcsec",
+        "offset_north_arcsec",
+        "sigma_east_arcsec",
+        "sigma_north_arcsec",
+        "extra_scatter_arcsec",
+        "chi2",
+        "p_value",
+        "heldout_rms_uncorrected_arcsec",
+        "heldout_rms_corrected_arcsec"
+      ],
+      "title": "TranslationEvaluation",
       "type": "object"
     },
     "TruthPosition": {
@@ -5453,6 +7332,9 @@
   "additionalProperties": false,
   "description": "Generated from backend/skyshift/contracts.py (skyshift.contracts/1). Do not edit.",
   "properties": {
+    "AlignmentReport": {
+      "$ref": "#/$defs/AlignmentReport"
+    },
     "ApiError": {
       "$ref": "#/$defs/ApiError"
     },
@@ -5479,6 +7361,9 @@
     },
     "ChangeIndicator": {
       "$ref": "#/$defs/ChangeIndicator"
+    },
+    "ConventionTest": {
+      "$ref": "#/$defs/ConventionTest"
     },
     "Coverage": {
       "$ref": "#/$defs/Coverage"
@@ -5507,6 +7392,12 @@
     "Epoch": {
       "$ref": "#/$defs/Epoch"
     },
+    "ErrorBudgetTerm": {
+      "$ref": "#/$defs/ErrorBudgetTerm"
+    },
+    "EstimatorValidation": {
+      "$ref": "#/$defs/EstimatorValidation"
+    },
     "EvidenceRecord": {
       "$ref": "#/$defs/EvidenceRecord"
     },
@@ -5531,17 +7422,32 @@
     "FitResidual": {
       "$ref": "#/$defs/FitResidual"
     },
+    "FrameAlignment": {
+      "$ref": "#/$defs/FrameAlignment"
+    },
     "FrameProduct": {
       "$ref": "#/$defs/FrameProduct"
     },
     "FrameTruth": {
       "$ref": "#/$defs/FrameTruth"
     },
+    "GaiaFrameOverlay": {
+      "$ref": "#/$defs/GaiaFrameOverlay"
+    },
+    "GaiaPrediction": {
+      "$ref": "#/$defs/GaiaPrediction"
+    },
+    "GaiaSourceDetail": {
+      "$ref": "#/$defs/GaiaSourceDetail"
+    },
     "HealthStatus": {
       "$ref": "#/$defs/HealthStatus"
     },
     "IdentifiabilityReport": {
       "$ref": "#/$defs/IdentifiabilityReport"
+    },
+    "InjectionSummary": {
+      "$ref": "#/$defs/InjectionSummary"
     },
     "InstrumentDescription": {
       "$ref": "#/$defs/InstrumentDescription"
@@ -5570,8 +7476,14 @@
     "PSFReference": {
       "$ref": "#/$defs/PSFReference"
     },
+    "PredictionConvention": {
+      "$ref": "#/$defs/PredictionConvention"
+    },
     "PredictionCurve": {
       "$ref": "#/$defs/PredictionCurve"
+    },
+    "PropagatedParameters": {
+      "$ref": "#/$defs/PropagatedParameters"
     },
     "PropagatedPosition": {
       "$ref": "#/$defs/PropagatedPosition"
@@ -5588,6 +7500,12 @@
     "Quality": {
       "$ref": "#/$defs/Quality"
     },
+    "RadialInjectionBin": {
+      "$ref": "#/$defs/RadialInjectionBin"
+    },
+    "ReferenceStarResidual": {
+      "$ref": "#/$defs/ReferenceStarResidual"
+    },
     "RegistrationSummary": {
       "$ref": "#/$defs/RegistrationSummary"
     },
@@ -5596,6 +7514,9 @@
     },
     "ReproductionReport": {
       "$ref": "#/$defs/ReproductionReport"
+    },
+    "ResidualStatistics": {
+      "$ref": "#/$defs/ResidualStatistics"
     },
     "ResolveResult": {
       "$ref": "#/$defs/ResolveResult"
@@ -5623,6 +7544,9 @@
     },
     "TrackPoint": {
       "$ref": "#/$defs/TrackPoint"
+    },
+    "TranslationEvaluation": {
+      "$ref": "#/$defs/TranslationEvaluation"
     },
     "TruthPosition": {
       "$ref": "#/$defs/TruthPosition"

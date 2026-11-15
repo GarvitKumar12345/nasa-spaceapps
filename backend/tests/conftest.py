@@ -56,6 +56,9 @@ def pytest_runtest_makereport(item: pytest.Item, call):  # noqa: ANN001
             if report.skipped and isinstance(report.longrepr, tuple):
                 message = str(report.longrepr[2])
         doc = (item.obj.__doc__ or "").strip().splitlines()[0] if getattr(item, "obj", None) and item.obj.__doc__ else None
+        # Observations that are not failures (e.g. a changed archive row count) are recorded with
+        # record_property("note", text) and shown next to the result in Methods.
+        notes = [str(v) for k, v in getattr(item, "user_properties", []) if k == "note"]
         _results.append(
             {
                 "id": item.nodeid,
@@ -66,6 +69,7 @@ def pytest_runtest_makereport(item: pytest.Item, call):  # noqa: ANN001
                 "duration_s": round(report.duration, 4),
                 "message": message,
                 "file": str(Path(item.fspath).name),
+                "notes": notes,
             }
         )
 

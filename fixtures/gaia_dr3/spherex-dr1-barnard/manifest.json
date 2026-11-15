@@ -1,0 +1,1438 @@
+{
+ "schema": "skyshift.gaia-dr3-manifest/1",
+ "field": "spherex-dr1-barnard",
+ "catalog": "gaiadr3.gaia_source",
+ "release": "Gaia DR3",
+ "endpoint": "https://gea.esac.esa.int/tap-server/tap/sync",
+ "started_utc": "2026-11-14T22:46:29.324828Z",
+ "retrieved_utc": "2026-11-14T22:46:35.260703Z",
+ "software": [
+  {
+   "name": "skyshift",
+   "version": "0.1.0"
+  },
+  {
+   "name": "python",
+   "version": "3.13.5"
+  },
+  {
+   "name": "numpy",
+   "version": "2.5.4"
+  },
+  {
+   "name": "scipy",
+   "version": "1.18.1"
+  },
+  {
+   "name": "astropy",
+   "version": "8.0.2"
+  },
+  {
+   "name": "pydantic",
+   "version": "2.14.3"
+  },
+  {
+   "name": "fastapi",
+   "version": "0.162.7"
+  },
+  {
+   "name": "platform",
+   "version": "Windows-11-10.0.26300-SP0"
+  }
+ ],
+ "geometry": {
+  "center_ra_deg": 269.44628,
+  "center_dec_deg": 4.76803,
+  "footprint_radius_deg": 0.07288574014964819,
+  "dt_max_yr": 10.338422471674308,
+  "max_proper_motion_arcsec_yr": 10.5,
+  "proper_motion_margin_deg": 0.030153732209050065,
+  "neighbour_margin_px": 6.0,
+  "pixel_scale_arcsec": 6.2,
+  "neighbour_margin_deg": 0.010333333333333333,
+  "radius_deg": 0.1133729,
+  "derivation": "radius = footprint 262.4\" + proper-motion margin 10.5\"/yr x 10.338 yr = 108.6\" + neighbour margin 6 px x 6.20\"/px = 37.2\" -> 0.1133729 deg (408.1\")"
+ },
+ "footprints": [
+  {
+   "key": "2025W35_2A_0474_4:D1",
+   "file_name": "level2_2025W35_2A_0474_4D1_spx_l2b-v27-2026-231.fits",
+   "shape": [
+    59,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.39650137777335,
+     4.816461355958595
+    ],
+    [
+     269.4958378781406,
+     4.819440713938768
+    ],
+    [
+     269.4958995355137,
+     4.718662041525624
+    ],
+    [
+     269.3965537238157,
+     4.715679020936858
+    ]
+   ],
+   "max_corner_distance_deg": 0.07208626452667663,
+   "mid_utc": "2025-08-30T22:47:30.648",
+   "mid_mjd_tdb": 60917.950461003085,
+   "dt_from_catalog_epoch_yr": 9.663109327495205
+  },
+  {
+   "key": "2025W36_2B_0123_1:D1",
+   "file_name": "level2_2025W36_2B_0123_1D1_spx_l2b-v27-2026-234.fits",
+   "shape": [
+    59,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.3971881594504,
+     4.816661389520065
+    ],
+    [
+     269.4965303852286,
+     4.81964371593423
+    ],
+    [
+     269.4965921553298,
+     4.718864507416963
+    ],
+    [
+     269.3972405629822,
+     4.715878365554547
+    ]
+   ],
+   "max_corner_distance_deg": 0.07191273372412554,
+   "mid_utc": "2025-09-05T02:35:19.911",
+   "mid_mjd_tdb": 60923.108670064685,
+   "dt_from_catalog_epoch_yr": 9.677231734234697
+  },
+  {
+   "key": "2026W11_1A_0539_1:D1",
+   "file_name": "level2_2026W11_1A_0539_1D1_spx_l2b-v27-2026-232.fits",
+   "shape": [
+    59,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.4927437737314,
+     4.715852360972833
+    ],
+    [
+     269.3933079468844,
+     4.7184356797053875
+    ],
+    [
+     269.3994210707604,
+     4.819062508067276
+    ],
+    [
+     269.49889587044623,
+     4.816481265129442
+    ]
+   ],
+   "max_corner_distance_deg": 0.07243236800931208,
+   "mid_utc": "2026-03-11T13:34:41.095",
+   "mid_mjd_tdb": 61110.56655417242,
+   "dt_from_catalog_epoch_yr": 10.190463449793185
+  },
+  {
+   "key": "2025W35_1A_0008_4:D3",
+   "file_name": "level2_2025W35_1A_0008_4D3_spx_l2b-v27-2026-230.fits",
+   "shape": [
+    59,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.3996868224143,
+     4.822285494466542
+    ],
+    [
+     269.49868512655576,
+     4.814752256118981
+    ],
+    [
+     269.494381829614,
+     4.714199695602355
+    ],
+    [
+     269.3953748446119,
+     4.7217378783923785
+    ]
+   ],
+   "max_corner_distance_deg": 0.07208106953413083,
+   "mid_utc": "2025-08-25T00:56:58.638",
+   "mid_mjd_tdb": 60912.04036829591,
+   "dt_from_catalog_epoch_yr": 9.646928375524835
+  },
+  {
+   "key": "2026W12_2A_0520_1:D3",
+   "file_name": "level2_2026W12_2A_0520_1D3_spx_l2b-v27-2026-235.fits",
+   "shape": [
+    59,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.4964813963841,
+     4.716845705133657
+    ],
+    [
+     269.3972887238364,
+     4.71806646772712
+    ],
+    [
+     269.3956326234157,
+     4.818694294070931
+    ],
+    [
+     269.49486280281945,
+     4.817470736562502
+    ]
+   ],
+   "max_corner_distance_deg": 0.0715736372341463,
+   "mid_utc": "2026-03-22T08:45:17.948",
+   "mid_mjd_tdb": 61121.365591824004,
+   "dt_from_catalog_epoch_yr": 10.220029603527836
+  },
+  {
+   "key": "2026W19_1A_0216_1:D3",
+   "file_name": "level2_2026W19_1A_0216_1D3_spx_l2b-v27-2026-245.fits",
+   "shape": [
+    59,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.49627338366975,
+     4.716294746262622
+    ],
+    [
+     269.39708422422257,
+     4.71750810373818
+    ],
+    [
+     269.39542761000496,
+     4.818129085186669
+    ],
+    [
+     269.4946542203498,
+     4.816912291835868
+    ]
+   ],
+   "max_corner_distance_deg": 0.0718247355555656,
+   "mid_utc": "2026-05-04T14:35:12.724",
+   "mid_mjd_tdb": 61164.6085869145,
+   "dt_from_catalog_epoch_yr": 10.338422471674308
+  },
+  {
+   "key": "2025W35_1A_0432_4:D4",
+   "file_name": "level2_2025W35_1A_0432_4D4_spx_l2b-v27-2026-230.fits",
+   "shape": [
+    58,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.3971383157897,
+     4.8170007457173805
+    ],
+    [
+     269.49694748598546,
+     4.819973838410018
+    ],
+    [
+     269.4967700512305,
+     4.720453667470227
+    ],
+    [
+     269.3969497795869,
+     4.717475188001916
+    ]
+   ],
+   "max_corner_distance_deg": 0.0724391168564349,
+   "mid_utc": "2025-08-27T05:07:00.175",
+   "mid_mjd_tdb": 60914.21399719593,
+   "dt_from_catalog_epoch_yr": 9.652879447119703
+  },
+  {
+   "key": "2025W40_1A_0353_1:D4",
+   "file_name": "level2_2025W40_1A_0353_1D4_spx_l2b-v27-2026-239.fits",
+   "shape": [
+    58,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.3961604720407,
+     4.816654828410528
+    ],
+    [
+     269.49597173953265,
+     4.819636873202977
+    ],
+    [
+     269.495791042829,
+     4.720111463817481
+    ],
+    [
+     269.3959683770515,
+     4.71712414872178
+    ]
+   ],
+   "max_corner_distance_deg": 0.07152127436530088,
+   "mid_utc": "2025-09-30T14:03:50.892",
+   "mid_mjd_tdb": 60948.586806416395,
+   "dt_from_catalog_epoch_yr": 9.746987069899886
+  },
+  {
+   "key": "2026W11_1A_0430_2:D4",
+   "file_name": "level2_2026W11_1A_0430_2D4_spx_l2b-v27-2026-232.fits",
+   "shape": [
+    58,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.4927261411582,
+     4.717158393132111
+    ],
+    [
+     269.3924125226372,
+     4.719862544564488
+    ],
+    [
+     269.400516384661,
+     4.819234240177666
+    ],
+    [
+     269.50087312381623,
+     4.81653488640455
+    ]
+   ],
+   "max_corner_distance_deg": 0.07288574014964819,
+   "mid_utc": "2026-03-11T02:12:34.771",
+   "mid_mjd_tdb": 61110.0928698668,
+   "dt_from_catalog_epoch_yr": 10.189166572844183
+  },
+  {
+   "key": "2025W35_1A_0008_4:D6",
+   "file_name": "level2_2025W35_1A_0008_4D6_spx_l2b-v27-2026-230.fits",
+   "shape": [
+    58,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.39818192586296,
+     4.821480934161128
+    ],
+    [
+     269.4972667161285,
+     4.813768099298814
+    ],
+    [
+     269.4928446043152,
+     4.71483912966896
+    ],
+    [
+     269.39375126181847,
+     4.722556187962672
+    ]
+   ],
+   "max_corner_distance_deg": 0.07179320069407912,
+   "mid_utc": "2025-08-25T00:56:58.638",
+   "mid_mjd_tdb": 60912.04036829591,
+   "dt_from_catalog_epoch_yr": 9.646928375524835
+  },
+  {
+   "key": "2026W12_2A_0520_1:D6",
+   "file_name": "level2_2026W12_2A_0520_1D6_spx_l2b-v27-2026-235.fits",
+   "shape": [
+    58,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.49671789769803,
+     4.718620729840725
+    ],
+    [
+     269.39742437782996,
+     4.720011376688085
+    ],
+    [
+     269.395982859921,
+     4.819026693371187
+    ],
+    [
+     269.4953134643094,
+     4.817633551905113
+    ]
+   ],
+   "max_corner_distance_deg": 0.07150383805612032,
+   "mid_utc": "2026-03-22T08:45:17.948",
+   "mid_mjd_tdb": 61121.365591824004,
+   "dt_from_catalog_epoch_yr": 10.220029603527836
+  },
+  {
+   "key": "2026W19_1A_0216_1:D6",
+   "file_name": "level2_2026W19_1A_0216_1D6_spx_l2b-v27-2026-245.fits",
+   "shape": [
+    58,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.49651039634546,
+     4.718052730143568
+    ],
+    [
+     269.3972194473378,
+     4.719433540412956
+    ],
+    [
+     269.3957750669067,
+     4.818448622038749
+    ],
+    [
+     269.49510290567105,
+     4.817065136760408
+    ]
+   ],
+   "max_corner_distance_deg": 0.07123886168000237,
+   "mid_utc": "2026-05-04T14:35:12.723",
+   "mid_mjd_tdb": 61164.60858690293,
+   "dt_from_catalog_epoch_yr": 10.338422471642614
+  },
+  {
+   "key": "2025W35_1A_0146_3:D2",
+   "file_name": "level2_2025W35_1A_0146_3D2_spx_l2b-v27-2026-230.fits",
+   "shape": [
+    59,
+    59
+   ],
+   "corners_icrs_deg": [
+    [
+     269.39567644533685,
+     4.817390519517352
+    ],
+    [
+     269.4962631102276,
+     4.817825630592488
+    ],
+    [
+     269.49543937355713,
+     4.717393634543015
+    ],
+    [
+     269.3948454663629,
+     4.7169570477360505
+    ]
+   ],
+   "max_corner_distance_deg": 0.07235933863404204,
+   "mid_utc": "2025-08-25T17:13:37.687",
+   "mid_mjd_tdb": 60912.71859802956,
+   "dt_from_catalog_epoch_yr": 9.648785267334976
+  },
+  {
+   "key": "2026W11_2A_0550_1:D2",
+   "file_name": "level2_2026W11_2A_0550_1D2_spx_l2b-v27-2026-234.fits",
+   "shape": [
+    59,
+    59
+   ],
+   "corners_icrs_deg": [
+    [
+     269.4957508195487,
+     4.716318695757238
+    ],
+    [
+     269.39524523062323,
+     4.718144944894184
+    ],
+    [
+     269.39731260214654,
+     4.818558899768699
+    ],
+    [
+     269.4978547171592,
+     4.8167316660702575
+    ]
+   ],
+   "max_corner_distance_deg": 0.07144714046204273,
+   "mid_utc": "2026-03-15T07:18:51.039",
+   "mid_mjd_tdb": 61114.30555815435,
+   "dt_from_catalog_epoch_yr": 10.200700284788201
+  },
+  {
+   "key": "2025W35_1A_0146_3:D5",
+   "file_name": "level2_2025W35_1A_0146_3D5_spx_l2b-v27-2026-230.fits",
+   "shape": [
+    59,
+    59
+   ],
+   "corners_icrs_deg": [
+    [
+     269.39742308280745,
+     4.81879189901032
+    ],
+    [
+     269.498111883944,
+     4.818743633099607
+    ],
+    [
+     269.4968108076377,
+     4.718194284668574
+    ],
+    [
+     269.39611515848014,
+     4.718240419733412
+    ]
+   ],
+   "max_corner_distance_deg": 0.07238547603601898,
+   "mid_utc": "2025-08-25T17:13:37.688",
+   "mid_mjd_tdb": 60912.71859804114,
+   "dt_from_catalog_epoch_yr": 9.64878526736667
+  },
+  {
+   "key": "2026W11_2A_0550_1:D5",
+   "file_name": "level2_2026W11_2A_0550_1D5_spx_l2b-v27-2026-234.fits",
+   "shape": [
+    58,
+    59
+   ],
+   "corners_icrs_deg": [
+    [
+     269.49602613247276,
+     4.716655511145442
+    ],
+    [
+     269.3954267147085,
+     4.718963529722073
+    ],
+    [
+     269.39793221198244,
+     4.817772348804181
+    ],
+    [
+     269.4985672426336,
+     4.815463971314842
+    ]
+   ],
+   "max_corner_distance_deg": 0.07139398305426088,
+   "mid_utc": "2026-03-15T07:18:51.039",
+   "mid_mjd_tdb": 61114.30555815435,
+   "dt_from_catalog_epoch_yr": 10.200700284788201
+  },
+  {
+   "key": "2025W35_2A_0474_3:D1",
+   "file_name": "level2_2025W35_2A_0474_3D1_spx_l2b-v27-2026-231.fits",
+   "shape": [
+    59,
+    58
+   ],
+   "corners_icrs_deg": [
+    [
+     269.39630794697706,
+     4.816584695261592
+    ],
+    [
+     269.4956904497642,
+     4.8195850464182115
+    ],
+    [
+     269.4957467359179,
+     4.718758958699621
+    ],
+    [
+     269.3963546156104,
+     4.715754830008399
+    ]
+   ],
+   "max_corner_distance_deg": 0.07216788427808027,
+   "mid_utc": "2025-08-30T22:45:21.717",
+   "mid_mjd_tdb": 60917.94896874614,
+   "dt_from_catalog_epoch_yr": 9.66310524191835
+  }
+ ],
+ "count_query": {
+  "adql": "SELECT COUNT(*) AS n_rows FROM gaiadr3.gaia_source WHERE 1 = CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', 269.4462800, 4.7680300, 0.1133729))",
+  "form": {
+   "REQUEST": "doQuery",
+   "LANG": "ADQL",
+   "FORMAT": "csv",
+   "MAXREC": "50000",
+   "QUERY": "SELECT COUNT(*) AS n_rows FROM gaiadr3.gaia_source WHERE 1 = CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', 269.4462800, 4.7680300, 0.1133729))"
+  },
+  "record": {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:29.325143Z",
+   "status": 200,
+   "bytes": 12,
+   "sha256": "8a319f14f03f26f6a704065277cc3e14785717ec54903057469f937bdb944ce5",
+   "elapsed_s": 2.177,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  },
+  "n_rows": 3180
+ },
+ "field_query": {
+  "adql": "SELECT source_id, ref_epoch, ra, ra_error, dec, dec_error, parallax, parallax_error, pmra, pmra_error, pmdec, pmdec_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, astrometric_params_solved, nu_eff_used_in_astrometry, pseudocolour, visibility_periods_used, ruwe, astrometric_excess_noise, astrometric_excess_noise_sig, ipd_frac_multi_peak, ipd_gof_harmonic_amplitude, duplicated_source, non_single_star, phot_g_mean_mag, phot_bp_mean_mag, phot_rp_mean_mag, bp_rp, phot_variable_flag, radial_velocity, radial_velocity_error, grvs_mag, rv_template_teff FROM gaiadr3.gaia_source WHERE 1 = CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', 269.4462800, 4.7680300, 0.1133729)) ORDER BY source_id",
+  "form": {
+   "REQUEST": "doQuery",
+   "LANG": "ADQL",
+   "FORMAT": "votable",
+   "MAXREC": "50000",
+   "QUERY": "SELECT source_id, ref_epoch, ra, ra_error, dec, dec_error, parallax, parallax_error, pmra, pmra_error, pmdec, pmdec_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, astrometric_params_solved, nu_eff_used_in_astrometry, pseudocolour, visibility_periods_used, ruwe, astrometric_excess_noise, astrometric_excess_noise_sig, ipd_frac_multi_peak, ipd_gof_harmonic_amplitude, duplicated_source, non_single_star, phot_g_mean_mag, phot_bp_mean_mag, phot_rp_mean_mag, bp_rp, phot_variable_flag, radial_velocity, radial_velocity_error, grvs_mag, rv_template_teff FROM gaiadr3.gaia_source WHERE 1 = CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', 269.4462800, 4.7680300, 0.1133729)) ORDER BY source_id"
+  },
+  "record": {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:31.502044Z",
+   "status": 200,
+   "bytes": 889558,
+   "sha256": "4494d19abc5e1ab6437675e1da91471e0421b22dc7592f06047ef44ea5b06918",
+   "elapsed_s": 3.759,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  },
+  "n_rows": 3180,
+  "response_file": "gaia_dr3_response.vot.gz",
+  "response_sha256": "4494d19abc5e1ab6437675e1da91471e0421b22dc7592f06047ef44ea5b06918",
+  "response_sha256_gz": "de31e8b39bdf7ff6005e071d2d380e12e5438f964656b600f06ea0e70942f7aa",
+  "job_id": "3cf2ac3f-e07d-11f1-87a2-bc97e148b76b-O",
+  "query_status": "OK",
+  "fields": [
+   {
+    "name": "source_id",
+    "unit": null,
+    "datatype": "long",
+    "ucd": "meta.id"
+   },
+   {
+    "name": "ref_epoch",
+    "unit": "yr",
+    "datatype": "double",
+    "ucd": "meta.ref;time.epoch"
+   },
+   {
+    "name": "ra",
+    "unit": "deg",
+    "datatype": "double",
+    "ucd": "pos.eq.ra;meta.main"
+   },
+   {
+    "name": "ra_error",
+    "unit": "mas",
+    "datatype": "float",
+    "ucd": "stat.error;pos.eq.ra"
+   },
+   {
+    "name": "dec",
+    "unit": "deg",
+    "datatype": "double",
+    "ucd": "pos.eq.dec;meta.main"
+   },
+   {
+    "name": "dec_error",
+    "unit": "mas",
+    "datatype": "float",
+    "ucd": "stat.error;pos.eq.dec"
+   },
+   {
+    "name": "parallax",
+    "unit": "mas",
+    "datatype": "double",
+    "ucd": "pos.parallax.trig"
+   },
+   {
+    "name": "parallax_error",
+    "unit": "mas",
+    "datatype": "float",
+    "ucd": "stat.error;pos.parallax.trig"
+   },
+   {
+    "name": "pmra",
+    "unit": "mas / yr",
+    "datatype": "double",
+    "ucd": "pos.pm;pos.eq.ra"
+   },
+   {
+    "name": "pmra_error",
+    "unit": "mas / yr",
+    "datatype": "float",
+    "ucd": "stat.error;pos.pm;pos.eq.ra"
+   },
+   {
+    "name": "pmdec",
+    "unit": "mas / yr",
+    "datatype": "double",
+    "ucd": "pos.pm;pos.eq.dec"
+   },
+   {
+    "name": "pmdec_error",
+    "unit": "mas / yr",
+    "datatype": "float",
+    "ucd": "stat.error;pos.pm;pos.eq.dec"
+   },
+   {
+    "name": "ra_dec_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "ra_parallax_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "ra_pmra_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "ra_pmdec_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "dec_parallax_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "dec_pmra_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "dec_pmdec_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "parallax_pmra_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "parallax_pmdec_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "pmra_pmdec_corr",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.correlation"
+   },
+   {
+    "name": "astrometric_params_solved",
+    "unit": null,
+    "datatype": "short",
+    "ucd": "meta.number"
+   },
+   {
+    "name": "nu_eff_used_in_astrometry",
+    "unit": "1 / um",
+    "datatype": "float",
+    "ucd": "em.wavenumber"
+   },
+   {
+    "name": "pseudocolour",
+    "unit": "1 / um",
+    "datatype": "float",
+    "ucd": "em.wavenumber"
+   },
+   {
+    "name": "visibility_periods_used",
+    "unit": null,
+    "datatype": "short",
+    "ucd": "meta.number"
+   },
+   {
+    "name": "ruwe",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.error"
+   },
+   {
+    "name": "astrometric_excess_noise",
+    "unit": "mas",
+    "datatype": "float",
+    "ucd": "stat.value"
+   },
+   {
+    "name": "astrometric_excess_noise_sig",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.value"
+   },
+   {
+    "name": "ipd_frac_multi_peak",
+    "unit": null,
+    "datatype": "short",
+    "ucd": "stat.value"
+   },
+   {
+    "name": "ipd_gof_harmonic_amplitude",
+    "unit": null,
+    "datatype": "float",
+    "ucd": "stat.value"
+   },
+   {
+    "name": "duplicated_source",
+    "unit": null,
+    "datatype": "boolean",
+    "ucd": "meta.code.status"
+   },
+   {
+    "name": "non_single_star",
+    "unit": null,
+    "datatype": "short",
+    "ucd": "meta.code.status"
+   },
+   {
+    "name": "phot_g_mean_mag",
+    "unit": "mag",
+    "datatype": "float",
+    "ucd": "phot.mag;em.opt"
+   },
+   {
+    "name": "phot_bp_mean_mag",
+    "unit": "mag",
+    "datatype": "float",
+    "ucd": "phot.mag;em.opt.B"
+   },
+   {
+    "name": "phot_rp_mean_mag",
+    "unit": "mag",
+    "datatype": "float",
+    "ucd": "phot.mag;em.opt.R"
+   },
+   {
+    "name": "bp_rp",
+    "unit": "mag",
+    "datatype": "float",
+    "ucd": "phot.color;em.opt.B;em.opt.R"
+   },
+   {
+    "name": "phot_variable_flag",
+    "unit": null,
+    "datatype": "char",
+    "ucd": "meta.code;src.var"
+   },
+   {
+    "name": "radial_velocity",
+    "unit": "km / s",
+    "datatype": "float",
+    "ucd": "spect.dopplerVeloc.opt;em.opt.I"
+   },
+   {
+    "name": "radial_velocity_error",
+    "unit": "km / s",
+    "datatype": "float",
+    "ucd": "stat.error;spect.dopplerVeloc.opt;em.opt.I"
+   },
+   {
+    "name": "grvs_mag",
+    "unit": "mag",
+    "datatype": "float",
+    "ucd": "phot.mag;em.opt"
+   },
+   {
+    "name": "rv_template_teff",
+    "unit": "K",
+    "datatype": "float",
+    "ucd": "stat.fit.param"
+   }
+  ],
+  "params": {
+   "CITATION": "https://www.cosmos.esa.int/web/gaia-users/credits",
+   "RELEASE": "Gaia DR3",
+   "HELP": "https://www.cosmos.esa.int/web/gaia-users/archive",
+   "ISSUES": "https://www.cosmos.esa.int/web/gaia-users/known-issues",
+   "DATA": "https://www.cosmos.esa.int/web/gaia/data-access",
+   "TERMS": "https://www.cosmos.esa.int/web/esdc/terms-and-conditions",
+   "HOME": "https://www.cosmos.esa.int/web/gaia",
+   "PUBLISHER": "ESA/Gaia/DPAC",
+   "CREATOR": "Gaia Collaboration"
+  },
+  "coosys": [
+   {
+    "system": "ICRS",
+    "epoch": "J2016.0",
+    "equinox": null
+   }
+  ]
+ },
+ "checks": [
+  {
+   "id": "columns",
+   "status": "pass",
+   "detail": "42 columns by name; missing none; unexpected none",
+   "reference": "Gaia DR3 data model: gaiadr3.gaia_source"
+  },
+  {
+   "id": "units",
+   "status": "pass",
+   "detail": "all column units equal the documented units (astropy unit comparison)",
+   "reference": "Gaia DR3 data model: gaiadr3.gaia_source"
+  },
+  {
+   "id": "datatypes",
+   "status": "pass",
+   "detail": "VOTable datatypes as documented (source_id is 'long')",
+   "reference": null
+  },
+  {
+   "id": "release",
+   "status": "pass",
+   "detail": "VOTable PARAM RELEASE = 'Gaia DR3' (expected 'Gaia DR3')",
+   "reference": "ESA Gaia archive TAP response metadata"
+  },
+  {
+   "id": "table",
+   "status": "pass",
+   "detail": "query recorded by the service names gaiadr3.gaia_source",
+   "reference": null
+  },
+  {
+   "id": "coosys",
+   "status": "pass",
+   "detail": "COOSYS system ['ICRS'], epoch ['J2016.0'] (expected ICRS, J2016.0)",
+   "reference": null
+  },
+  {
+   "id": "query_status",
+   "status": "pass",
+   "detail": "QUERY_STATUS = 'OK' (OVERFLOW would mean a truncated result)",
+   "reference": null
+  },
+  {
+   "id": "ref_epoch",
+   "status": "pass",
+   "detail": "ref_epoch = 2016.0 (Julian year, TCB) for 3180 of 3180 rows",
+   "reference": null
+  },
+  {
+   "id": "source_ids",
+   "status": "pass",
+   "detail": "3180 decimal-string source_ids, unique=True, ascending=True (ORDER BY source_id)",
+   "reference": null
+  },
+  {
+   "id": "solution_types",
+   "status": "pass",
+   "detail": "astrometric_params_solved codes [3, 31, 95]; 2-parameter rows have NULL parallax/pm: True; 5/6-parameter rows have parallax/pm and errors: True",
+   "reference": null
+  },
+  {
+   "id": "row_count",
+   "status": "pass",
+   "detail": "3180 rows returned; independent COUNT(*) of the same circle = 3180",
+   "reference": null
+  }
+ ],
+ "pinned_sources": [
+  {
+   "source_id": "4472832130942575872",
+   "ref_epoch": 2016.0,
+   "ra": 269.44850252543836,
+   "ra_error": 0.026238996535539627,
+   "dec": 4.739420051112412,
+   "dec_error": 0.02904352732002735,
+   "parallax": 546.975939730948,
+   "parallax_error": 0.04011635482311249,
+   "pmra": -801.5509783684709,
+   "pmra_error": 0.0318208672106266,
+   "pmdec": 10362.394206546573,
+   "pmdec_error": 0.036070454865694046,
+   "ra_dec_corr": -0.052255287766456604,
+   "ra_parallax_corr": 0.04826723039150238,
+   "ra_pmra_corr": -0.2110990583896637,
+   "ra_pmdec_corr": -0.034664228558540344,
+   "dec_parallax_corr": -0.5435387492179871,
+   "dec_pmra_corr": -0.0558132603764534,
+   "dec_pmdec_corr": -0.6312156319618225,
+   "parallax_pmra_corr": -0.05781335011124611,
+   "parallax_pmdec_corr": 0.5593565106391907,
+   "pmra_pmdec_corr": 0.03058500960469246,
+   "astrometric_params_solved": 31.0,
+   "nu_eff_used_in_astrometry": 1.2571804523468018,
+   "pseudocolour": null,
+   "visibility_periods_used": 17.0,
+   "ruwe": 1.084850549697876,
+   "astrometric_excess_noise": 0.204818457365036,
+   "astrometric_excess_noise_sig": 21.04514503479004,
+   "ipd_frac_multi_peak": 0.0,
+   "ipd_gof_harmonic_amplitude": 0.024416973814368248,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 8.193974494934082,
+   "phot_bp_mean_mag": 9.791788101196289,
+   "phot_rp_mean_mag": 6.9580912590026855,
+   "bp_rp": 2.8336968421936035,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": -110.46822357177734,
+   "radial_velocity_error": 0.13125522434711456,
+   "grvs_mag": 6.365547180175781,
+   "rv_template_teff": 3300.0
+  },
+  {
+   "source_id": "4472837942025804800",
+   "ref_epoch": 2016.0,
+   "ra": 269.48416200060814,
+   "ra_error": 0.011557986959815025,
+   "dec": 4.831755793397169,
+   "dec_error": 0.010167923755943775,
+   "parallax": 1.4232981277188417,
+   "parallax_error": 0.01451860461384058,
+   "pmra": 3.8288675489547677,
+   "pmra_error": 0.01304433774203062,
+   "pmdec": 2.2735047103003527,
+   "pmdec_error": 0.012231088243424892,
+   "ra_dec_corr": -0.23800887167453766,
+   "ra_parallax_corr": 0.26201581954956055,
+   "ra_pmra_corr": -0.14291159808635712,
+   "ra_pmdec_corr": 0.021854067221283913,
+   "dec_parallax_corr": -0.3303946554660797,
+   "dec_pmra_corr": -0.1117776483297348,
+   "dec_pmdec_corr": -0.46940362453460693,
+   "parallax_pmra_corr": -0.14699502289295197,
+   "parallax_pmdec_corr": 0.3726702332496643,
+   "pmra_pmdec_corr": 0.08053448051214218,
+   "astrometric_params_solved": 31.0,
+   "nu_eff_used_in_astrometry": 1.54082453250885,
+   "pseudocolour": null,
+   "visibility_periods_used": 17.0,
+   "ruwe": 0.8057911992073059,
+   "astrometric_excess_noise": 0.05062710866332054,
+   "astrometric_excess_noise_sig": 3.312700033187866,
+   "ipd_frac_multi_peak": 0.0,
+   "ipd_gof_harmonic_amplitude": 0.01801939867436886,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 11.821142196655273,
+   "phot_bp_mean_mag": 12.181912422180176,
+   "phot_rp_mean_mag": 11.290657043457031,
+   "bp_rp": 0.8912553787231445,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": -31.38987159729004,
+   "radial_velocity_error": 0.6864109039306641,
+   "grvs_mag": 11.092849731445312,
+   "rv_template_teff": 5750.0
+  },
+  {
+   "source_id": "4472836292758713216",
+   "ref_epoch": 2016.0,
+   "ra": 269.443871611535,
+   "ra_error": 0.012801256962120533,
+   "dec": 4.796291416021129,
+   "dec_error": 0.011619402095675468,
+   "parallax": 0.9765427027908512,
+   "parallax_error": 0.015798721462488174,
+   "pmra": -6.158672306279798,
+   "pmra_error": 0.015396637842059135,
+   "pmdec": 0.5128588102925811,
+   "pmdec_error": 0.014128879643976688,
+   "ra_dec_corr": -0.1523752063512802,
+   "ra_parallax_corr": 0.182140052318573,
+   "ra_pmra_corr": -0.21246986091136932,
+   "ra_pmdec_corr": -0.010472250171005726,
+   "dec_parallax_corr": -0.31904175877571106,
+   "dec_pmra_corr": -0.0787036195397377,
+   "dec_pmdec_corr": -0.5548262596130371,
+   "parallax_pmra_corr": -0.15403826534748077,
+   "parallax_pmdec_corr": 0.3704572319984436,
+   "pmra_pmdec_corr": -0.014246176928281784,
+   "astrometric_params_solved": 31.0,
+   "nu_eff_used_in_astrometry": 1.4350991249084473,
+   "pseudocolour": null,
+   "visibility_periods_used": 18.0,
+   "ruwe": 1.104310393333435,
+   "astrometric_excess_noise": 0.07996279746294022,
+   "astrometric_excess_noise_sig": 8.861723899841309,
+   "ipd_frac_multi_peak": 0.0,
+   "ipd_gof_harmonic_amplitude": 0.024513589218258858,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 11.862573623657227,
+   "phot_bp_mean_mag": 12.49676513671875,
+   "phot_rp_mean_mag": 11.09972858428955,
+   "bp_rp": 1.3970365524291992,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": -12.091110229492188,
+   "radial_velocity_error": 0.4073440432548523,
+   "grvs_mag": 10.777619361877441,
+   "rv_template_teff": 4750.0
+  },
+  {
+   "source_id": "4472838762358909184",
+   "ref_epoch": 2016.0,
+   "ra": 269.4548239675722,
+   "ra_error": 0.013908659107983112,
+   "dec": 4.852172704082272,
+   "dec_error": 0.012499375268816948,
+   "parallax": 0.1224657040456407,
+   "parallax_error": 0.01714341714978218,
+   "pmra": -0.08523542682677264,
+   "pmra_error": 0.016962459310889244,
+   "pmdec": -8.237271428677355,
+   "pmdec_error": 0.014600611291825771,
+   "ra_dec_corr": -0.11435642093420029,
+   "ra_parallax_corr": 0.04662199318408966,
+   "ra_pmra_corr": -0.09837500751018524,
+   "ra_pmdec_corr": -0.10267649590969086,
+   "dec_parallax_corr": -0.3467017412185669,
+   "dec_pmra_corr": -0.13008897006511688,
+   "dec_pmdec_corr": -0.5791260004043579,
+   "parallax_pmra_corr": -0.2047283947467804,
+   "parallax_pmdec_corr": 0.4240947961807251,
+   "pmra_pmdec_corr": -0.0273026954382658,
+   "astrometric_params_solved": 31.0,
+   "nu_eff_used_in_astrometry": 1.3123600482940674,
+   "pseudocolour": null,
+   "visibility_periods_used": 19.0,
+   "ruwe": 1.065086007118225,
+   "astrometric_excess_noise": 0.08774197846651077,
+   "astrometric_excess_noise_sig": 9.579962730407715,
+   "ipd_frac_multi_peak": 0.0,
+   "ipd_gof_harmonic_amplitude": 0.03298133984208107,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 12.465688705444336,
+   "phot_bp_mean_mag": 13.647253036499023,
+   "phot_rp_mean_mag": 11.396707534790039,
+   "bp_rp": 2.2505455017089844,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": 46.16496276855469,
+   "radial_velocity_error": 0.537283182144165,
+   "grvs_mag": 10.946919441223145,
+   "rv_template_teff": 3800.0
+  },
+  {
+   "source_id": "4472836563335659008",
+   "ref_epoch": 2016.0,
+   "ra": 269.3719376440295,
+   "ra_error": 0.017561059445142746,
+   "dec": 4.780480466203376,
+   "dec_error": 0.016607461497187614,
+   "parallax": 1.9675823179027216,
+   "parallax_error": 0.01929084025323391,
+   "pmra": 0.49723815512205594,
+   "pmra_error": 0.02155403047800064,
+   "pmdec": -8.743334961478878,
+   "pmdec_error": 0.01815810613334179,
+   "ra_dec_corr": -0.2674798369407654,
+   "ra_parallax_corr": 0.07503325492143631,
+   "ra_pmra_corr": -0.3319363296031952,
+   "ra_pmdec_corr": 0.09030113369226456,
+   "dec_parallax_corr": -0.24891282618045807,
+   "dec_pmra_corr": 0.005367069039493799,
+   "dec_pmdec_corr": -0.718498945236206,
+   "parallax_pmra_corr": -0.08855532109737396,
+   "parallax_pmdec_corr": 0.279609352350235,
+   "pmra_pmdec_corr": -0.1536232829093933,
+   "astrometric_params_solved": 31.0,
+   "nu_eff_used_in_astrometry": 1.5217795372009277,
+   "pseudocolour": null,
+   "visibility_periods_used": 17.0,
+   "ruwe": 1.339931607246399,
+   "astrometric_excess_noise": 0.10123591870069504,
+   "astrometric_excess_noise_sig": 12.730096817016602,
+   "ipd_frac_multi_peak": 65.0,
+   "ipd_gof_harmonic_amplitude": 0.053511202335357666,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 12.52945327758789,
+   "phot_bp_mean_mag": 12.89401912689209,
+   "phot_rp_mean_mag": 11.92117977142334,
+   "bp_rp": 0.97283935546875,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": -7.89024543762207,
+   "radial_velocity_error": 11.214537620544434,
+   "grvs_mag": null,
+   "rv_template_teff": 5500.0
+  },
+  {
+   "source_id": "4472837770227461504",
+   "ref_epoch": 2016.0,
+   "ra": 269.4570371115001,
+   "ra_error": 0.011846911162137985,
+   "dec": 4.811112657622305,
+   "dec_error": 0.01076554972678423,
+   "parallax": 0.4894495398217104,
+   "parallax_error": 0.014657026156783104,
+   "pmra": 1.324612539590324,
+   "pmra_error": 0.014303796924650669,
+   "pmdec": -7.686559994524281,
+   "pmdec_error": 0.013023960404098034,
+   "ra_dec_corr": -0.15731669962406158,
+   "ra_parallax_corr": 0.19046881794929504,
+   "ra_pmra_corr": -0.23216556012630463,
+   "ra_pmdec_corr": 0.006596975959837437,
+   "dec_parallax_corr": -0.31890520453453064,
+   "dec_pmra_corr": -0.058300312608480453,
+   "dec_pmdec_corr": -0.5514681935310364,
+   "parallax_pmra_corr": -0.17356935143470764,
+   "parallax_pmdec_corr": 0.36046937108039856,
+   "pmra_pmdec_corr": -0.007101032882928848,
+   "astrometric_params_solved": 31.0,
+   "nu_eff_used_in_astrometry": 1.3822555541992188,
+   "pseudocolour": null,
+   "visibility_periods_used": 18.0,
+   "ruwe": 1.0970447063446045,
+   "astrometric_excess_noise": 0.0505877360701561,
+   "astrometric_excess_noise_sig": 3.0147228240966797,
+   "ipd_frac_multi_peak": 0.0,
+   "ipd_gof_harmonic_amplitude": 0.017295900732278824,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 12.653553009033203,
+   "phot_bp_mean_mag": 13.485408782958984,
+   "phot_rp_mean_mag": 11.768242835998535,
+   "bp_rp": 1.7171659469604492,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": 69.2262191772461,
+   "radial_velocity_error": 0.31159508228302,
+   "grvs_mag": 11.391368865966797,
+   "rv_template_teff": 4500.0
+  },
+  {
+   "source_id": "4472831306295694976",
+   "ref_epoch": 2016.0,
+   "ra": 269.47673867361766,
+   "ra_error": 0.012762445025146008,
+   "dec": 4.68059921622862,
+   "dec_error": 0.012843591161072254,
+   "parallax": 0.5215005717692351,
+   "parallax_error": 0.0162899699062109,
+   "pmra": -6.751953073244006,
+   "pmra_error": 0.016371916979551315,
+   "pmdec": 0.1924331447671851,
+   "pmdec_error": 0.016121864318847656,
+   "ra_dec_corr": -0.1934131234884262,
+   "ra_parallax_corr": 0.15077562630176544,
+   "ra_pmra_corr": -0.2591215670108795,
+   "ra_pmdec_corr": 0.11943519860506058,
+   "dec_parallax_corr": -0.3499889671802521,
+   "dec_pmra_corr": 0.1013629287481308,
+   "dec_pmdec_corr": -0.53468257188797,
+   "parallax_pmra_corr": -0.1786937415599823,
+   "parallax_pmdec_corr": 0.2622002959251404,
+   "pmra_pmdec_corr": -0.05231459438800812,
+   "astrometric_params_solved": 31.0,
+   "nu_eff_used_in_astrometry": 1.4486199617385864,
+   "pseudocolour": null,
+   "visibility_periods_used": 17.0,
+   "ruwe": 1.0590137243270874,
+   "astrometric_excess_noise": 0.06316720694303513,
+   "astrometric_excess_noise_sig": 4.022558689117432,
+   "ipd_frac_multi_peak": 0.0,
+   "ipd_gof_harmonic_amplitude": 0.03500042110681534,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 12.767820358276367,
+   "phot_bp_mean_mag": 13.360864639282227,
+   "phot_rp_mean_mag": 12.032936096191406,
+   "bp_rp": 1.3279285430908203,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": 10.990067481994629,
+   "radial_velocity_error": 1.259731411933899,
+   "grvs_mag": 11.747190475463867,
+   "rv_template_teff": 5250.0
+  },
+  {
+   "source_id": "4472836567633878656",
+   "ref_epoch": 2016.0,
+   "ra": 269.3716417628814,
+   "ra_error": 1.8465496301651,
+   "dec": 4.780688475223709,
+   "dec_error": 2.4341211318969727,
+   "parallax": null,
+   "parallax_error": null,
+   "pmra": null,
+   "pmra_error": null,
+   "pmdec": null,
+   "pmdec_error": null,
+   "ra_dec_corr": 0.9996276497840881,
+   "ra_parallax_corr": null,
+   "ra_pmra_corr": null,
+   "ra_pmdec_corr": null,
+   "dec_parallax_corr": null,
+   "dec_pmra_corr": null,
+   "dec_pmdec_corr": null,
+   "parallax_pmra_corr": null,
+   "parallax_pmdec_corr": null,
+   "pmra_pmdec_corr": null,
+   "astrometric_params_solved": 3.0,
+   "nu_eff_used_in_astrometry": null,
+   "pseudocolour": null,
+   "visibility_periods_used": 6.0,
+   "ruwe": null,
+   "astrometric_excess_noise": 0.0317540168762207,
+   "astrometric_excess_noise_sig": 0.09808938950300217,
+   "ipd_frac_multi_peak": 0.0,
+   "ipd_gof_harmonic_amplitude": 9.191117286682129,
+   "duplicated_source": false,
+   "non_single_star": 0.0,
+   "phot_g_mean_mag": 15.137622833251953,
+   "phot_bp_mean_mag": null,
+   "phot_rp_mean_mag": null,
+   "bp_rp": null,
+   "phot_variable_flag": "NOT_AVAILABLE",
+   "radial_velocity": null,
+   "radial_velocity_error": null,
+   "grvs_mag": null,
+   "rv_template_teff": null
+  }
+ ],
+ "epoch_prop": {
+  "adql": "SELECT source_id, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2025.64692853) AS p0, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2025.64692853) AS e0, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2025.64878542) AS p1, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2025.64878542) AS e1, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2025.65287960) AS p2, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2025.65287960) AS e2, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2025.66310539) AS p3, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2025.66310539) AS e3, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2025.66310948) AS p4, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2025.66310948) AS e4, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2025.67723188) AS p5, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2025.67723188) AS e5, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2025.74698722) AS p6, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2025.74698722) AS e6, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2026.18916673) AS p7, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2026.18916673) AS e7, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2026.19046361) AS p8, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2026.19046361) AS e8, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2026.20070044) AS p9, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2026.20070044) AS e9, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2026.22002976) AS p10, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2026.22002976) AS e10, ESDC_EPOCH_PROP(ra, dec, parallax, pmra, pmdec, radial_velocity, ref_epoch, 2026.33842263) AS p11, ESDC_EPOCH_PROP_ERROR(ra, dec, parallax, pmra, pmdec, radial_velocity, ra_error, dec_error, parallax_error, pmra_error, pmdec_error, radial_velocity_error, ra_dec_corr, ra_parallax_corr, ra_pmra_corr, ra_pmdec_corr, dec_parallax_corr, dec_pmra_corr, dec_pmdec_corr, parallax_pmra_corr, parallax_pmdec_corr, pmra_pmdec_corr, ref_epoch, 2026.33842263) AS e11 FROM gaiadr3.gaia_source WHERE source_id IN (4472832130942575872, 4472837942025804800, 4472836292758713216, 4472838762358909184, 4472836563335659008, 4472837770227461504, 4472831306295694976, 4472836567633878656) ORDER BY source_id",
+  "target_epochs_jyear_tcb": [
+   2025.64692853,
+   2025.64878542,
+   2025.6528796,
+   2025.66310539,
+   2025.66310948,
+   2025.67723188,
+   2025.74698722,
+   2026.18916673,
+   2026.19046361,
+   2026.20070044,
+   2026.22002976,
+   2026.33842263
+  ],
+  "record": {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:36.294789Z",
+   "status": 200,
+   "bytes": 38250,
+   "sha256": "656c310cda259913c9c82c195a8d0c7fe4ed4cabdac9e8b714edb710e64bee14",
+   "elapsed_s": 2.592,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  },
+  "response_file": "gaia_dr3_epoch_prop.vot.gz",
+  "response_sha256_gz": "ed53f8f0684cc6c21f764baa41e59e759157da1392821da620af1b583e1bb5f6",
+  "status": "recorded",
+  "note": "Exposure mid-times converted from UTC to Julian years on the TCB axis (the Gaia time scale used by ref_epoch). Recorded only as an independent check of skyshift.science.epoch_propagation; never used for predictions."
+ },
+ "overflow_probe": {
+  "form": {
+   "REQUEST": "doQuery",
+   "LANG": "ADQL",
+   "FORMAT": "votable",
+   "MAXREC": "5"
+  },
+  "record": {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:38.897654Z",
+   "status": 200,
+   "bytes": 12571,
+   "sha256": "a1751b6c10622177274706f8d9da93e3240bd1e4438487ac0fa98baf52b9dedd",
+   "elapsed_s": 2.729,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  },
+  "n_rows": 5,
+  "query_status": "OVERFLOW",
+  "query_status_all": "OK,OVERFLOW",
+  "response_file": "gaia_dr3_overflow_probe.vot.gz",
+  "response_sha256_gz": "66b8cae2e98625418190533ca6256f31afded24662b80f94e1f5ae2c99e30104"
+ },
+ "acknowledgement": "This work has made use of data from the European Space Agency (ESA) mission Gaia (https://www.cosmos.esa.int/gaia), processed by the Gaia Data Processing and Analysis Consortium (DPAC, https://www.cosmos.esa.int/web/gaia/dpac/consortium). Funding for the DPAC has been provided by national institutions, in particular the institutions participating in the Gaia Multilateral Agreement.",
+ "citations": [
+  "Gaia Collaboration, Vallenari, A., et al. 2023, A&A 674, A1 (Gaia Data Release 3: summary of the content and survey properties)",
+  "Gaia Collaboration, Prusti, T., et al. 2016, A&A 595, A1 (The Gaia mission)"
+ ],
+ "notes": [
+  "Gaia DR3 is a frozen release: a different row count for the same ADQL is reported as a count change, separately from schema, provenance and pinned-value checks (which must not change).",
+  "Source IDs are stored and served as decimal strings (64-bit integers exceed exact JavaScript/float64 integers)."
+ ],
+ "http_log": [
+  {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:29.325143Z",
+   "status": 200,
+   "bytes": 12,
+   "sha256": "8a319f14f03f26f6a704065277cc3e14785717ec54903057469f937bdb944ce5",
+   "elapsed_s": 2.177,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  },
+  {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:31.502044Z",
+   "status": 200,
+   "bytes": 889558,
+   "sha256": "4494d19abc5e1ab6437675e1da91471e0421b22dc7592f06047ef44ea5b06918",
+   "elapsed_s": 3.759,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  },
+  {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:36.294789Z",
+   "status": 200,
+   "bytes": 38250,
+   "sha256": "656c310cda259913c9c82c195a8d0c7fe4ed4cabdac9e8b714edb710e64bee14",
+   "elapsed_s": 2.592,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  },
+  {
+   "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+   "started_utc": "2026-11-14T22:46:38.897654Z",
+   "status": 200,
+   "bytes": 12571,
+   "sha256": "a1751b6c10622177274706f8d9da93e3240bd1e4438487ac0fa98baf52b9dedd",
+   "elapsed_s": 2.729,
+   "attempts": 1,
+   "range": null,
+   "content_range": null,
+   "error": null,
+   "method": "POST"
+  }
+ ]
+}

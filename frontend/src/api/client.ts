@@ -1,6 +1,7 @@
 /* Typed client for the SkyShift FastAPI backend (see docs/architecture.md §5).
  * All JSON shapes come from contracts.gen.ts (generated from the Python contracts). */
 import type {
+  AlignmentReport,
   CatalogAssociation,
   CatalogOverlay,
   Dataset,
@@ -10,6 +11,8 @@ import type {
   EvidenceRecord,
   EvidenceValidation,
   FitRequest,
+  GaiaFrameOverlay,
+  GaiaSourceDetail,
   HealthStatus,
   MeasurementSet,
   ModelFit,
@@ -133,6 +136,37 @@ async function plane(path: string): Promise<PlaneData> {
   }
 }
 
+/** Gaia DR3 source_ids are 64-bit integers (up to ~6.9e18 > 2^53): they must arrive as decimal strings.
+ * A number here would already have lost digits in JSON.parse, so it is refused, never converted. */
+export const GAIA_SOURCE_ID = /^[1-9][0-9]{0,18}$/
+
+export function assertGaiaSourceId(value: unknown, where: string): string {
+  if (typeof value !== 'string' || !GAIA_SOURCE_ID.test(value)) {
+    throw new ApiError(500, 'internal_error', `${where}: Gaia source_id must be a decimal string, got ${typeof value === 'string' ? JSON.stringify(value) : typeof value}.`)
+  }
+  return value
+}
+
+function checkOverlay(o: GaiaFrameOverlay): GaiaFrameOverlay {
+  o.predictions.forEach((p) => assertGaiaSourceId(p.source_id, 'Gaia overlay'))
+  return o
+}
+
+function checkDetail(d: GaiaSourceDetail): GaiaSourceDetail {
+  assertGaiaSourceId(d.source.source_id, 'Gaia source detail')
+  if (d.prediction) assertGaiaSourceId(d.prediction.source_id, 'Gaia prediction')
+  if (d.measurement) assertGaiaSourceId(d.measurement.source_id, 'Gaia reference measurement')
+  return d
+}
+
+function checkAlignment(r: AlignmentReport): AlignmentReport {
+  r.frames.forEach((f) => {
+    f.residuals.forEach((x) => assertGaiaSourceId(x.source_id, 'alignment residual'))
+    f.saturated_source_ids.forEach((x) => assertGaiaSourceId(x, 'saturated source'))
+  })
+  return r
+}
+
 export const api = {
   health: () => json<HealthStatus>('/health', {}, 8_000),
   providers: () => json<ProviderStatus[]>('/providers'),
@@ -163,6 +197,11 @@ export const api = {
     return response.text()
   },
   validation: () => json<ValidationReport>('/validation'),
+  gaiaOverlay: async (datasetId: string, frameId: string) =>
+    checkOverlay(await json<GaiaFrameOverlay>(`/datasets/${enc(datasetId)}/gaia/overlay?frame_id=${enc(frameId)}`, {}, 180_000)),
+  gaiaSource: async (datasetId: string, sourceId: string, frameId: string) =>
+    checkDetail(await json<GaiaSourceDetail>(`/datasets/${enc(datasetId)}/gaia/sources/${enc(assertGaiaSourceId(sourceId, 'request'))}?frame_id=${enc(frameId)}`, {}, 180_000)),
+  alignment: async (datasetId: string) => checkAlignment(await json<AlignmentReport>(`/datasets/${enc(datasetId)}/alignment`, {}, 300_000)),
 }
 
 export function describeError(error: unknown): string {

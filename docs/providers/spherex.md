@@ -103,11 +103,24 @@ includes_pixel_response=True)`, `BackgroundInfo(included_in_image=True, subtract
 `kind='archive_wcs_reprojection'`, `display_only=True`, 64×64 north-up grid, bilinear image, nearest-pixel flags,
 `SKYSHIFT_NO_COVERAGE` (bit 31) outside the cutout.
 
+## Gaia DR3 predictions and alignment diagnostics (session 3)
+The archive WCS is fitted to Gaia DR3 positions propagated with proper motion (ES v2.1 §3.2.8). The per-frame residuals
+confirm a catalogue-frame WCS: χ² 197 (30 dof), frame offsets ≤ 0.30″, against the 4.7–12.8″ that applied aberration would
+produce. Gaia DR3 predictions (no aberration, geocentric parallax applied once) are therefore placed through the archive WCS
+on every frame. Reference stars are fitted with each frame's own ePSF (validated by injection into the real pixels).
+- **Usable frames:** 15 of 17 have 5–13 references.
+- **Pooled residual before correction:** mean (+0.016″, −0.015″), RMS (0.210″, 0.228″), extra scatter 0.11″.
+- **Constant offset:** justified in 5 frames (mean offsets 0.14–0.43″), evaluated on held-out stars and never applied.
+- **Too few references:** two frames (PERSIST-dominated D3; D6 with 4).
+
+Details, per-frame table and error budget: [gaia_dr3.md](gaia_dr3.md).
+
 ## Not done (scientific limitations)
-- No SPHEREx photometry or astrometry: ePSF evaluation, flux calibration from MJy/sr (pixel solid angles), and flag
-  handling in fits are not implemented; pixel values are surface brightness including zodiacal light.
-- No registration by SkyShift: display alignment uses the archive TAN-SIP WCS (documented RMS < 0.3″ vs Gaia/2MASS);
-  residuals against Gaia DR3 are the next step. Hence no difference images and no motion fits on real data.
+- No SPHEREx photometry: flux calibration from MJy/sr (pixel solid angles) and the documented systematic floor are not
+  implemented; pixel values are surface brightness including zodiacal light. The ePSF is evaluated only to fit positions
+  of Gaia reference stars for the alignment diagnostics.
+- No registration or correction by SkyShift: display alignment uses the archive TAN-SIP WCS, whose residuals against
+  Gaia DR3 are measured (above) but not applied. Hence no difference images and no target motion fits on real data.
 - Wavelengths: WCS-WAVE lookup at the field centre only (visualization-grade); CWAVE/CBAND products not retrieved.
   Across one 0.1° cutout the local wavelength changes by 11 nm (D1, ≈ 0.5 bandwidth) to 27 nm (D3), measured at the
   cutout corners, so frames that are compatible at the centre are not necessarily compatible near the cutout edges.

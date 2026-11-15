@@ -4,6 +4,7 @@
  * Generated from backend/skyshift/contracts.py (skyshift.contracts/1). Do not edit.
  */
 export interface SkyShiftContracts {
+  AlignmentReport?: AlignmentReport;
   ApiError?: ApiError;
   AssociationCandidate?: AssociationCandidate;
   AstrometricCalibration?: AstrometricCalibration;
@@ -13,6 +14,7 @@ export interface SkyShiftContracts {
   CatalogOverlay?: CatalogOverlay;
   CatalogSource?: CatalogSource;
   ChangeIndicator?: ChangeIndicator;
+  ConventionTest?: ConventionTest;
   Coverage?: Coverage;
   CurveComponent?: CurveComponent;
   Dataset?: Dataset;
@@ -22,6 +24,8 @@ export interface SkyShiftContracts {
   DetectedSource?: DetectedSource;
   DifferenceInfo?: DifferenceInfo;
   Epoch?: Epoch;
+  ErrorBudgetTerm?: ErrorBudgetTerm;
+  EstimatorValidation?: EstimatorValidation;
   EvidenceRecord?: EvidenceRecord;
   EvidenceSelection?: EvidenceSelection;
   EvidenceValidation?: EvidenceValidation;
@@ -30,10 +34,15 @@ export interface SkyShiftContracts {
   FitParameter?: FitParameter;
   FitRequest?: FitRequest;
   FitResidual?: FitResidual;
+  FrameAlignment?: FrameAlignment;
   FrameProduct?: FrameProduct;
   FrameTruth?: FrameTruth;
+  GaiaFrameOverlay?: GaiaFrameOverlay;
+  GaiaPrediction?: GaiaPrediction;
+  GaiaSourceDetail?: GaiaSourceDetail;
   HealthStatus?: HealthStatus;
   IdentifiabilityReport?: IdentifiabilityReport;
+  InjectionSummary?: InjectionSummary;
   InstrumentDescription?: InstrumentDescription;
   MaskBit?: MaskBit;
   MeasurementSet?: MeasurementSet;
@@ -43,15 +52,20 @@ export interface SkyShiftContracts {
   ObservationTiming?: ObservationTiming;
   ObserverModel?: ObserverModel;
   PSFReference?: PSFReference;
+  PredictionConvention?: PredictionConvention;
   PredictionCurve?: PredictionCurve;
+  PropagatedParameters?: PropagatedParameters;
   PropagatedPosition?: PropagatedPosition;
   Provenance?: Provenance;
   ProviderCapability?: ProviderCapability;
   ProviderStatus?: ProviderStatus;
   Quality?: Quality;
+  RadialInjectionBin?: RadialInjectionBin;
+  ReferenceStarResidual?: ReferenceStarResidual;
   RegistrationSummary?: RegistrationSummary;
   ReproductionCheck?: ReproductionCheck;
   ReproductionReport?: ReproductionReport;
+  ResidualStatistics?: ResidualStatistics;
   ResolveResult?: ResolveResult;
   SimulationSection?: SimulationSection;
   SimulationTruth?: SimulationTruth;
@@ -61,12 +75,331 @@ export interface SkyShiftContracts {
   SuiteRun?: SuiteRun;
   TestResult?: TestResult;
   TrackPoint?: TrackPoint;
+  TranslationEvaluation?: TranslationEvaluation;
   TruthPosition?: TruthPosition;
   TruthSource?: TruthSource;
   ValidationReport?: ValidationReport;
   ViewState?: ViewState;
   WCSDescription?: WCSDescription;
   WavelengthInfo?: WavelengthInfo;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "AlignmentReport".
+ */
+export interface AlignmentReport {
+  catalog: string;
+  convention: PredictionConvention;
+  convention_test: ConventionTest;
+  dataset_id: string;
+  field_assessment: string;
+  frames: FrameAlignment[];
+  limitations: string[];
+  method: string;
+  method_version: string;
+  n_frames_insufficient: number;
+  n_frames_not_validated: number;
+  n_frames_ok: number;
+  pooled: ResidualStatistics | null;
+  /**
+   * Which frames' references enter the pooled statistics and the convention test
+   */
+  pooled_over: string;
+  provenance: Provenance;
+  reason_texts: {
+    [k: string]: string;
+  };
+  release: string;
+  selection_criteria: string[];
+  status: "available" | "unavailable";
+  status_reason: string;
+}
+/**
+ * What a catalogue prediction on an archive frame represents, and how that was established.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "PredictionConvention".
+ */
+export interface PredictionConvention {
+  error_budget: ErrorBudgetTerm[];
+  evidence: string[];
+  excludes: string[];
+  frame: string;
+  includes: string[];
+  status: "resolved" | "approximate";
+  wcs_convention: string;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ErrorBudgetTerm".
+ */
+export interface ErrorBudgetTerm {
+  /**
+   * Upper bound of the term's positional effect, if one is stated
+   */
+  bound_arcsec: number | null;
+  note: string;
+  source: string | null;
+  term: string;
+  treatment: "included" | "neglected" | "absorbed_by_wcs" | "dominant_uncertainty" | "excluded_by_selection";
+  typical_arcsec: number | null;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ConventionTest".
+ */
+export interface ConventionTest {
+  chi2_apparent_frame: number | null;
+  chi2_catalog_frame: number | null;
+  decision: string;
+  dof: number | null;
+  max_aberration_arcsec: number | null;
+  /**
+   * Largest per-frame mean residual among the frames tested
+   */
+  max_frame_offset_arcsec: number | null;
+  min_aberration_arcsec: number | null;
+  n_frames: number;
+  p_apparent_frame: number | null;
+  p_catalog_frame: number | null;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "FrameAlignment".
+ */
+export interface FrameAlignment {
+  /**
+   * (east, north) offset expected if the WCS mapped to apparent directions
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  aberration_if_apparent_arcsec: [number, number];
+  band_id: string;
+  detector: number;
+  epoch: Epoch;
+  estimator: EstimatorValidation | null;
+  frame_id: string;
+  n_candidates: number;
+  /**
+   * Predictions fainter than the candidate magnitude limit (not reference candidates)
+   */
+  n_fainter_than_limit: number;
+  /**
+   * Gaia predictions inside the native cutout
+   */
+  n_in_frame: number;
+  /**
+   * Candidates rejected, by reason below
+   */
+  n_rejected: number;
+  n_used: number;
+  observation_id: string;
+  rejected_by_reason: {
+    [k: string]: number;
+  };
+  residuals: ReferenceStarResidual[];
+  saturated_source_ids: string[];
+  statistics: ResidualStatistics | null;
+  status: "ok" | "insufficient_reference_stars" | "estimator_not_validated" | "not_available";
+  status_reason: string;
+  translation: TranslationEvaluation;
+}
+/**
+ * An instant with an explicit time scale.
+ *
+ * `value`/`format`/`scale` preserve the original convention (e.g. Gaia DR3
+ * reference epoch 2016.0, jyear, TCB). `mjd_tdb` is derived by the backend
+ * with astropy for model computations; `iso_utc` is a derived display value.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "Epoch".
+ */
+export interface Epoch {
+  format: "isot" | "mjd" | "jd" | "jyear";
+  /**
+   * Derived display value (UTC ISO-8601)
+   */
+  iso_utc: string | null;
+  /**
+   * Derived: same instant as MJD in TDB
+   */
+  mjd_tdb: number;
+  scale: "utc" | "tai" | "tt" | "tdb" | "tcb";
+  value: number | string;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "EstimatorValidation".
+ */
+export interface EstimatorValidation {
+  criteria: string;
+  method: string;
+  /**
+   * S/N ~ 40 injections binned by distance from the saturated source
+   */
+  near_saturated: RadialInjectionBin[];
+  passed: boolean;
+  per_target: InjectionSummary[];
+  pixel_noise_median: number | null;
+}
+/**
+ * Injection-recovery in an annulus around the saturated source (justifies the exclusion radius).
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "RadialInjectionBin".
+ */
+export interface RadialInjectionBin {
+  bias_x_px: number | null;
+  bias_y_px: number | null;
+  n_injected: number;
+  n_recovered: number;
+  r_max_px: number;
+  r_min_px: number;
+  rms_x_px: number | null;
+  rms_y_px: number | null;
+  robust_pull_x: number | null;
+  robust_pull_y: number | null;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "InjectionSummary".
+ */
+export interface InjectionSummary {
+  bias_x_px: number | null;
+  bias_y_px: number | null;
+  n_injected: number;
+  n_recovered: number;
+  passed: boolean;
+  rms_x_px: number | null;
+  rms_y_px: number | null;
+  robust_pull_x: number | null;
+  robust_pull_y: number | null;
+  se_x_px: number | null;
+  se_y_px: number | null;
+  snr_median: number | null;
+  snr_target: number;
+}
+/**
+ * An ePSF image measurement of a Gaia reference candidate and its residual from the prediction.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ReferenceStarResidual".
+ */
+export interface ReferenceStarResidual {
+  chi2_red: number | null;
+  detail: string | null;
+  dist_saturated_px: number | null;
+  epsf_zone: number | null;
+  frame_id: string;
+  g_mag: number | null;
+  measured_x: number | null;
+  measured_y: number | null;
+  n_masked: number | null;
+  origin: "derived_measurement";
+  predicted_x: number;
+  predicted_y: number;
+  reason: string | null;
+  reason_text: string | null;
+  /**
+   * measured minus predicted, RA*cos(Dec)
+   */
+  residual_east_arcsec: number | null;
+  residual_north_arcsec: number | null;
+  sigma_east_arcsec: number | null;
+  sigma_north_arcsec: number | null;
+  sigma_x_px: number | null;
+  sigma_y_px: number | null;
+  snr: number | null;
+  source_id: string;
+  status: "used" | "rejected";
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ResidualStatistics".
+ */
+export interface ResidualStatistics {
+  chi2_mean: number | null;
+  chi2_zero: number | null;
+  dof_mean: number | null;
+  dof_zero: number | null;
+  /**
+   * Scatter beyond the formal errors (chi2 about the mean = dof)
+   */
+  extra_scatter_arcsec: number | null;
+  mean_east_arcsec: number | null;
+  mean_north_arcsec: number | null;
+  median_east_arcsec: number | null;
+  median_north_arcsec: number | null;
+  n: number;
+  n_outliers_5sigma: number | null;
+  rms_east_arcsec: number | null;
+  rms_north_arcsec: number | null;
+  rms_total_arcsec: number | null;
+  robust_sigma_east_arcsec: number | null;
+  robust_sigma_north_arcsec: number | null;
+  se_east_arcsec: number | null;
+  se_north_arcsec: number | null;
+  std_east_arcsec: number | null;
+  std_north_arcsec: number | null;
+  wmean_east_arcsec: number | null;
+  wmean_north_arcsec: number | null;
+  wse_east_arcsec: number | null;
+  wse_north_arcsec: number | null;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "TranslationEvaluation".
+ */
+export interface TranslationEvaluation {
+  chi2: number | null;
+  decision: string;
+  evaluated: boolean;
+  extra_scatter_arcsec: number | null;
+  heldout_rms_corrected_arcsec: number | null;
+  heldout_rms_uncorrected_arcsec: number | null;
+  justified: boolean;
+  n: number;
+  offset_east_arcsec: number | null;
+  offset_north_arcsec: number | null;
+  p_value: number | null;
+  sigma_east_arcsec: number | null;
+  sigma_north_arcsec: number | null;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "Provenance".
+ */
+export interface Provenance {
+  dataset_id: string | null;
+  /**
+   * Dotted SkyShift function or archive process that produced this
+   */
+  method: string | null;
+  method_version: string | null;
+  notes: string[];
+  origin: "observed" | "simulated" | "simulation_truth" | "derived_measurement" | "model_prediction" | "catalog";
+  /**
+   * IDs of the inputs this product was derived from
+   */
+  parents: string[];
+  processing_version: string | null;
+  provider: ("synthetic" | "spherex" | "gaia_dr3" | "wise" | "neossat") | "skyshift";
+  /**
+   * Data release / collection label exactly as the provider names it
+   */
+  release: string | null;
+  retrieved_utc: string | null;
+  software: SoftwareVersion[];
+  source_url: string | null;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "SoftwareVersion".
+ */
+export interface SoftwareVersion {
+  name: string;
+  version: string;
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
@@ -117,29 +450,6 @@ export interface PropagatedPosition {
   ra_deg: number;
   sigma_dec_mas: number | null;
   sigma_ra_cosdec_mas: number | null;
-}
-/**
- * An instant with an explicit time scale.
- *
- * `value`/`format`/`scale` preserve the original convention (e.g. Gaia DR3
- * reference epoch 2016.0, jyear, TCB). `mjd_tdb` is derived by the backend
- * with astropy for model computations; `iso_utc` is a derived display value.
- *
- * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
- * via the `definition` "Epoch".
- */
-export interface Epoch {
-  format: "isot" | "mjd" | "jd" | "jyear";
-  /**
-   * Derived display value (UTC ISO-8601)
-   */
-  iso_utc: string | null;
-  /**
-   * Derived: same instant as MJD in TDB
-   */
-  mjd_tdb: number;
-  scale: "utc" | "tai" | "tt" | "tdb" | "tcb";
-  value: number | string;
 }
 /**
  * Absolute zero point of the registered frame set against a reference catalog.
@@ -325,42 +635,11 @@ export interface CatalogSource {
   radial_velocity_error_km_s: number | null;
   radial_velocity_km_s: number | null;
   reference_epoch: Epoch;
+  /**
+   * The catalog's own identifier as an exact decimal string (a Gaia source_id is a 64-bit integer; never sent as a JSON number)
+   */
+  source_id: string | null;
   uncertainty_status: "estimated" | "propagated" | "catalog_reported" | "not_available" | "not_applicable";
-}
-/**
- * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
- * via the `definition` "Provenance".
- */
-export interface Provenance {
-  dataset_id: string | null;
-  /**
-   * Dotted SkyShift function or archive process that produced this
-   */
-  method: string | null;
-  method_version: string | null;
-  notes: string[];
-  origin: "observed" | "simulated" | "simulation_truth" | "derived_measurement" | "model_prediction" | "catalog";
-  /**
-   * IDs of the inputs this product was derived from
-   */
-  parents: string[];
-  processing_version: string | null;
-  provider: ("synthetic" | "spherex" | "gaia_dr3" | "wise" | "neossat") | "skyshift";
-  /**
-   * Data release / collection label exactly as the provider names it
-   */
-  release: string | null;
-  retrieved_utc: string | null;
-  software: SoftwareVersion[];
-  source_url: string | null;
-}
-/**
- * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
- * via the `definition` "SoftwareVersion".
- */
-export interface SoftwareVersion {
-  name: string;
-  version: string;
 }
 /**
  * Derived statistics from measured positions/fluxes. Not a classification.
@@ -473,7 +752,9 @@ export interface AnalysisCapability {
     | "difference_imaging"
     | "catalog_overlay"
     | "evidence_record"
-    | "registration";
+    | "registration"
+    | "alignment_diagnostics"
+    | "photometry";
   reason: string | null;
   /**
    * What must be implemented and validated first
@@ -1268,6 +1549,121 @@ export interface FitRequest {
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "GaiaFrameOverlay".
+ */
+export interface GaiaFrameOverlay {
+  adql: string;
+  catalog: string;
+  convention: PredictionConvention;
+  dataset_id: string;
+  epoch: Epoch;
+  /**
+   * Frame the overlay is drawn on (display frame)
+   */
+  frame_id: string;
+  label: string;
+  n_catalog_rows: number;
+  n_in_frame: number;
+  native_frame_id: string;
+  notes: string[];
+  observation_id: string;
+  predictions: GaiaPrediction[];
+  provenance: Provenance;
+  release: string;
+  retrieved_utc: string;
+}
+/**
+ * One Gaia DR3 source predicted at one exposure (a model prediction, never an image measurement).
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "GaiaPrediction".
+ */
+export interface GaiaPrediction {
+  bp_rp: number | null;
+  corr_ra_dec: number | null;
+  dec_deg: number;
+  flags: string[];
+  g_mag: number | null;
+  in_native: boolean;
+  origin: "model_prediction";
+  ra_deg: number;
+  reference_reason: string | null;
+  reference_status: "used" | "rejected" | "not_candidate";
+  sigma_dec_mas: number | null;
+  sigma_ra_cosdec_mas: number | null;
+  solution: "2-parameter" | "5-parameter" | "6-parameter" | "unknown";
+  /**
+   * Gaia DR3 source_id as an exact decimal string
+   */
+  source_id: string;
+  /**
+   * 0-based pixel on the display grid (TAN), where the frame is shown
+   */
+  x_display: number | null;
+  /**
+   * 0-based native cutout pixel through the archive WCS (incl. SIP)
+   */
+  x_native: number;
+  y_display: number | null;
+  y_native: number;
+}
+/**
+ * Everything known about one Gaia source in one frame, with catalogue values and predictions kept apart.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "GaiaSourceDetail".
+ */
+export interface GaiaSourceDetail {
+  dataset_id: string;
+  frame_id: string;
+  limitations: string[];
+  /**
+   * Image measurement (derived), if this source was a reference candidate
+   */
+  measurement: ReferenceStarResidual | null;
+  prediction: GaiaPrediction | null;
+  propagated: PropagatedParameters | null;
+  source: CatalogSource;
+}
+/**
+ * All six astrometric parameters at the exposure epoch with uncertainties (model prediction).
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "PropagatedParameters".
+ */
+export interface PropagatedParameters {
+  corr_ra_dec: number | null;
+  dec_deg: number;
+  epoch: Epoch;
+  method: string;
+  mu_r_mas_yr: number | null;
+  /**
+   * (east, north) observer-parallax displacement applied once
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  observer_parallax_offset_mas: [number, number];
+  origin: "model_prediction";
+  parallax_mas: number | null;
+  /**
+   * Bound on the error from an unknown radial velocity (|v_r| <= 500 km/s); 0 if v_r is catalogued
+   */
+  perspective_bound_mas: number;
+  pmdec_mas_yr: number | null;
+  pmra_mas_yr: number | null;
+  ra_deg: number;
+  radial_velocity_assumed: boolean;
+  radial_velocity_used_km_s: number;
+  /**
+   * ra_cosdec/dec/parallax (mas), pmra/pmdec/mu_r (mas/yr)
+   */
+  sigmas: {
+    [k: string]: number;
+  };
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
  * via the `definition` "HealthStatus".
  */
 export interface HealthStatus {
@@ -1385,6 +1781,10 @@ export interface TestResult {
   id: string;
   message: string | null;
   name: string;
+  /**
+   * Recorded observations that are not failures, e.g. a changed archive row count
+   */
+  notes: string[];
   status: "passed" | "failed" | "skipped" | "error" | "not_run";
   suite: "pytest" | "vitest" | "playwright";
 }

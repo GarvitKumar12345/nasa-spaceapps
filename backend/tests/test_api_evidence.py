@@ -153,16 +153,16 @@ def test_evidence_csv_keeps_origin_units_and_rows(client, record):
 
 @pytest.mark.contracts
 def test_provider_statuses_are_honest():
-    """All five providers listed; 'tested' appears only for SPHEREx live checks recorded in the report; others are documented, not run."""
+    """All five providers listed; 'tested' appears only for SPHEREx/Gaia live checks recorded in the report; WISE/NEOSSat are documented, not run."""
     statuses = [ProviderStatus.model_validate(s.model_dump()) for s in provider_statuses()]
     assert [s.id for s in statuses] == ["synthetic", "spherex", "gaia_dr3", "wise", "neossat"]
     assert all(s.status != "tested" for s in statuses)
     for s in statuses:
         for c in s.capabilities:
             if c.status == "tested":
-                assert s.id == "spherex" and c.checked_utc and "live test" in c.detail
-    assert statuses[1].status == "implemented"
-    for s in statuses[2:]:
+                assert s.id in ("spherex", "gaia_dr3") and c.checked_utc and "live test" in c.detail
+    assert statuses[1].status == "implemented" and statuses[2].status == "implemented"
+    for s in statuses[3:]:
         assert s.status == "documented" and any(c.status == "not_run" for c in s.capabilities)
     for provider in (SpherexProvider(), WiseProvider(), NeossatProvider()):
         with pytest.raises(ProviderUnavailable):

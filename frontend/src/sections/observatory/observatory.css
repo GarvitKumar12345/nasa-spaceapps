@@ -620,3 +620,108 @@ th.nocase,
 .nocase {
   text-transform: none;
 }
+
+/* ---------------------------------------------------------------- Gaia DR3 predictions (observed data)
+ * Predictions are catalogue models: hollow squares (never filled, never teal). ePSF image measurements
+ * are teal crosses. Role is carried by stroke weight/dash and by the legend text, not by colour alone. */
+.sky-gaia rect,
+.sky-gaia path,
+circle.sky-gaia {
+  fill: none;
+  stroke: var(--plot-catalog);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+.sky-gaia-other rect {
+  opacity: 0.55;
+}
+.sky-gaia-rejected rect {
+  stroke-dasharray: 2 2;
+  opacity: 0.85;
+}
+.sky-gaia-used rect {
+  stroke: var(--violet-strong);
+  stroke-width: 2;
+}
+.sky-gaia-saturated rect,
+.sky-gaia-saturated path {
+  stroke: var(--amber);
+  stroke-width: 1.5;
+}
+circle.sky-gaia-no_motion {
+  stroke-dasharray: 3 2;
+  opacity: 0.8;
+}
+.sky-measured {
+  fill: none;
+  stroke: var(--teal-strong);
+  stroke-width: 2;
+}
+.sky-residual-vector {
+  stroke: var(--teal);
+  stroke-width: 1.5;
+}
+.gaia-controls {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s2);
+  margin-top: var(--s2);
+  flex-wrap: wrap;
+}
+.gaia-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1) var(--s3);
+  color: var(--text-2);
+}
+.gaia-legend .legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.lg-gaia {
+  fill: none;
+  stroke: var(--plot-catalog);
+  stroke-width: 1.2;
+}
+.lg-gaia-used {
+  stroke: var(--violet-strong);
+  stroke-width: 2;
+}
+.lg-gaia-dash {
+  stroke-dasharray: 3 2;
+}
+.lg-measured {
+  fill: none;
+  stroke: var(--teal-strong);
+  stroke-width: 2;
+}
+.gaia-panel {
+  border-left: 2px solid var(--violet-wash);
+}
+.gaia-id {
+  font-size: var(--fs-sm);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.alignment-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 380px) minmax(0, 1fr);
+  gap: var(--s4);
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .alignment-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.resid-ring {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 3;
+}
+.resid-mean {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 2;
+}

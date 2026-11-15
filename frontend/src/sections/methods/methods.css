@@ -90,3 +90,8 @@
   align-items: baseline;
   flex-wrap: wrap;
 }
+.me-notes {
+  list-style: none;
+  margin: 2px 0 0 26px;
+  padding: 0;
+}

@@ -63,28 +63,55 @@ FETCH_COMMAND = "cd backend && uv run python -m skyshift.providers.spherex.fetch
 
 UNAVAILABLE: list[AnalysisCapability] = [
     AnalysisCapability(id="source_detection", status="unavailable",
-                       reason="Source detection is not implemented for SPHEREx surface-brightness images in this build.",
+                       reason="Blind source detection is not implemented for SPHEREx surface-brightness images; the only sources examined are Gaia DR3 predictions.",
                        requirements=["Background and zodiacal-light handling validated on SPHEREx data", "Detections checked against an independent catalog"]),
     AnalysisCapability(id="source_measurement", status="unavailable",
-                       reason="Positions and fluxes need effective-PSF fitting (per-zone ePSF, sub-pixel position, pixel response already included); "
-                              "a surface-brightness pixel value is not a point-source flux.",
-                       requirements=["ePSF evaluation through the documented model interface, tested on real stars", "Flux calibration from MJy/sr with pixel solid angles", "Flag handling per ES Sect. 3.3"]),
+                       reason="ePSF positions are measured only for Gaia reference stars inside the alignment diagnostics; measuring a chosen (target) source "
+                              "is not validated (the field-centre star is saturated in every frame).",
+                       requirements=["Target-specific ePSF fitting with neighbour modelling", "Validation on unsaturated targets of known motion"]),
+    AnalysisCapability(id="photometry", status="unavailable",
+                       reason="Pixel values are surface brightness (MJy/sr, zodiacal light included); point-source fluxes need pixel solid angles, aperture/ePSF "
+                              "flux calibration and the documented systematic floor, none of which is validated here.",
+                       requirements=["Flux calibration from MJy/sr with pixel solid-angle maps", "Comparison with the SPHEREx spectrophotometry tool", "Flag handling per ES Sect. 3.3"]),
     AnalysisCapability(id="astrometric_fit", status="unavailable",
-                       reason="No validated SPHEREx positions or uncertainties exist yet, so no motion or parallax model is fitted.",
-                       requirements=["Validated per-epoch positions with uncertainties", "Catalog-referenced registration with recorded residuals"]),
+                       reason="Target motion/parallax fits need validated per-epoch positions of the target; only reference-star residuals are measured, and the "
+                              "field-centre star is saturated in every frame.",
+                       requirements=["Validated target positions with uncertainties at each epoch", "A correction model validated on held-out stars"]),
     AnalysisCapability(id="difference_imaging", status="unavailable",
-                       reason="Difference imaging needs PSF matching, SkyShift-checked registration and calibrated spectral compatibility (CWAVE/CBAND); frames that merely look aligned are not sufficient.",
-                       requirements=["Registration residuals recorded against a reference catalog", "PSF matching between epochs", "CWAVE/CBAND spectral calibration at the source position"]),
-    AnalysisCapability(id="catalog_overlay", status="unavailable",
-                       reason="The Gaia DR3 provider is not implemented yet; it is the next integration step.",
-                       requirements=["Live Gaia DR3 query, epoch propagation to each frame, documented matching"]),
+                       reason="Difference imaging needs PSF matching, a validated registration and calibrated spectral compatibility (CWAVE/CBAND); frames that merely "
+                              "look aligned are not sufficient.",
+                       requirements=["PSF matching between epochs", "Registration validated on held-out stars", "CWAVE/CBAND spectral calibration at the source position"]),
     AnalysisCapability(id="registration", status="unavailable",
-                       reason="SkyShift has not re-registered these frames: display alignment uses the archive TAN-SIP WCS only (documented RMS < 0.3 arcsec vs Gaia/2MASS for detector 3).",
-                       requirements=["Matching of stationary stars to Gaia DR3 propagated to each epoch", "Residual statistics recorded per frame"]),
+                       reason="SkyShift does not re-register or correct these frames: display alignment uses the archive TAN-SIP WCS. The alignment diagnostics "
+                              "measure its residuals and test a translation on held-out stars, but no correction is applied to any product.",
+                       requirements=["A correction model justified in every frame used", "Propagation of the correction uncertainty into downstream products"]),
     AnalysisCapability(id="evidence_record", status="unavailable",
-                       reason="Evidence records need a source identity and measurements, which are not available for observed SPHEREx data in this build.",
-                       requirements=["Source measurement (see above)"]),
+                       reason="Evidence records need a target identity and measurements, which are not available for observed SPHEREx data in this build.",
+                       requirements=["Target source measurement (see above)"]),
 ]
+
+
+def capabilities_for(field_id: str) -> list[AnalysisCapability]:
+    """Analysis capabilities of an observed SPHEREx dataset (Gaia items depend on a recorded Gaia DR3 response)."""
+    from skyshift.providers.gaia_dr3.paths import manifest_path as gaia_manifest_path
+    from skyshift.providers.gaia_dr3.paths import response_path as gaia_response_path
+
+    caps = list(UNAVAILABLE)
+    gaia_ok = gaia_manifest_path(field_id).exists() and gaia_response_path(field_id).exists()
+    fetch = f"cd backend && uv run python -m skyshift.providers.gaia_dr3.fetch --field {field_id}"
+    if gaia_ok:
+        caps.insert(0, AnalysisCapability(
+            id="catalog_overlay", status="available",
+            reason="Gaia DR3 sources (recorded query) propagated to each exposure mid-time and placed through the archive WCS: model predictions, not measurements."))
+        caps.insert(1, AnalysisCapability(
+            id="alignment_diagnostics", status="available",
+            reason="Image-minus-Gaia residuals of isolated, unsaturated reference stars (ePSF positions on native pixels) before any correction; "
+                   "per-frame status, rejected-star reasons and estimator validation in the report."))
+    else:
+        for cid in ("catalog_overlay", "alignment_diagnostics"):
+            caps.insert(0, AnalysisCapability(id=cid, status="unavailable", reason=f"No recorded Gaia DR3 response for this field; run: {fetch}",  # type: ignore[arg-type]
+                                              requirements=["Recorded Gaia DR3 query for the field (fixtures/gaia_dr3/<field>/)"]))
+    return caps
 
 
 class _ArchiveWcsAdapter:
@@ -357,7 +384,8 @@ def build_bundle(preset: FieldPreset, manifest: dict | None = None) -> DatasetBu
     dataset = Dataset(
         id=ds_id, title=preset.title, provider="spherex", origin="observed", release=preset.collection,
         description=(f"Real SPHEREx {ref.COLLECTIONS[preset.collection].release} Spectral Image cutouts ({preset.cutout_size_deg:g} deg) containing the field centre, "
-                     f"grouped by local wavelength at that position. Read-only viewer: display alignment uses the archive WCS; no SkyShift measurements."),
+                     f"grouped by local wavelength at that position. Read-only: display alignment uses the archive WCS; Gaia DR3 predictions and "
+                     f"reference-star alignment diagnostics are available, target measurements are not."),
         field=FieldDescription(center=centre, fov_arcsec=preset.cutout_size_deg * 3600.0, ecliptic_lat_deg=float(ecl.lat.deg)),
         instrument=InstrumentDescription(name="SPHEREx", kind="spherex", pixel_scale_arcsec=scale, detector_shape=ref.DETECTOR_SHAPE, psf_by_band=psf_by_band,
                                          notes=["Six 2040x2040 H2RG detectors behind linear variable filters: wavelength varies across each detector.",
@@ -365,21 +393,23 @@ def build_bundle(preset: FieldPreset, manifest: dict | None = None) -> DatasetBu
         bands=bands, observations=observations, frames=frames, common_grid=grid_desc, reference_frame_ids=ref_frames,
         astrometric_calibration=None, seed=None, generator=None, generator_version=None, scenario_parameters=None,
         limitations=[
-            "Read-only viewer of archive pixels: no SkyShift source detection, photometry, astrometry, registration, model fit or difference image.",
+            "Archive pixels are never modified: no SkyShift source detection, photometry, registration, target fit or difference image.",
+            "Gaia DR3 overlays are model predictions placed through the archive WCS; reference-star ePSF positions are used only for alignment diagnostics.",
             "Local wavelengths use the WCS-WAVE lookup (visualization-grade, ~1 nm); CWAVE/CBAND calibration products were not retrieved.",
             "Display frames are bilinear reprojections through the archive TAN-SIP WCS; alignment is not verified by SkyShift.",
             "IMAGE is surface brightness including zodiacal light (MJy/sr); pixel values are not point-source fluxes.",
             "Wavelength compatibility is evaluated only at the field centre; other positions in the cutout see different wavelengths.",
-            "The ePSF extension is recognised and recorded but not evaluated.",
+            "The ePSF of the zone containing a star is used without interpolation between zones (zone width ~97 px; ~50 px along the spectral direction on D3).",
         ],
-        capabilities=UNAVAILABLE, archive_query=summary,
+        capabilities=capabilities_for(ds_id), archive_query=summary,
         provenance=Provenance(origin="observed", provider="spherex", dataset_id=ds_id, release=preset.collection, source_url=disc["url"], retrieved_utc=disc["retrieved_utc"],
                               method="IRSA SIA2 discovery + byte-range screening + IBE cutouts (skyshift.providers.spherex.fetch)", notes=[preset.centre_note]),
         quality=Quality(status="warning" if available else "unavailable",
                         flags=["DISPLAY_ONLY_ALIGNMENT", "VISUALIZATION_WAVELENGTHS"] + ([] if len(available) == len(observations) else ["SOME_OBSERVATIONS_UNAVAILABLE"]),
                         messages=[f"{len(available)} of {len(observations)} selected observations available."]),
     )
-    return DatasetBundle(dataset=dataset, arrays=arrays, catalog=[], catalog_name=None, truth=None)
+    native_images = {f"{ds_id}:{k}:native": img for k, img in images.items()}
+    return DatasetBundle(dataset=dataset, arrays=arrays, catalog=[], catalog_name=None, truth=None, extras={"spectral_images": native_images})
 
 
 def dataset_summary(preset: FieldPreset) -> DatasetSummary | None:

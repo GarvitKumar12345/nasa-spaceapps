@@ -12,14 +12,14 @@ type Load<T> = { status: 'loading' } | { status: 'ready'; data: T } | { status: 
 
 const GROUPS: { id: string; title: string; categories: string[]; blurb: string }[] = [
   { id: 'math', title: 'Mathematical checks', categories: ['math', 'coords'], blurb: 'Kepler, astrometric model, time scales, coordinates and WCS against independent methods (astropy, scipy, published relations).' },
-  { id: 'measurement', title: 'Source-measurement checks', categories: ['measurement'], blurb: 'PSF rendering/fitting and detection on generated pixels, including Monte-Carlo calibration of reported uncertainties.' },
-  { id: 'registration', title: 'Image-registration checks', categories: ['registration'], blurb: 'Registration accuracy against the simulation-truth WCS, transform covariance, reprojection and masks — distinct from numerical round trips.' },
-  { id: 'catalog', title: 'Catalog matching', categories: ['catalog'], blurb: 'Epoch propagation from J2016.0 (TCB), covariance growth, ambiguous/unmatched handling.' },
+  { id: 'measurement', title: 'Source-measurement checks', categories: ['measurement'], blurb: 'Synthetic: PSF rendering/fitting and detection, Monte-Carlo calibration of uncertainties. SPHEREx: ePSF normalisation and lattice samples, noiseless recovery, injection into real pixels.' },
+  { id: 'registration', title: 'Image-registration and alignment checks', categories: ['registration'], blurb: 'Synthetic registration against the simulation-truth WCS; SPHEREx alignment diagnostics: residual statistics and decisions against direct formulas, reference selection on a constructed frame, real frames vs Gaia DR3.' },
+  { id: 'catalog', title: 'Catalog propagation and matching', categories: ['catalog'], blurb: 'Gaia DR3 epoch propagation vs the archive\'s own ESDC_EPOCH_PROP(_ERROR), ERFA and a Monte Carlo; J2016.0 TCB; missing motion/RV and weak parallaxes; observer parallax applied once; synthetic matching.' },
   { id: 'pipeline', title: 'End-to-end synthetic pipeline', categories: ['pipeline'], blurb: 'Injected motion recovered from image measurements; truth used only for validation.' },
   { id: 'contracts', title: 'Contracts, API and export', categories: ['contracts', 'api'], blurb: 'Schema validation, origins, provenance, evidence round trip, staleness, reproduction, CSV.' },
-  { id: 'archive', title: 'Archive product checks (SPHEREx DR1)', categories: ['archive'], blurb: 'Recorded real products (SIA2 response, retrieval manifest, a real cutout fixture, the local cutout cache) checked offline against the documented DR1 format, with independent wavelength and request-path cross-checks.' },
+  { id: 'archive', title: 'Archive product checks (SPHEREx DR1, Gaia DR3)', categories: ['archive'], blurb: 'Recorded real products checked offline: SPHEREx SIA2 response, manifest, cutout fixture and cache against the DR1 format; the Gaia DR3 field response (units, datatypes, RELEASE, COOSYS, COUNT, truncation probe) and its search-radius derivation.' },
   { id: 'browser', title: 'Browser checks', categories: ['browser', 'ui'], blurb: 'Primary controls, failure states, selection, view switching, persistence, exports, responsive layout.' },
-  { id: 'live', title: 'Live-data integration checks', categories: ['live'], blurb: 'Real archive requests. SPHEREx: discovery, byte-range screening and a cutout download (run with --live). Gaia DR3, WISE and NEOSSat are not implemented.' },
+  { id: 'live', title: 'Live-data integration checks', categories: ['live'], blurb: 'Real archive requests (run with --live). SPHEREx: discovery, byte-range screening, a cutout download. Gaia DR3: the field query and the archive-side propagation. A changed row count is a note, not a failure; schema, provenance and pinned values must match. WISE and NEOSSat are not implemented.' },
 ]
 
 const STATUS_HELP: [string, string][] = [
@@ -275,7 +275,7 @@ function LiveGroup({ results, planned }: { results: TestResult[]; planned: { pro
         {ran.length
           ? `${ran.length} live archive check(s) were executed in the latest validation run and are listed below with their outcome. Anything not listed as executed has not been run.`
           : 'No live archive request is recorded in the latest validation run (live checks run only with --live).'}{' '}
-        Gaia DR3, WISE and NEOSSat have no live checks in this build. Documentation review is not a live test; mocked responses do not count.
+        WISE and NEOSSat have no live checks in this build. Documentation review is not a live test; mocked responses do not count.
       </p>
       <ul className="me-results">
         {planned.map((c) => (
@@ -286,6 +286,15 @@ function LiveGroup({ results, planned }: { results: TestResult[]; planned: { pro
         {results.map((r) => (
           <li key={r.id}>
             <StatusPill status={r.status} /> {r.name}
+            {r.notes.length > 0 && (
+              <ul className="me-notes" data-testid="live-notes">
+                {r.notes.map((n) => (
+                  <li key={n} className="small faint">
+                    note: {n}
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>
@@ -296,12 +305,12 @@ function LiveGroup({ results, planned }: { results: TestResult[]; planned: { pro
 function ScienceSection() {
   const origins: DataOrigin[] = ['observed', 'simulated', 'simulation_truth', 'derived_measurement', 'model_prediction', 'catalog']
   const originText: Record<DataOrigin, string> = {
-    observed: 'Recorded by a real instrument and delivered by an archive: SPHEREx DR1 cutouts, shown read-only (no SkyShift measurements in this build).',
+    observed: 'Recorded by a real instrument and delivered by an archive: SPHEREx DR1 cutouts, shown read-only (archive arrays are never modified).',
     simulated: 'Generated by SkyShift: synthetic pixels and the simulated reference catalog.',
     simulation_truth: 'Injected values used to generate simulated data. Validation only; never a measurement.',
-    derived_measurement: 'Computed by SkyShift from data arrays: positions, fluxes, fit estimates.',
-    model_prediction: 'Evaluated from a declared model and parameters: fitted paths, propagated catalog positions.',
-    catalog: 'Values copied from an external catalog such as Gaia DR3 (none in this build).',
+    derived_measurement: 'Computed by SkyShift from data arrays: synthetic positions, fluxes and fits; ePSF positions of Gaia reference stars on SPHEREx frames (alignment diagnostics only).',
+    model_prediction: 'Evaluated from a declared model and parameters: fitted paths; Gaia DR3 positions propagated to each exposure (never measurements).',
+    catalog: 'Values copied from an external catalog: Gaia DR3 (gaiadr3.gaia_source, recorded field query); source IDs kept as exact strings.',
   }
   return (
     <Panel title="Science and methods" eyebrow="Models, measurement, conventions">
@@ -331,6 +340,21 @@ function ScienceSection() {
           <p>
             Catalog matching propagates J2016.0 (TCB) positions with space motion and observer parallax; 2-parameter solutions are not propagated. Results are matched,
             ambiguous (several candidates or a blend) or unmatched — and an unmatched source is not by itself evidence of a new object.
+          </p>
+        </section>
+        <section>
+          <h3>Real data: Gaia DR3 predictions and alignment diagnostics (SPHEREx)</h3>
+          <p>
+            Gaia DR3 is queried once per field with explicit ADQL on gaiadr3.gaia_source over the cutout footprints plus a proper-motion margin (10.5″/yr × the longest
+            interval since J2016.0) and a neighbour margin; the response, an independent COUNT(*) and the archive’s own propagation of pinned sources are recorded. Each
+            source is propagated to each exposure mid-time with the rigorous uniform-space-motion model of the Gaia DR3 documentation (radial velocity where catalogued,
+            6×6 covariance), then the geocentric observer parallax is applied once. Aberration and light deflection are not applied: the SPHEREx WCS is fitted to
+            proper-motion-propagated Gaia positions (Explanatory Supplement §3.2.8), and the residuals confirm it (catalogue frame, not the 5–13″ aberrated frame).
+          </p>
+          <p>
+            Reference stars (5/6-parameter, RUWE ≤ 1.4, isolated by the pipeline’s 10 %-within-2-px rule, unsaturated, ≥ 8 px from saturated regions, clean cores, S/N ≥ 10)
+            are fitted with the frame’s own per-zone effective PSF; the estimator is validated in every frame by injecting ePSF stars into its real pixels. Residuals are
+            reported before any correction, per frame and pooled; a constant offset is the only correction model, evaluated on held-out stars and never applied.
           </p>
         </section>
         <section>
@@ -368,13 +392,17 @@ function LimitationsSection() {
     <Panel title="Limitations" eyebrow="Read before interpreting any result">
       <ul className="me-list" data-testid="limitations">
         <li>
-          Measurements on synthetic data only. SPHEREx DR1 cutouts are shown read-only: display alignment uses the archive WCS, wavelengths come from the visualization-grade WCS-WAVE
-          lookup at the field centre, and no SPHEREx photometry, astrometry, registration, fit or difference image is computed. Gaia DR3, WISE and NEOSSat are not connected.
+          Target measurements on synthetic data only. SPHEREx DR1 cutouts are shown read-only: display alignment uses the archive WCS, wavelengths come from the visualization-grade
+          WCS-WAVE lookup at the field centre, and no SPHEREx photometry, target astrometry, registration, motion fit or difference image is computed. WISE and NEOSSat are not connected.
         </li>
         <li>
-          The SPHEREx field is centred on the approximate position of Barnard’s Star. In every selected frame the pixels within 2.5 px of that position carry OVERFLOW with SUR_ERROR
-          (early onboard overflow, ES Table 16) and BLOOM flags, so they are excluded from SPHEREx photometry by the documented rules; SkyShift does not identify or measure the source.
-          CWAVE/CBAND spectral calibration and the ePSF are not used.
+          Gaia DR3 overlays are model predictions placed through the archive WCS (documented RMS &lt; 0.3″). The SPHEREx alignment diagnostics measure only Gaia reference stars;
+          they use Gaia G/RP as the isolation flux proxy, the ePSF of the containing zone (no interpolation), and test only a constant offset, which is never applied. Frames
+          with fewer than 5 usable references are reported as insufficient.
+        </li>
+        <li>
+          The SPHEREx field is centred on Barnard’s Star, which saturates every selected frame (OVERFLOW, SUR_ERROR and BLOOM within 2.5 px); it is shown only as a prediction and
+          excluded from all measurements, together with references within 8 px of saturated regions. CWAVE/CBAND spectral calibration is not used.
         </li>
         <li>The toy instrument (0.40″/px, Gaussian PSF, Poisson + read noise) is not a SPHEREx sensitivity, PSF or wavelength model.</li>
         <li>The PSF used for fitting is the exact PSF used to render the pixels; real PSFs add model error.</li>
@@ -398,7 +426,11 @@ function ReferencesSection() {
     ['SPHEREx Explanatory Supplement v2.1 (flags, FINAST, ePSF, WCS-WAVE)', 'https://irsa.ipac.caltech.edu/data/SPHEREx/docs/SPHEREx_Expsupp.pdf'],
     ['IRSA IBE cutout service', 'https://irsa.ipac.caltech.edu/ibe/cutouts.html'],
     ['Gaia DR3 documentation (ESA)', 'https://gea.esac.esa.int/archive/documentation/GDR3/'],
-    ['Astroquery Gaia TAP', 'https://docs.astropy.org/projects/astroquery/en/stable/gaia/gaia.html'],
+    ['Gaia DR3 data model: gaiadr3.gaia_source', 'https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_main_source_catalogue/ssec_dm_gaia_source.html'],
+    ['ESA Gaia archive: writing queries (ESDC_EPOCH_PROP)', 'https://www.cosmos.esa.int/web/gaia-users/archive/writing-queries'],
+    ['Gaia credits and citation (Gaia Collaboration, Vallenari et al. 2023; Prusti et al. 2016)', 'https://www.cosmos.esa.int/web/gaia-users/credits'],
+    ['Astroquery Gaia TAP', 'https://astroquery.readthedocs.io/en/latest/gaia/gaia.html'],
+    ['IRSA tutorial: SPHEREx ePSF', 'https://caltech-ipac.github.io/irsa-tutorials/spherex-psf/'],
     ['WiseView (design precedent; cite if reused)', 'https://github.com/backyardworlds/wiseview'],
     ['CSA NEOSSat mission', 'https://www.asc-csa.gc.ca/eng/satellites/neossat/'],
     ['CADC NEOSSat collection', 'https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/neossat/'],

@@ -1,8 +1,9 @@
-"""Bounded HTTP access to IRSA: retries for transient failures, a concurrency cap,
-byte limits, and a record of every request (for manifests and Methods).
+"""Bounded HTTP access to archives: retries for transient failures, a concurrency cap,
+byte limits, a host allow-list, and a record of every request (for manifests and Methods).
 
-Standard library only. A failed request raises ArchiveRequestFailed; callers
-record the failure and never substitute other data.
+Used for IRSA (SPHEREx; GET, byte ranges) and the ESA Gaia archive TAP service
+(form POST). Standard library only. A failed request raises ArchiveRequestFailed;
+callers record the failure and never substitute other data.
 """
 
 from __future__ import annotations
@@ -13,11 +14,13 @@ import socket
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 
 USER_AGENT = "SkyShift/0.1 (local research build; bounded SPHEREx cutout client)"
+IRSA_PREFIXES: tuple[str, ...] = ("https://irsa.ipac.caltech.edu/",)
 TRANSIENT_HTTP = frozenset({429, 502, 503, 504})
 
 
@@ -37,6 +40,7 @@ class HttpRecord:
     range: str | None = None
     content_range: str | None = None
     error: str | None = None
+    method: str = "GET"
 
     def as_dict(self) -> dict:
         return asdict(self)
@@ -59,11 +63,14 @@ class ArchiveClient:
     max_backoff_s: float = 10.0
     max_concurrency: int = 4
     user_agent: str = USER_AGENT
+    allowed_prefixes: tuple[str, ...] = IRSA_PREFIXES
     log: list[HttpRecord] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if not 1 <= self.max_concurrency <= 8:
-            raise ValueError("max_concurrency must be between 1 and 8 (IRSA is a shared service)")
+            raise ValueError("max_concurrency must be between 1 and 8 (archives are shared services)")
+        if not self.allowed_prefixes or not all(p.startswith("https://") and p.endswith("/") for p in self.allowed_prefixes):
+            raise ValueError("allowed_prefixes must be non-empty https:// prefixes ending in '/'")
         self._slots = threading.BoundedSemaphore(self.max_concurrency)
         self._log_lock = threading.Lock()
 
@@ -73,8 +80,17 @@ class ArchiveClient:
         `max_bytes` aborts responses whose declared or received size exceeds the limit
         (protects against accidentally downloading a full 60 MB image).
         """
-        if not url.startswith("https://irsa.ipac.caltech.edu/"):
-            raise ValueError(f"refusing non-IRSA URL: {url}")
+        return self._request(url, data=None, byte_range=byte_range, max_bytes=max_bytes)
+
+    def post_form(self, url: str, fields: dict[str, str], *, max_bytes: int | None = None) -> tuple[bytes, HttpRecord]:
+        """POST `fields` as application/x-www-form-urlencoded (e.g. a TAP sync query)."""
+        data = urllib.parse.urlencode(fields).encode("utf-8")
+        return self._request(url, data=data, byte_range=None, max_bytes=max_bytes)
+
+    def _request(self, url: str, *, data: bytes | None, byte_range: str | None, max_bytes: int | None) -> tuple[bytes, HttpRecord]:
+        if not any(url.startswith(p) for p in self.allowed_prefixes):
+            raise ValueError(f"refusing URL outside {self.allowed_prefixes}: {url}")
+        method = "GET" if data is None else "POST"
         started, t0 = utc_now(), time.perf_counter()
         last_error = "no attempt"
         status: int | None = None
@@ -84,8 +100,10 @@ class ArchiveClient:
                 headers["Range"] = byte_range
             try:
                 with self._slots:
-                    req = urllib.request.Request(url, headers=headers)
-                    with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:  # noqa: S310 (https, fixed host)
+                    if data is not None:
+                        headers["Content-Type"] = "application/x-www-form-urlencoded"
+                    req = urllib.request.Request(url, data=data, headers=headers, method=method)
+                    with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:  # noqa: S310 (https, allow-listed host)
                         status = resp.status
                         declared = resp.headers.get("Content-Length")
                         if byte_range and status != 206:
@@ -96,7 +114,7 @@ class ArchiveClient:
                         if max_bytes is not None and len(body) > max_bytes:
                             raise _Permanent(f"response exceeds the {max_bytes}-byte limit")
                         content_range = resp.headers.get("Content-Range")
-                rec = HttpRecord(url, started, status, len(body), hashlib.sha256(body).hexdigest(), round(time.perf_counter() - t0, 3), attempt, byte_range, content_range)
+                rec = HttpRecord(url, started, status, len(body), hashlib.sha256(body).hexdigest(), round(time.perf_counter() - t0, 3), attempt, byte_range, content_range, None, method)
                 self._record(rec)
                 return body, rec
             except _Permanent as exc:
@@ -112,7 +130,7 @@ class ArchiveClient:
                 last_error = f"{type(exc).__name__}: {exc}"
             if attempt < self.max_attempts:
                 time.sleep(min(self.max_backoff_s, self.backoff_s * attempt))
-        rec = HttpRecord(url, started, status, 0, None, round(time.perf_counter() - t0, 3), attempt, byte_range, None, last_error)
+        rec = HttpRecord(url, started, status, 0, None, round(time.perf_counter() - t0, 3), attempt, byte_range, None, last_error, method)
         self._record(rec)
         raise ArchiveRequestFailed(rec, last_error)
 

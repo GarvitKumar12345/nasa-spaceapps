@@ -21,6 +21,7 @@ from astropy.time import Time
 from astropy.wcs import WCS, FITSFixedWarning
 
 from skyshift.contracts import FileCheck
+from skyshift.imaging.epsf import EPSFLibrary
 from skyshift.providers.spherex import reference as ref
 from skyshift.providers.spherex.discovery import DiscoveryRow
 from skyshift.providers.spherex.wavelength import WaveTable, wavelength_astropy, wavelength_bilinear
@@ -64,6 +65,7 @@ class SpectralImage:
     units: dict[str, str]
     zodi_model: str = ""
     calibration_refs: dict[str, str] = field(default_factory=dict)
+    epsf_library: EPSFLibrary | None = None  # zones overlapping this cutout (+1 px), read from the file's EPSF table
 
     @property
     def detector(self) -> int:
@@ -184,13 +186,36 @@ def read_spectral_image(data: bytes) -> SpectralImage:
                 calib[m.group(1)] = m.group(2)
         w = WCS(img_h)
         table = WaveTable.from_hdu(hdul["WCS-WAVE"])
+        epsf_library = _cutout_epsf_library(epsf_hdu, img_h, image.shape)
         hdul.close()
     return SpectralImage(
         sha256=hashlib.sha256(data).hexdigest(), nbytes=len(data), pipeline_version=version, hdu_names=names,
         primary_header=primary.copy(), image_header=img_h, image=image, flags=flags, variance=variance, zodi=zodi,
         flag_defs=sorted(flag_defs, key=lambda d: d.bit), wcs=w, wave_hdul=wave_hdul, wave_table=table, epsf=epsf, units=units,
-        zodi_model=zodi_model, calibration_refs=calib,
+        zodi_model=zodi_model, calibration_refs=calib, epsf_library=epsf_library,
     )
+
+
+def _cutout_epsf_library(epsf_hdu, image_header, shape: tuple[int, int]) -> EPSFLibrary | None:  # noqa: ANN001
+    """The EPSF zones whose detector rectangles overlap this cutout (1 px margin), or None if unreadable."""
+    try:
+        lib = EPSFLibrary.from_hdu(epsf_hdu)
+    except (ValueError, KeyError):
+        return None
+    if str(image_header.get("CTYPE1A", "")).strip() != "LINEAR" or "CRPIX1A" not in image_header:
+        return lib
+    ox = 1.0 - float(image_header["CRPIX1A"]) + float(image_header.get("CRVAL1A", 0.0))
+    oy = 1.0 - float(image_header["CRPIX2A"]) + float(image_header.get("CRVAL2A", 0.0))
+    ny, nx = shape
+    x0, x1, y0, y1 = ox - 1.5, ox + nx + 0.5, oy - 1.5, oy + ny + 0.5
+    keep = [z.index for z in lib.zones
+            if z.x_center + 0.5 * z.x_width >= x0 and z.x_center - 0.5 * z.x_width <= x1 and z.y_center + 0.5 * z.y_width >= y0 and z.y_center - 0.5 * z.y_width <= y1]
+    if not keep:
+        return lib
+    zones = [lib.zones[i] for i in keep]
+    from dataclasses import replace
+
+    return EPSFLibrary([replace(z, index=k) for k, z in enumerate(zones)], lib.arrays[keep], lib.oversampling, lib.detector)
 
 
 def _chk(cid: str, ok: bool | None, detail: str, reference: str | None = None, warn: bool = False) -> FileCheck:

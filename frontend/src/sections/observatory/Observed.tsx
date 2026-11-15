@@ -1,7 +1,8 @@
-/* Observatory for observed archive data (SPHEREx): a read-only viewer.
+/* Observatory for observed archive data (SPHEREx): a read-only viewer with Gaia DR3 predictions.
  * Explore and Analyze share the same store state as the synthetic view. Blink/compare is offered
- * only within a wavelength-compatibility group; measurement, fitting and difference imaging are
- * shown as unavailable with the dataset's own stated reasons. */
+ * only within a wavelength-compatibility group. Gaia DR3 predictions (model) and reference-star
+ * alignment diagnostics (derived) are shown; target measurement, motion fits, photometry and
+ * difference imaging are shown as unavailable with the dataset's own stated reasons. */
 import { useEffect, useMemo, useState } from 'react'
 import type { Band, Dataset, FileCheck, Observation } from '../../api/types'
 import { fmt, fmtUtc } from '../../lib/format'
@@ -15,6 +16,8 @@ import { Toolbar } from '../../components/observatory/Toolbar'
 import { useBandLimits, useGridWcs } from '../../components/observatory/derive'
 import { renderMaskOverlay, usePlane, type StretchLimits } from '../../components/observatory/pixels'
 import type { TanWcs } from '../../lib/tanwcs'
+import { useGaiaStore } from '../../state/gaia'
+import { AlignmentTab, GaiaCatalogTab, GaiaControls, GaiaSourcePanel, useGaiaCanvas, useGaiaOverlay } from './ObservedGaia'
 
 const CHECK_STATUS: Record<FileCheck['status'], string> = { pass: 'passed', warn: 'warning', fail: 'failed' }
 
@@ -40,6 +43,9 @@ export function ObservedObservatory({ dataset, active }: { dataset: Dataset; act
   const obsB = dataset.observations.find((o) => o.id === s.compareObsId) ?? null
   const displayed: Observation | null = s.playback.blink && blinkPhase && blink.ok ? obsB : obsA
   const limits = useBandLimits(s.datasetId, dataset, s.bandId, s.display.pLow, s.display.pHigh)
+  useEffect(() => {
+    useGaiaStore.getState().reset(dataset.id)
+  }, [dataset.id])
 
   useEffect(() => {
     if ((!active || !blink.ok) && (s.playback.playing || s.playback.blink)) s.setPlayback({ playing: false, blink: false })
@@ -89,7 +95,8 @@ export function ObservedObservatory({ dataset, active }: { dataset: Dataset; act
       <Callout tone="info">
         <span data-testid="observed-banner">
           <strong>Real SPHEREx {dataset.archive_query?.collection ?? dataset.release} data · read-only viewer.</strong> Frames are aligned for display with the archive's WCS only (not
-          registered by SkyShift). Source measurement, motion fits and difference images are unavailable for observed data in this build.
+          registered by SkyShift). Gaia DR3 sources are shown as predictions at each exposure (model, not measurements); reference-star residuals are in Analyze → Alignment.
+          Target measurement, photometry, motion fits and difference images are unavailable for observed data.
           {nUnavailable > 0 && ` ${nUnavailable} selected observation(s) are not available; see the timeline and the Observations tab.`}
         </span>
       </Callout>
@@ -172,7 +179,7 @@ export function ObservedObservatory({ dataset, active }: { dataset: Dataset; act
         </div>
         <ObservedInspector dataset={dataset} obs={s.mode === 'explore' ? displayed : obsA} role={s.mode === 'explore' ? (displayed?.id === obsB?.id && displayed?.id !== obsA?.id ? 'B' : 'A') : 'A'} band={band} />
       </div>
-      {s.mode === 'analyze' && <ObservedAnalyze dataset={dataset} />}
+      {s.mode === 'analyze' && <ObservedAnalyze dataset={dataset} obs={obsA} />}
     </div>
   )
 }
@@ -189,9 +196,13 @@ function ObservedCanvas(props: {
   marker: { x: number; y: number; label: string }
 }) {
   const s = useObservatoryStore()
+  const g = useGaiaStore()
+  const [hover, setHover] = useState<string | null>(null)
   const { dataset, obs } = props
   const frameId = obs?.status === 'available' ? displayFrameId(obs) : null
   const plane = usePlane(s.datasetId, frameId)
+  const gaiaLoad = useGaiaOverlay(s.datasetId, frameId, g.show.overlay)
+  const gaia = useGaiaCanvas(dataset, gaiaLoad && gaiaLoad.status === 'ready' ? gaiaLoad.data : null)
   const mask = usePlane(s.datasetId, s.display.flags ? frameId : null, 'mask')
   const frame = dataset.frames.find((f) => f.id === frameId) ?? null
   const overlay = useMemo(() => {
@@ -211,11 +222,12 @@ function ObservedCanvas(props: {
         gridShape={props.gridShape}
         view={s.view}
         onView={s.setView}
-        sources={[]}
-        selectedId={null}
-        hoverId={null}
-        onSelect={() => undefined}
-        onHover={() => undefined}
+        sources={gaia.sources}
+        selectedId={g.selectedSourceId}
+        hoverId={hover}
+        onSelect={(id) => g.select(id)}
+        onHover={setHover}
+        overlays={gaia.overlays}
         showGrid={s.display.grid}
         showLabels={s.display.labels}
         valueUnit="MJy/sr"
@@ -236,6 +248,9 @@ function ObservedCanvas(props: {
             {obs ? `${fmtUtc(obs.timing.mid.iso_utc)} UTC` : 'No frame'}
             {lam != null ? ` · λ ${lam.toFixed(4)} µm at centre` : ''} · archive-WCS display, not registered
             {obs && obs.status !== 'available' ? ` · ${obs.status}` : ''}
+            {gaiaLoad?.status === 'ready' && <span data-testid={`${props.testId}-gaia`}> · {gaia.sources.length} Gaia DR3 predictions (model)</span>}
+            {gaiaLoad?.status === 'loading' && <span> · propagating Gaia DR3…</span>}
+            {gaiaLoad?.status === 'error' && <span role="alert"> · Gaia DR3 overlay unavailable: {gaiaLoad.message}</span>}
           </span>
         }
       />
@@ -285,6 +300,7 @@ function ObservedDisplayControls() {
       <span className="small faint">
         <span className="flag-swatch flag-swatch-mask" aria-hidden /> masked for photometry <span className="flag-swatch flag-swatch-caution" aria-hidden /> warning flags (ES Sect. 3.3) · MJy/sr, display stretch only
       </span>
+      <GaiaControls datasetId={s.datasetId} />
     </div>
   )
 }
@@ -313,6 +329,7 @@ function ObservedInspector({ dataset, obs, role, band }: { dataset: Dataset; obs
   const hq = a?.header_quality ?? {}
   return (
     <aside className="inspector" aria-label="Observation details" data-testid="obs-inspector">
+      <GaiaSourcePanel datasetId={dataset.id} frameId={obs?.status === 'available' ? displayFrameId(obs) : null} />
       <section className="insp-block">
         <div className="eyebrow">Observation · {role}</div>
         {!obs || !a ? (
@@ -420,10 +437,13 @@ function ObservedInspector({ dataset, obs, role, band }: { dataset: Dataset; obs
   )
 }
 
-type ObsTab = 'observations' | 'compatibility' | 'flags' | 'archive' | 'unavailable'
+type ObsTab = 'observations' | 'compatibility' | 'flags' | 'gaia' | 'alignment' | 'archive' | 'unavailable'
 
-function ObservedAnalyze({ dataset }: { dataset: Dataset }) {
+function ObservedAnalyze({ dataset, obs }: { dataset: Dataset; obs: Observation | null }) {
   const [tab, setTab] = useState<ObsTab>('observations')
+  const frameId = obs?.status === 'available' ? displayFrameId(obs) : null
+  const nativeFrameId = obs?.frame_ids.find((f) => f.endsWith(':native')) ?? null
+  const gaiaLoad = useGaiaOverlay(dataset.id, frameId, tab === 'gaia')
   return (
     <section className="analyze-tabs panel" aria-label="Analysis of observed data">
       <Tabs<ObsTab>
@@ -435,6 +455,8 @@ function ObservedAnalyze({ dataset }: { dataset: Dataset }) {
           { id: 'observations', label: 'Observations' },
           { id: 'compatibility', label: 'Wavelength compatibility' },
           { id: 'flags', label: 'Flags & quality' },
+          { id: 'gaia', label: 'Gaia DR3' },
+          { id: 'alignment', label: 'Alignment' },
           { id: 'archive', label: 'Archive & provenance' },
           { id: 'unavailable', label: 'Unavailable analyses' },
         ]}
@@ -447,6 +469,10 @@ function ObservedAnalyze({ dataset }: { dataset: Dataset }) {
             <CompatibilityTab dataset={dataset} />
           ) : tab === 'flags' ? (
             <FlagsTab dataset={dataset} />
+          ) : tab === 'gaia' ? (
+            <GaiaCatalogTab dataset={dataset} overlay={gaiaLoad} />
+          ) : tab === 'alignment' ? (
+            <AlignmentTab datasetId={dataset.id} nativeFrameId={nativeFrameId} />
           ) : tab === 'archive' ? (
             <ArchiveTab dataset={dataset} />
           ) : (

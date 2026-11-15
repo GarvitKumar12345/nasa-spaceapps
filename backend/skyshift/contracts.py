@@ -390,7 +390,8 @@ class FieldDescription(Contract):
 
 
 AnalysisCapabilityId = Literal[
-    "source_detection", "source_measurement", "astrometric_fit", "difference_imaging", "catalog_overlay", "evidence_record", "registration"
+    "source_detection", "source_measurement", "astrometric_fit", "difference_imaging", "catalog_overlay", "evidence_record", "registration",
+    "alignment_diagnostics", "photometry",
 ]
 
 
@@ -468,6 +469,7 @@ class DatasetSummary(Contract):
 
 class CatalogSource(Contract):
     id: str = Field(description="e.g. 'gaiadr3:<source_id>' or 'simcat:<n>'")
+    source_id: str | None = Field(None, description="The catalog's own identifier as an exact decimal string (a Gaia source_id is a 64-bit integer; never sent as a JSON number)")
     catalog: str = Field(description="Exact table, e.g. 'gaiadr3.gaia_source'")
     catalog_release: str
     origin: Literal["catalog", "simulated"]
@@ -539,6 +541,275 @@ class CatalogOverlay(Contract):
     sources: list[CatalogSource]
     propagated: list[PropagatedPosition]
     notes: list[str] = Field(default_factory=list)
+
+
+# ---------------------------------------------------------------------------
+# Gaia DR3 predictions on observed frames and alignment diagnostics
+# ---------------------------------------------------------------------------
+
+
+class ErrorBudgetTerm(Contract):
+    term: str
+    bound_arcsec: float | None = Field(None, description="Upper bound of the term's positional effect, if one is stated")
+    typical_arcsec: float | None = None
+    treatment: Literal["included", "neglected", "absorbed_by_wcs", "dominant_uncertainty", "excluded_by_selection"]
+    note: str
+    source: str | None = None
+
+
+class PredictionConvention(Contract):
+    """What a catalogue prediction on an archive frame represents, and how that was established."""
+
+    frame: str
+    includes: list[str]
+    excludes: list[str]
+    wcs_convention: str
+    status: Literal["resolved", "approximate"]
+    evidence: list[str] = Field(default_factory=list)
+    error_budget: list[ErrorBudgetTerm] = Field(default_factory=list)
+
+
+class GaiaPrediction(Contract):
+    """One Gaia DR3 source predicted at one exposure (a model prediction, never an image measurement)."""
+
+    source_id: str = Field(description="Gaia DR3 source_id as an exact decimal string")
+    ra_deg: float
+    dec_deg: float
+    sigma_ra_cosdec_mas: float | None
+    sigma_dec_mas: float | None
+    corr_ra_dec: float | None = None
+    x_native: float = Field(description="0-based native cutout pixel through the archive WCS (incl. SIP)")
+    y_native: float
+    x_display: float | None = Field(None, description="0-based pixel on the display grid (TAN), where the frame is shown")
+    y_display: float | None = None
+    in_native: bool
+    g_mag: float | None = None
+    bp_rp: float | None = None
+    solution: Literal["2-parameter", "5-parameter", "6-parameter", "unknown"]
+    flags: list[str] = Field(default_factory=list)
+    reference_status: Literal["used", "rejected", "not_candidate"] = "not_candidate"
+    reference_reason: str | None = None
+    origin: Literal["model_prediction"] = "model_prediction"
+
+
+class GaiaFrameOverlay(Contract):
+    dataset_id: str
+    frame_id: str = Field(description="Frame the overlay is drawn on (display frame)")
+    native_frame_id: str
+    observation_id: str
+    epoch: Epoch = Field(description="Exposure mid-time the catalogue was propagated to")
+    catalog: str
+    release: str
+    retrieved_utc: str
+    adql: str
+    n_catalog_rows: int
+    n_in_frame: int
+    predictions: list[GaiaPrediction]
+    convention: PredictionConvention
+    label: str
+    notes: list[str] = Field(default_factory=list)
+    provenance: Provenance
+
+
+class PropagatedParameters(Contract):
+    """All six astrometric parameters at the exposure epoch with uncertainties (model prediction)."""
+
+    epoch: Epoch
+    ra_deg: float
+    dec_deg: float
+    parallax_mas: float | None
+    pmra_mas_yr: float | None
+    pmdec_mas_yr: float | None
+    mu_r_mas_yr: float | None
+    sigmas: dict[str, float] = Field(default_factory=dict, description="ra_cosdec/dec/parallax (mas), pmra/pmdec/mu_r (mas/yr)")
+    corr_ra_dec: float | None = None
+    observer_parallax_offset_mas: tuple[float, float] = Field(description="(east, north) observer-parallax displacement applied once")
+    radial_velocity_used_km_s: float
+    radial_velocity_assumed: bool
+    perspective_bound_mas: float = Field(description="Bound on the error from an unknown radial velocity (|v_r| <= 500 km/s); 0 if v_r is catalogued")
+    method: str
+    origin: Literal["model_prediction"] = "model_prediction"
+
+
+class ReferenceStarResidual(Contract):
+    """An ePSF image measurement of a Gaia reference candidate and its residual from the prediction."""
+
+    source_id: str
+    frame_id: str
+    status: Literal["used", "rejected"]
+    reason: str | None = None
+    reason_text: str | None = None
+    detail: str | None = None
+    g_mag: float | None = None
+    predicted_x: float
+    predicted_y: float
+    measured_x: float | None = None
+    measured_y: float | None = None
+    sigma_x_px: float | None = None
+    sigma_y_px: float | None = None
+    snr: float | None = None
+    chi2_red: float | None = None
+    n_masked: int | None = None
+    epsf_zone: int | None = None
+    dist_saturated_px: float | None = None
+    residual_east_arcsec: float | None = Field(None, description="measured minus predicted, RA*cos(Dec)")
+    residual_north_arcsec: float | None = None
+    sigma_east_arcsec: float | None = None
+    sigma_north_arcsec: float | None = None
+    origin: Literal["derived_measurement"] = "derived_measurement"
+
+
+class ResidualStatistics(Contract):
+    n: int
+    mean_east_arcsec: float | None = None
+    mean_north_arcsec: float | None = None
+    se_east_arcsec: float | None = None
+    se_north_arcsec: float | None = None
+    wmean_east_arcsec: float | None = None
+    wmean_north_arcsec: float | None = None
+    wse_east_arcsec: float | None = None
+    wse_north_arcsec: float | None = None
+    std_east_arcsec: float | None = None
+    std_north_arcsec: float | None = None
+    rms_east_arcsec: float | None = None
+    rms_north_arcsec: float | None = None
+    rms_total_arcsec: float | None = None
+    median_east_arcsec: float | None = None
+    median_north_arcsec: float | None = None
+    robust_sigma_east_arcsec: float | None = None
+    robust_sigma_north_arcsec: float | None = None
+    extra_scatter_arcsec: float | None = Field(None, description="Scatter beyond the formal errors (chi2 about the mean = dof)")
+    chi2_zero: float | None = None
+    dof_zero: int | None = None
+    chi2_mean: float | None = None
+    dof_mean: int | None = None
+    n_outliers_5sigma: int | None = None
+
+
+class TranslationEvaluation(Contract):
+    evaluated: bool
+    justified: bool
+    n: int
+    decision: str
+    offset_east_arcsec: float | None = None
+    offset_north_arcsec: float | None = None
+    sigma_east_arcsec: float | None = None
+    sigma_north_arcsec: float | None = None
+    extra_scatter_arcsec: float | None = None
+    chi2: float | None = None
+    p_value: float | None = None
+    heldout_rms_uncorrected_arcsec: float | None = None
+    heldout_rms_corrected_arcsec: float | None = None
+
+
+class InjectionSummary(Contract):
+    snr_target: float
+    n_injected: int
+    n_recovered: int
+    snr_median: float | None = None
+    bias_x_px: float | None = None
+    bias_y_px: float | None = None
+    se_x_px: float | None = None
+    se_y_px: float | None = None
+    rms_x_px: float | None = None
+    rms_y_px: float | None = None
+    robust_pull_x: float | None = None
+    robust_pull_y: float | None = None
+    passed: bool
+
+
+class RadialInjectionBin(Contract):
+    """Injection-recovery in an annulus around the saturated source (justifies the exclusion radius)."""
+
+    r_min_px: float
+    r_max_px: float
+    n_injected: int
+    n_recovered: int
+    bias_x_px: float | None = None
+    bias_y_px: float | None = None
+    rms_x_px: float | None = None
+    rms_y_px: float | None = None
+    robust_pull_x: float | None = None
+    robust_pull_y: float | None = None
+
+
+class EstimatorValidation(Contract):
+    method: str
+    passed: bool
+    criteria: str
+    pixel_noise_median: float | None = None
+    per_target: list[InjectionSummary] = Field(default_factory=list)
+    near_saturated: list[RadialInjectionBin] = Field(default_factory=list, description="S/N ~ 40 injections binned by distance from the saturated source")
+
+
+class FrameAlignment(Contract):
+    frame_id: str
+    observation_id: str
+    band_id: str
+    detector: int
+    epoch: Epoch
+    status: Literal["ok", "insufficient_reference_stars", "estimator_not_validated", "not_available"]
+    status_reason: str
+    n_in_frame: int = Field(description="Gaia predictions inside the native cutout")
+    n_fainter_than_limit: int = Field(description="Predictions fainter than the candidate magnitude limit (not reference candidates)")
+    n_candidates: int
+    n_used: int
+    n_rejected: int = Field(description="Candidates rejected, by reason below")
+    rejected_by_reason: dict[str, int] = Field(default_factory=dict)
+    statistics: ResidualStatistics | None = None
+    translation: TranslationEvaluation
+    estimator: EstimatorValidation | None = None
+    aberration_if_apparent_arcsec: tuple[float, float] = Field(description="(east, north) offset expected if the WCS mapped to apparent directions")
+    saturated_source_ids: list[str] = Field(default_factory=list)
+    residuals: list[ReferenceStarResidual] = Field(default_factory=list)
+
+
+class ConventionTest(Contract):
+    n_frames: int
+    dof: int | None = None
+    chi2_catalog_frame: float | None = None
+    chi2_apparent_frame: float | None = None
+    p_catalog_frame: float | None = None
+    p_apparent_frame: float | None = None
+    max_aberration_arcsec: float | None = None
+    min_aberration_arcsec: float | None = None
+    max_frame_offset_arcsec: float | None = Field(None, description="Largest per-frame mean residual among the frames tested")
+    decision: str
+
+
+class AlignmentReport(Contract):
+    dataset_id: str
+    catalog: str
+    release: str
+    method: str
+    method_version: str
+    status: Literal["available", "unavailable"]
+    status_reason: str
+    convention: PredictionConvention
+    convention_test: ConventionTest
+    selection_criteria: list[str]
+    reason_texts: dict[str, str]
+    frames: list[FrameAlignment]
+    pooled: ResidualStatistics | None = None
+    n_frames_ok: int
+    n_frames_insufficient: int
+    n_frames_not_validated: int
+    pooled_over: str = Field(description="Which frames' references enter the pooled statistics and the convention test")
+    field_assessment: str
+    limitations: list[str] = Field(default_factory=list)
+    provenance: Provenance
+
+
+class GaiaSourceDetail(Contract):
+    """Everything known about one Gaia source in one frame, with catalogue values and predictions kept apart."""
+
+    dataset_id: str
+    frame_id: str
+    source: CatalogSource
+    prediction: GaiaPrediction | None
+    propagated: PropagatedParameters | None
+    measurement: ReferenceStarResidual | None = Field(None, description="Image measurement (derived), if this source was a reference candidate")
+    limitations: list[str] = Field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -954,6 +1225,7 @@ class TestResult(Contract):
     duration_s: float | None = None
     message: str | None = None
     file: str | None = None
+    notes: list[str] = Field(default_factory=list, description="Recorded observations that are not failures, e.g. a changed archive row count")
 
 
 class SuiteRun(Contract):
@@ -1047,6 +1319,21 @@ EXPORTED_MODELS: list[type[Contract]] = [
     AssociationCandidate,
     CatalogAssociation,
     CatalogOverlay,
+    ErrorBudgetTerm,
+    PredictionConvention,
+    GaiaPrediction,
+    GaiaFrameOverlay,
+    PropagatedParameters,
+    ReferenceStarResidual,
+    ResidualStatistics,
+    TranslationEvaluation,
+    InjectionSummary,
+    RadialInjectionBin,
+    EstimatorValidation,
+    FrameAlignment,
+    ConventionTest,
+    AlignmentReport,
+    GaiaSourceDetail,
     ChangeIndicator,
     TrackPoint,
     DetectedSource,

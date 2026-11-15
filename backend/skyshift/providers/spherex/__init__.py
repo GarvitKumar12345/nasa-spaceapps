@@ -32,18 +32,9 @@ def check_extension_names(names: list[str]) -> list[str]:
 
 
 def _live_status(test_name: str) -> tuple[str, str | None, str]:
-    from skyshift.validation.report import load_report
+    from skyshift.providers.archive_common import live_status
 
-    report = load_report()
-    hits = [r for r in report.results if r.suite == "pytest" and r.id.endswith(test_name)]
-    if not hits:
-        return "not_run", None, "no recorded run of the live test"
-    r = hits[0]
-    if r.status == "passed":
-        return "tested", report.generated_utc, f"live test {test_name} passed (validation report {report.generated_utc})"
-    if r.status in ("failed", "error"):
-        return "failed", report.generated_utc, f"live test {test_name} {r.status}: {(r.message or '')[:200]}"
-    return "not_run", report.generated_utc, f"live test {test_name} {r.status} in the latest report (run with --live)"
+    return live_status(test_name)
 
 
 def _cap(name: str, status: str, detail: str, checked: str | None = None) -> ProviderCapability:
@@ -81,8 +72,12 @@ class SpherexProvider:
                 _cap("Legacy QR1/QR2 products (PSF cube)", "implemented", "Explicitly refused (UnsupportedSpherexProduct); no separately tested handling exists."),
                 _cap("Local wavelength at the field centre (WCS-WAVE)", "implemented", "Visualization-grade lookup with an independent bilinear cross-check; used for compatibility groups."),
                 _cap("Spectral calibration products (CWAVE/CBAND)", "not_implemented", "Required before quantitative wavelength-dependent work."),
-                _cap("Effective PSF evaluation", "not_implemented", "EPSF table recognised and recorded (zones, 5x oversampling); not evaluated."),
-                _cap("Photometry / astrometry / registration / difference imaging", "not_implemented", "Unavailable for observed data; each dataset lists the requirements."),
+                _cap("Effective PSF evaluation and position fitting", "implemented",
+                     "Per-zone ePSF (5x, A&K flux fractions, bicubic spline) fitted with a plane background; validated per frame by injection-recovery "
+                     "into the real pixels (skyshift.imaging.epsf, skyshift.science.alignment)."),
+                _cap("Alignment diagnostics vs Gaia DR3 (reference stars, before correction)", "implemented",
+                     "Per-frame residuals, rejected-star reasons, held-out translation test and the archive-WCS convention test; no correction applied."),
+                _cap("Photometry / target astrometry / registration / difference imaging", "not_implemented", "Unavailable for observed data; each dataset lists the requirements."),
             ],
             references=REFERENCES,
             notes=["Read-only viewer. Never substituted by synthetic data."] + manifests,

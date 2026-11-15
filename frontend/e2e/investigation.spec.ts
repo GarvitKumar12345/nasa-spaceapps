@@ -80,14 +80,16 @@ test.describe('[browser] complete synthetic investigation', () => {
   })
 
   test('Methods shows real provider statuses and never claims unrun live checks', async ({ page }) => {
-    // Gaia DR3 / WISE / NEOSSat stay documented with live checks not run; SPHEREx is implemented (its live checks come from the report).
+    // WISE / NEOSSat stay documented with live checks not run; SPHEREx and Gaia DR3 are implemented (their live checks come from the report).
     await page.goto('/#/methods')
     const providers = page.getByTestId('provider-table')
     await expect(providers.locator('[data-provider="spherex"]')).toContainText('implemented')
-    await expect(providers.locator('[data-provider="gaia_dr3"]')).toContainText('documented')
+    await expect(providers.locator('[data-provider="gaia_dr3"]')).toContainText('implemented')
+    await expect(providers.locator('[data-provider="wise"]')).toContainText('documented')
     await expect(page.getByTestId('live-group')).toContainText('not run')
-    await expect(page.getByTestId('limitations')).toContainText('Measurements on synthetic data only')
-    await expect(page.locator('[data-group="Archive product checks (SPHEREx DR1)"]')).toBeVisible()
+    await expect(page.getByTestId('limitations')).toContainText('Target measurements on synthetic data only')
+    await expect(page.getByTestId('limitations')).toContainText('Gaia DR3 overlays are model predictions')
+    await expect(page.locator('[data-group="Archive product checks (SPHEREx DR1, Gaia DR3)"]')).toBeVisible()
   })
 
   test('corrupted notebook storage is reported, not silently discarded', async ({ page }) => {

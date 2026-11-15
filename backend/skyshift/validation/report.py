@@ -74,6 +74,7 @@ def pytest_results(payload: dict[str, Any]) -> list[TestResult]:
                 duration_s=r.get("duration_s"),
                 message=r.get("message"),
                 file=r.get("file"),
+                notes=[str(n) for n in (r.get("notes") or [])],
             )
         )
     return out

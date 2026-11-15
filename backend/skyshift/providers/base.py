@@ -63,6 +63,8 @@ class DatasetBundle:
     catalog: list[CatalogSource] = field(default_factory=list)
     catalog_name: str | None = None
     truth: SimulationTruth | None = None
+    # Provider-specific objects needed by analyses (e.g. the validated SPHEREx SpectralImage per native frame id).
+    extras: dict[str, object] = field(default_factory=dict)
 
 
 @runtime_checkable

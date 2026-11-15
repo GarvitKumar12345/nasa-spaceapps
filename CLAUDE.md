@@ -10,9 +10,10 @@ Design background: `planning/SkyShift_Project_Blueprint.md`, `planning/skyshift-
 - Dev (both servers): `npm run dev` at repo root → http://127.0.0.1:5173 (API on :8000, proxied at `/api`)
 - Backend only: `cd backend && uv run uvicorn skyshift.api.app:app --host 127.0.0.1 --port 8000`
 - SPHEREx DR1 cutouts (real data; local cache `backend/cache/spherex/`, not committed): `cd backend && uv run python -m skyshift.providers.spherex.fetch --field spherex-dr1-barnard --from-manifest`. The API never downloads; the manifest `fixtures/spherex/<field>/manifest.json` is the committed retrieval record (details: `docs/providers/spherex.md`).
+- Gaia DR3 for a field (committed: `fixtures/gaia_dr3/<field>/`): `cd backend && uv run python -m skyshift.providers.gaia_dr3.fetch --field spherex-dr1-barnard [--dry-run]` (needs the SPHEREx cache for the footprints). Alignment reports are disk-cached in `backend/cache/alignment/` (key = inputs + code hash).
 
 ## Test
-- Python: `cd backend && uv run pytest` (markers: math, coords, measurement, registration, catalog, pipeline, contracts, api, archive, slow; `-m live` for IRSA tests, skipped by default; SPHEREx dataset tests skip if the cutout cache is absent)
+- Python: `cd backend && uv run pytest` (markers: math, coords, measurement, registration, catalog, pipeline, contracts, api, archive, slow; `-m live` for IRSA/ESA tests, skipped by default; SPHEREx dataset tests skip if the cutout cache is absent). Live tests record count changes with `record_property("note", …)` and fail only on schema/provenance/pinned-product differences.
 - TypeScript: `cd frontend && npm run test` (vitest) · `npm run typecheck` · `npm run build`
 - Browser: `cd frontend && npm run e2e` (Playwright, system Chrome; starts servers if needed)
 - Full validation report for Methods: `npm run validate` (repo root) → `validation/report.json`; add live IRSA checks with `cd backend && uv run python scripts/validate.py --live`
@@ -30,5 +31,7 @@ Design background: `planning/SkyShift_Project_Blueprint.md`, `planning/skyshift-
 - Measure only native original arrays (image/variance/mask). Reprojected frames are display-only. Missing data stays missing; never substitute synthetic data for a failed archive request.
 - Never invert weak/negative parallax into a distance; report underconstrained fits as such.
 - SPHEREx is read-only: explicit collection (`spherex_dr1`), extensions read by EXTNAME, flag bits from each file's FLAGS header, units MJy/sr (surface brightness incl. zodi), times UTC (`MJD-AVG`). Blink/compare only within a compatibility group (same detector AND |Δλ| ≤ 0.25 × bandwidth at the field centre, WCS-WAVE). Measurement, registration, fits and differences stay unavailable for observed data (`Dataset.capabilities`, API 409 `not_available`) until validated.
-- Gaia DR3, WISE and NEOSSat/CADC live integrations are not implemented: keep their status honest (`backend/skyshift/providers/`, `docs/providers/`).
+- Gaia DR3: `gaiadr3.gaia_source` named explicitly; source_id is always a decimal string (never float/JSON number). Propagate from J2016.0 TCB with the Gaia-documented model (RV where catalogued; Barnard's Star needs it); apply observer parallax once and no aberration (the SPHEREx WCS is catalogue-frame: ES §3.2.8 + convention test). Predictions are `model_prediction`, reference ePSF positions `derived_measurement`; an unmatched prediction is never a discovery. Alignment residuals are reported before correction; no correction is applied anywhere.
+- SPHEREx photometry, target astrometry/motion fits and difference imaging stay unavailable (`Dataset.capabilities`, API 409).
+- WISE and NEOSSat/CADC live integrations are not implemented: keep their status honest (`backend/skyshift/providers/`, `docs/providers/`).
 - Tests must check behaviour against independent methods or noise-justified tolerances, not restate the implementation.

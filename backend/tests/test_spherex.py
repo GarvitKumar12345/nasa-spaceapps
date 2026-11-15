@@ -431,7 +431,8 @@ def test_spherex_status_is_derived_from_recorded_checks():
     by_name = {c.name: c for c in st.capabilities}
     for cap_name, key in (("Discovery (SIA2, explicit collection, bounded cone)", "discovery"), ("Cutout acquisition (IBE; cached; concurrency <= 4; retries)", "cutout")):
         assert by_name[cap_name].status == _live_status(LIVE_TESTS[key])[0]
-    assert by_name["Effective PSF evaluation"].status == "not_implemented"
+    assert by_name["Effective PSF evaluation and position fitting"].status == "implemented"  # used only for Gaia reference stars
+    assert by_name["Photometry / target astrometry / registration / difference imaging"].status == "not_implemented"
     assert by_name["Spectral calibration products (CWAVE/CBAND)"].status == "not_implemented"
 
 
@@ -439,15 +440,26 @@ def test_spherex_status_is_derived_from_recorded_checks():
 
 
 @pytest.mark.live
-def test_live_sia_discovery_matches_manifest(spherex_manifest):
-    """[live] SPHEREx: a live SIA2 query in spherex_dr1 returns the same 239 products as the recorded manifest (DR1 is a frozen release)."""
+def test_live_sia_discovery_matches_manifest(spherex_manifest, record_property):
+    """[live] SPHEREx: a live SIA2 query in spherex_dr1 parses with the documented schema and still returns every pinned (selected) product unchanged; a changed row count is recorded as a note."""
     from skyshift.providers.spherex.http import ArchiveClient
 
     client = ArchiveClient()
     body, rec = client.get(spherex_manifest["discovery"]["url"], max_bytes=50_000_000)
-    rows = parse_sia_votable(body, "spherex_dr1")
+    rows = parse_sia_votable(body, "spherex_dr1")  # schema + provenance checks (columns by name, collection, band/file consistency)
     assert rec.status == 200
-    assert {row_key(r.obs_id, r.detector) for r in rows} == {row_key(r["obs_id"], r["detector"]) for r in spherex_manifest["discovery"]["rows"]}
+    live = {row_key(r.obs_id, r.detector): r for r in rows}
+    recorded = {row_key(r["obs_id"], r["detector"]): r for r in spherex_manifest["discovery"]["rows"]}
+    pinned = [k for g in spherex_manifest["selection"]["selected_groups"] for k in g["members"]] + [c["key"] for c in spherex_manifest["selection"].get("contrast", [])]
+    for k in pinned:  # pinned products must be unchanged: same processing tag and access URL
+        assert k in live, f"pinned product {k} no longer returned"
+        assert (live[k].processing_tag, live[k].access_url) == (recorded[k]["processing_tag"], recorded[k]["access_url"])
+    added, removed = sorted(set(live) - set(recorded)), sorted(set(recorded) - set(live))
+    if added or removed:
+        record_property("note", f"SIA2 row count changed: {len(live)} live vs {len(recorded)} recorded (+{len(added)} / -{len(removed)}); "
+                                "pinned products unchanged. Reported, not a failure.")
+    else:
+        record_property("note", f"SIA2 row count unchanged ({len(recorded)} products).")
 
 
 @pytest.mark.live

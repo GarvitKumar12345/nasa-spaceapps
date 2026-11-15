@@ -4,7 +4,9 @@ Run (from backend/):  uv run uvicorn skyshift.api.app:app --host 127.0.0.1 --por
 Errors use {"detail": ApiError}. Pixel planes are raw little-endian bytes
 (float32 image/variance with NaN = no coverage in display products; uint16 or uint32 mask,
 stated in X-SkyShift-Dtype). Observed datasets are read-only: analysis routes answer 409
-not_available with the dataset's stated reason.
+not_available with the dataset's stated reason. Observed datasets add Gaia DR3 predictions
+(/gaia/overlay, /gaia/sources/{source_id}) and alignment diagnostics (/alignment), served from
+the recorded catalogue response; the API never queries an archive. Gaia source IDs are strings.
 """
 
 from __future__ import annotations
@@ -17,10 +19,12 @@ import numpy as np
 from astropy.coordinates import SkyCoord
 from fastapi import Body, FastAPI, Query, Request
 from fastapi.exceptions import HTTPException
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, Response
 
 from skyshift import __version__
 from skyshift.contracts import (
+    AlignmentReport,
     ApiError,
     CatalogAssociation,
     CatalogOverlay,
@@ -32,6 +36,8 @@ from skyshift.contracts import (
     EvidenceRecord,
     EvidenceValidation,
     FitRequest,
+    GaiaFrameOverlay,
+    GaiaSourceDetail,
     HealthStatus,
     MeasurementSet,
     ModelFit,
@@ -46,13 +52,17 @@ from skyshift.coords.wcs import description_to_wcs, sky_to_pixel
 from skyshift.notebook.evidence import record_to_csv, reproduce_record, validate_record
 from skyshift.pipeline.investigation import Investigation, get_investigation
 from skyshift.pipeline.observed import ObservedSession
+from skyshift.pipeline.observed_gaia import ObservedGaia, observed_gaia
 from skyshift.providers.base import ProviderUnavailable
+from skyshift.providers.gaia_dr3 import load_recorded_field
+from skyshift.providers.gaia_dr3.catalog import SOURCE_ID_RE
 from skyshift.providers.registry import dataset_provider, list_datasets, load_dataset, provider_statuses
 from skyshift.science.astrometry import fit_astrometry
 from skyshift.validation.report import report_with_staleness
 from skyshift.versions import software_versions
 
 app = FastAPI(title="SkyShift API", version=__version__, description="Local research API for the SkyShift observatory.")
+app.add_middleware(GZipMiddleware, minimum_size=2048)
 
 
 class ApiException(HTTPException):
@@ -157,18 +167,59 @@ def measurements(dataset_id: str, source_id: str, method: str = Query("psf_gauss
 
 @app.get("/api/datasets/{dataset_id}/sources/{source_id}/associations", response_model=list[CatalogAssociation])
 def associations(dataset_id: str, source_id: str) -> list[CatalogAssociation]:
-    inv = _investigation(dataset_id, "catalog_overlay")
+    # Associations link image-detected sources to the catalogue, so they need source detection.
+    inv = _investigation(dataset_id, "source_detection")
     _source_guard(inv, source_id)
     return inv.associations(source_id)
 
 
 @app.get("/api/datasets/{dataset_id}/catalog", response_model=CatalogOverlay)
 def catalog(dataset_id: str, frame_id: str) -> CatalogOverlay:
-    inv = _investigation(dataset_id, "catalog_overlay")
+    sess = _session(dataset_id)
+    if isinstance(sess, ObservedSession):
+        raise ApiException(409, "not_available", f"{dataset_id} is observed data: its Gaia DR3 predictions are served by /api/datasets/{dataset_id}/gaia/overlay.",
+                           {"capability": "catalog_overlay", "route": f"/api/datasets/{dataset_id}/gaia/overlay", "origin": "observed"})
     try:
-        return inv.catalog_overlay(frame_id)
+        return sess.catalog_overlay(frame_id)
     except KeyError:
         raise ApiException(404, "not_found", f"Unknown frame {frame_id!r}.") from None
+
+
+def _observed_gaia(dataset_id: str, capability: str) -> ObservedGaia:
+    sess = _session(dataset_id)
+    if not isinstance(sess, ObservedSession):
+        raise ApiException(409, "not_available", f"{dataset_id} is simulated: it has its own simulated reference catalogue (/catalog); Gaia DR3 is used for observed data only.",
+                           {"capability": capability, "origin": "simulated"})
+    cap = sess.capability(capability)
+    if cap.status != "available":
+        raise ApiException(409, "not_available", cap.reason or f"{capability} is unavailable for {dataset_id}.",
+                           {"capability": capability, "requirements": cap.requirements, "origin": "observed"})
+    return observed_gaia(sess.bundle, load_recorded_field(dataset_id))
+
+
+@app.get("/api/datasets/{dataset_id}/gaia/overlay", response_model=GaiaFrameOverlay)
+def gaia_overlay(dataset_id: str, frame_id: str) -> GaiaFrameOverlay:
+    og = _observed_gaia(dataset_id, "catalog_overlay")
+    try:
+        return og.overlay(frame_id)
+    except KeyError:
+        raise ApiException(404, "not_found", f"Unknown frame {frame_id!r}.") from None
+
+
+@app.get("/api/datasets/{dataset_id}/gaia/sources/{source_id}", response_model=GaiaSourceDetail)
+def gaia_source(dataset_id: str, source_id: str, frame_id: str) -> GaiaSourceDetail:
+    if not SOURCE_ID_RE.match(source_id):
+        raise ApiException(422, "invalid_request", "A Gaia DR3 source_id is a decimal integer string (sent as a string, never a number).")
+    og = _observed_gaia(dataset_id, "catalog_overlay")
+    try:
+        return og.source_detail(frame_id, source_id)
+    except KeyError as exc:
+        raise ApiException(404, "not_found", str(exc.args[0]) if exc.args else "not found") from None
+
+
+@app.get("/api/datasets/{dataset_id}/alignment", response_model=AlignmentReport)
+def alignment(dataset_id: str) -> AlignmentReport:
+    return _observed_gaia(dataset_id, "alignment_diagnostics").report()
 
 
 def _difference(dataset_id: str, a: str, b: str) -> tuple[DifferenceInfo, np.ndarray | None]:
