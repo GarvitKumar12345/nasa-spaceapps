@@ -21,6 +21,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Literal
 
 from skyshift.contracts import SuiteRun, TestResult
 from skyshift.validation.report import (
@@ -30,6 +31,7 @@ from skyshift.validation.report import (
     counts,
     playwright_results,
     pytest_results,
+    source_hash,
     vitest_results,
     write_report,
 )
@@ -44,8 +46,21 @@ def _run(cmd: list[str], cwd: Path, env: dict[str, str] | None = None) -> tuple[
     started = _utc_now()
     t0 = time.perf_counter()
     print(f"\n$ {' '.join(cmd)}   (cwd={cwd})", flush=True)
-    proc = subprocess.run(cmd, cwd=cwd, env=env, check=False)
+    try:
+        proc = subprocess.run(cmd, cwd=cwd, env=env, check=False)
+    except OSError as exc:
+        print(f"Runner could not start: {exc}", file=sys.stderr, flush=True)
+        return 127, time.perf_counter() - t0, started
     return proc.returncode, time.perf_counter() - t0, started
+
+
+def _checked_results(suite: Literal["pytest", "vitest", "playwright"], results: list[TestResult], code: int) -> list[TestResult]:
+    """A partial JSON file cannot hide a runner failure outside individual tests."""
+    if not results or (code != 0 and not any(r.status in ("failed", "error") for r in results)):
+        message = f"{suite} recorded no checks" if not results else f"{suite} exited unsuccessfully after writing partial results"
+        return [*results, TestResult(id=f"runner:{suite}", name=f"{suite} runner completion", suite=suite,
+                                    category="runner", status="error", message=f"{message} (exit code {code})")]
+    return results
 
 
 def _version(cmd: list[str]) -> str:
@@ -69,6 +84,7 @@ def main() -> int:
     parser.add_argument("--no-e2e", action="store_true", help="skip the Playwright browser suite")
     parser.add_argument("--live", action="store_true", help="include live archive tests (network)")
     args = parser.parse_args()
+    tested_source_hash = source_hash()
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     for name in ("pytest.json", "vitest.json", "playwright.json"):
@@ -89,7 +105,7 @@ def main() -> int:
     if payload is None:
         suites.append(SuiteRun(suite="pytest", ran=False, started_utc=started, duration_s=duration, command=" ".join(py_cmd[1:]), note=f"pytest produced no results (exit code {code})"))
     else:
-        rs = pytest_results(payload)
+        rs = _checked_results("pytest", pytest_results(payload), code)
         results += rs
         note = None if not args.live else "live archive tests requested"
         suites.append(SuiteRun(suite="pytest", ran=True, started_utc=started, duration_s=duration, counts=counts(rs), command="pytest -q", note=note))
@@ -102,7 +118,7 @@ def main() -> int:
     if payload is None:
         suites.append(SuiteRun(suite="vitest", ran=False, started_utc=started, duration_s=duration, command="vitest run", note=f"vitest produced no results (exit code {code})"))
     else:
-        rs = vitest_results(payload)
+        rs = _checked_results("vitest", vitest_results(payload), code)
         results += rs
         suites.append(SuiteRun(suite="vitest", ran=True, started_utc=started, duration_s=duration, counts=counts(rs), command="vitest run"))
 
@@ -116,7 +132,7 @@ def main() -> int:
         if payload is None:
             suites.append(SuiteRun(suite="playwright", ran=False, started_utc=started, duration_s=duration, command="playwright test", note=f"Playwright produced no results (exit code {code})"))
         else:
-            rs = playwright_results(payload)
+            rs = _checked_results("playwright", playwright_results(payload), code)
             results += rs
             suites.append(SuiteRun(suite="playwright", ran=True, started_utc=started, duration_s=duration, counts=counts(rs), command="playwright test"))
 
@@ -131,6 +147,9 @@ def main() -> int:
         }
     )
     report = build_report(generated_utc=_utc_now(), environment=environment, suites=suites, results=results)
+    changed_during_run = report.source_hash != tested_source_hash
+    # If files changed mid-run, keep the original identity so Methods flags the report stale.
+    report = report.model_copy(update={"source_hash": tested_source_hash})
     write_report(report)
 
     c = counts(results)
@@ -141,7 +160,9 @@ def main() -> int:
     print(f"  written: {REPO_ROOT / 'validation' / 'report.json'}")
     failed = c.get("failed", 0) + c.get("error", 0)
     unexpected_not_run = [s.suite for s in suites if not s.ran and s.note != "skipped by --no-e2e"]
-    return 1 if failed or unexpected_not_run else 0
+    if changed_during_run:
+        print("Sources changed during validation; report is stale and must not certify the final state.")
+    return 1 if failed or unexpected_not_run or changed_during_run else 0
 
 
 if __name__ == "__main__":

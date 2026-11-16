@@ -215,3 +215,11 @@ def test_observer_parallax_is_applied_exactly_once():
     oe, on = observer_parallax_offsets(bary.ra_deg, bary.dec_deg, bary.parallax_mas, b)
     assert np.hypot(oe[0], on[0]) <= plx * np.linalg.norm(b) * (1 + 1e-12)  # one application, never doubled
     assert np.hypot(float(e), float(n)) == pytest.approx(float(np.hypot(oe[0], on[0])), rel=1e-6)
+    # independent of the parallax-factor formulas: subtract the observer's position vector from the star's (au)
+    ra, dec = np.radians(bary.ra_deg[0]), np.radians(bary.dec_deg[0])
+    star = (1000.0 / plx) * 206264.80624709636 * np.array([np.cos(dec) * np.cos(ra), np.cos(dec) * np.sin(ra), np.sin(dec)])
+    g = star - b
+    ra_g, dec_g = np.degrees(np.arctan2(g[1], g[0])) % 360.0, np.degrees(np.arcsin(g[2] / np.linalg.norm(g)))
+    ge, gn = offsets_mas(ra_g, dec_g, bary.ra_deg[0], bary.dec_deg[0])
+    # first-order parallax factors vs exact geometry differ by ~(b/d)^2 rad ~ 1e-3 mas for Barnard's Star
+    assert float(e) == pytest.approx(float(ge), abs=3e-3) and float(n) == pytest.approx(float(gn), abs=3e-3)

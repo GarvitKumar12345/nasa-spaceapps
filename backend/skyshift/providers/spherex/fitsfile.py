@@ -197,7 +197,10 @@ def read_spectral_image(data: bytes) -> SpectralImage:
 
 
 def _cutout_epsf_library(epsf_hdu, image_header, shape: tuple[int, int]) -> EPSFLibrary | None:  # noqa: ANN001
-    """The EPSF zones whose detector rectangles overlap this cutout (1 px margin), or None if unreadable."""
+    """The EPSF zones overlapping this cutout (1 px margin) plus their grid neighbours, or None if unreadable.
+
+    Positions inside the cutout always fall in an overlapping zone; the neighbouring zones are kept
+    only for the PSF-mismatch sensitivity test (refits with an adjacent zone's ePSF)."""
     try:
         lib = EPSFLibrary.from_hdu(epsf_hdu)
     except (ValueError, KeyError):
@@ -208,10 +211,13 @@ def _cutout_epsf_library(epsf_hdu, image_header, shape: tuple[int, int]) -> EPSF
     oy = 1.0 - float(image_header["CRPIX2A"]) + float(image_header.get("CRVAL2A", 0.0))
     ny, nx = shape
     x0, x1, y0, y1 = ox - 1.5, ox + nx + 0.5, oy - 1.5, oy + ny + 0.5
-    keep = [z.index for z in lib.zones
-            if z.x_center + 0.5 * z.x_width >= x0 and z.x_center - 0.5 * z.x_width <= x1 and z.y_center + 0.5 * z.y_width >= y0 and z.y_center - 0.5 * z.y_width <= y1]
-    if not keep:
+    overlap = [z for z in lib.zones
+               if z.x_center + 0.5 * z.x_width >= x0 and z.x_center - 0.5 * z.x_width <= x1 and z.y_center + 0.5 * z.y_width >= y0 and z.y_center - 0.5 * z.y_width <= y1]
+    if not overlap:
         return lib
+    bins = {(z.binx, z.biny) for z in overlap}
+    near = {(bx + dx, by + dy) for bx, by in bins for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1))}
+    keep = [z.index for z in lib.zones if (z.binx, z.biny) in near]
     zones = [lib.zones[i] for i in keep]
     from dataclasses import replace
 

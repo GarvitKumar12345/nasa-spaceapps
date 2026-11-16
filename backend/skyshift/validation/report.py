@@ -28,7 +28,14 @@ _HASH_GLOBS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("backend/scripts", (".py",)),
     ("frontend/src", (".ts", ".tsx", ".css")),
     ("frontend/e2e", (".ts",)),
-    ("fixtures", (".json",)),
+    ("fixtures", (".json", ".gz", ".fits")),
+)
+
+_HASH_FILES = (
+    "package.json", "package-lock.json", "backend/pyproject.toml", "backend/uv.lock",
+    "frontend/package.json", "frontend/package-lock.json", "frontend/index.html",
+    "frontend/vite.config.ts", "frontend/vitest.config.ts", "frontend/playwright.config.ts",
+    "frontend/tsconfig.json", "frontend/tsconfig.app.json", "frontend/tsconfig.node.json",
 )
 
 _TAG = re.compile(r"\[(math|coords|measurement|registration|catalog|pipeline|contracts|api|ui|browser|live|archive)\]", re.I)
@@ -38,6 +45,7 @@ def source_hash(root: Path = REPO_ROOT) -> str:
     """sha256 over (relative path, content hash) of all source/test/fixture files."""
     digest = hashlib.sha256()
     files: list[Path] = []
+    files.extend(root / rel for rel in _HASH_FILES if (root / rel).is_file())
     for rel, suffixes in _HASH_GLOBS:
         base = root / rel
         if not base.exists():

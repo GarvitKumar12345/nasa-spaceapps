@@ -557,6 +557,15 @@ class ErrorBudgetTerm(Contract):
     source: str | None = None
 
 
+class ConventionAspect(Contract):
+    """One part of the archive-WCS coordinate convention and how far it is established."""
+
+    aspect: str
+    status: Literal["documented", "tested", "documented_and_tested", "undocumented_bounded", "untested_bounded"]
+    evidence: str
+    bound_arcsec: float | None = Field(None, description="Largest positional effect if this aspect were handled differently")
+
+
 class PredictionConvention(Contract):
     """What a catalogue prediction on an archive frame represents, and how that was established."""
 
@@ -564,8 +573,10 @@ class PredictionConvention(Contract):
     includes: list[str]
     excludes: list[str]
     wcs_convention: str
-    status: Literal["resolved", "approximate"]
+    status: Literal["resolved", "partially_resolved", "approximate"] = Field(
+        description="resolved = every aspect documented or tested; partially_resolved = the decisive aspects tested, the rest undocumented but bounded")
     evidence: list[str] = Field(default_factory=list)
+    aspects: list[ConventionAspect] = Field(default_factory=list)
     error_budget: list[ErrorBudgetTerm] = Field(default_factory=list)
 
 
@@ -693,13 +704,33 @@ class TranslationEvaluation(Contract):
     decision: str
     offset_east_arcsec: float | None = None
     offset_north_arcsec: float | None = None
-    sigma_east_arcsec: float | None = None
+    sigma_east_arcsec: float | None = Field(None, description="Total: random (shrinks as 1/sqrt(N)) and shared (does not) in quadrature")
     sigma_north_arcsec: float | None = None
+    sigma_random_east_arcsec: float | None = None
+    sigma_random_north_arcsec: float | None = None
+    sigma_shared_arcsec: float | None = Field(None, description="Shared per-frame error per axis (PSF mismatch, centroid convention, Gaia frame)")
     extra_scatter_arcsec: float | None = None
     chi2: float | None = None
-    p_value: float | None = None
-    heldout_rms_uncorrected_arcsec: float | None = None
-    heldout_rms_corrected_arcsec: float | None = None
+    p_value: float | None = Field(None, description="With the total uncertainty (decision basis)")
+    chi2_random_only: float | None = None
+    p_value_random_only: float | None = Field(None, description="Random errors only (previous criterion; shown for comparison)")
+    heldout_rms_uncorrected_arcsec: float | None = Field(None, description="2-D RMS sqrt(<dE^2 + dN^2>) of the references, uncorrected")
+    heldout_rms_corrected_arcsec: float | None = Field(None, description="2-D RMS after the leave-one-out offset")
+
+
+class SharedSystematics(Contract):
+    """Errors common to all references of one frame: they do not average down with the number of stars."""
+
+    n_zone_swaps: int
+    zone_swap_rms_x_px: float | None = None
+    zone_swap_rms_y_px: float | None = None
+    psf_mismatch_arcsec: float | None = Field(None, description="Half the RMS zone-swap shift, per sky axis; null when no adjacent-zone ePSF exists (see missing_terms)")
+    convention_windowed_px: tuple[float, float] = Field(description="Windowed centroid minus ePSF reference point (detector x, y)")
+    convention_barycentre_px: tuple[float, float] = Field(description="5x5 barycentre minus ePSF reference point (detector x, y)")
+    convention_arcsec: float = Field(description="RMS of the two convention offsets, per sky axis")
+    gaia_frame_arcsec: float
+    total_arcsec: float = Field(description="Quadrature sum of the terms that could be estimated")
+    missing_terms: list[str] = Field(default_factory=list, description="Shared terms that could not be estimated for this frame (the total omits them)")
 
 
 class InjectionSummary(Contract):
@@ -760,6 +791,9 @@ class FrameAlignment(Contract):
     translation: TranslationEvaluation
     estimator: EstimatorValidation | None = None
     aberration_if_apparent_arcsec: tuple[float, float] = Field(description="(east, north) offset expected if the WCS mapped to apparent directions")
+    shared: SharedSystematics | None = None
+    offset_detector_px: tuple[float, float] | None = Field(None, description="Weighted mean residual mapped to detector (x, y) pixels")
+    offset_detector_sigma_px: tuple[float, float] | None = None
     saturated_source_ids: list[str] = Field(default_factory=list)
     residuals: list[ReferenceStarResidual] = Field(default_factory=list)
 
@@ -775,6 +809,36 @@ class ConventionTest(Contract):
     min_aberration_arcsec: float | None = None
     max_frame_offset_arcsec: float | None = Field(None, description="Largest per-frame mean residual among the frames tested")
     decision: str
+
+
+class UncertaintyTerm(Contract):
+    term: str
+    kind: Literal["random_per_star", "unexplained_per_star", "shared_per_frame", "shared_all_frames"]
+    typical_arcsec: float | None
+    range_arcsec: tuple[float, float] | None = None
+    enters_as: str
+    source: str
+
+
+class DetectorFrameOffsets(Contract):
+    """Per-frame offsets in detector pixels: a detector-fixed estimator offset would appear in every frame."""
+
+    n_frames: int
+    mean_x_px: float
+    mean_y_px: float
+    se_x_px: float
+    se_y_px: float
+    std_x_px: float
+    std_y_px: float
+    n_positive_x: int
+    interpretation: str
+
+
+class ReportCache(Contract):
+    key: str
+    computed_utc: str
+    served_from_cache: bool
+    inputs: dict[str, str] = Field(default_factory=dict, description="Input identities hashed into the key")
 
 
 class AlignmentReport(Contract):
@@ -795,6 +859,10 @@ class AlignmentReport(Contract):
     n_frames_insufficient: int
     n_frames_not_validated: int
     pooled_over: str = Field(description="Which frames' references enter the pooled statistics and the convention test")
+    uncertainty_budget: list[UncertaintyTerm] = Field(default_factory=list)
+    detector_frame_offsets: DetectorFrameOffsets | None = None
+    reassessment: str | None = Field(None, description="How the offset classifications changed once shared errors were included")
+    cache: ReportCache | None = None
     field_assessment: str
     limitations: list[str] = Field(default_factory=list)
     provenance: Provenance
@@ -1330,8 +1398,13 @@ EXPORTED_MODELS: list[type[Contract]] = [
     InjectionSummary,
     RadialInjectionBin,
     EstimatorValidation,
+    SharedSystematics,
     FrameAlignment,
     ConventionTest,
+    UncertaintyTerm,
+    DetectorFrameOffsets,
+    ReportCache,
+    ConventionAspect,
     AlignmentReport,
     GaiaSourceDetail,
     ChangeIndicator,

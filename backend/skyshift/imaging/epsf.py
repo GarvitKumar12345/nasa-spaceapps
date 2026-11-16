@@ -204,6 +204,12 @@ class EPSFLibrary:
     def zone_contains(self, index: int, det_x: float, det_y: float) -> bool:
         return self.zones[index].contains(det_x, det_y)
 
+    def neighbours(self, index: int) -> list[int]:
+        """Indices of the zones adjacent in the zone grid (BINX/BINY +/- 1) that this library holds."""
+        z = self.zones[index]
+        want = {(z.binx + 1, z.biny), (z.binx - 1, z.biny), (z.binx, z.biny + 1), (z.binx, z.biny - 1)}
+        return [o.index for o in self.zones if (o.binx, o.biny) in want]
+
     def model(self, index: int) -> EPSFModel:
         if index not in self._models:
             self._models[index] = EPSFModel(self.arrays[index], self.oversampling)

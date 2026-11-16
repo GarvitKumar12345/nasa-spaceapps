@@ -1,0 +1,113 @@
+{
+ "purpose": "Coverage check for the recommended next demonstration target (estimator review 2026-11-15). Not a fixture: no cutout was downloaded and nothing here is used by the app.",
+ "target": "van Maanen 2 (WD 0046+051)",
+ "position_used_deg": {
+  "ra": 12.3001,
+  "dec": 5.3693,
+  "note": "approximate 2025.7 position: J2000 (00 49 09.90 +05 23 19.0) + Gaia-like proper motion (+1.23, -2.71 arcsec/yr) x 25.7 yr; the 0.005 deg cone covers its uncertainty"
+ },
+ "query": {
+  "service": "IRSA SIA2",
+  "collection": "spherex_dr1",
+  "url": "https://irsa.ipac.caltech.edu/SIA?COLLECTION=spherex_dr1&POS=CIRCLE+12.3001000+5.3693000+0.005000&RESPONSEFORMAT=VOTABLE",
+  "radius_deg": 0.005,
+  "client": "skyshift.providers.spherex.http.USER_AGENT"
+ },
+ "attempts": [
+  {
+   "utc": "2026-11-15T20:49Z",
+   "result": "HTTP 502 Proxy Error (no rows)"
+  },
+  {
+   "utc": "2026-11-15T20:50:49Z",
+   "result": "HTTP 200, 216 rows, 216 after processing-version de-duplication"
+  }
+ ],
+ "by_detector": {
+  "D1": {
+   "n_images": 38,
+   "season_1": {
+    "n": 19,
+    "first": "2025-06-29",
+    "last": "2025-07-07"
+   },
+   "season_2": {
+    "n": 19,
+    "first": "2025-12-31",
+    "last": "2026-01-06"
+   }
+  },
+  "D2": {
+   "n_images": 38,
+   "season_1": {
+    "n": 19,
+    "first": "2025-07-06",
+    "last": "2025-07-19"
+   },
+   "season_2": {
+    "n": 19,
+    "first": "2025-12-23",
+    "last": "2026-01-04"
+   }
+  },
+  "D3": {
+   "n_images": 32,
+   "season_1": {
+    "n": 14,
+    "first": "2025-07-07",
+    "last": "2025-07-19"
+   },
+   "season_2": {
+    "n": 18,
+    "first": "2025-12-19",
+    "last": "2026-01-01"
+   }
+  },
+  "D4": {
+   "n_images": 38,
+   "season_1": {
+    "n": 19,
+    "first": "2025-06-29",
+    "last": "2025-07-07"
+   },
+   "season_2": {
+    "n": 19,
+    "first": "2025-12-31",
+    "last": "2026-01-06"
+   }
+  },
+  "D5": {
+   "n_images": 38,
+   "season_1": {
+    "n": 19,
+    "first": "2025-07-06",
+    "last": "2025-07-19"
+   },
+   "season_2": {
+    "n": 19,
+    "first": "2025-12-23",
+    "last": "2026-01-04"
+   }
+  },
+  "D6": {
+   "n_images": 32,
+   "season_1": {
+    "n": 14,
+    "first": "2025-07-07",
+    "last": "2025-07-19"
+   },
+   "season_2": {
+    "n": 18,
+    "first": "2025-12-19",
+    "last": "2026-01-01"
+   }
+  }
+ },
+ "not_checked": [
+  "local wavelength / compatibility groups at the target position",
+  "S/N per frame",
+  "Gaia DR3 neighbours (ESA archive unreachable on 2026-11-15)",
+  "flags at the target position",
+  "cutout download and validation"
+ ]
+}

@@ -91,3 +91,36 @@ def test_staleness_detects_source_change(tmp_path):
     (src / "mod.py").write_text("x = 2\n")
     assert report_with_staleness(path, tmp_path).stale is True
     assert source_hash(tmp_path) != report.source_hash
+
+
+@pytest.mark.parametrize("rel", ["backend/uv.lock", "frontend/package-lock.json", "frontend/playwright.config.ts", "fixtures/gaia_dr3/field/response.xml.gz"])
+def test_staleness_includes_dependencies_runner_config_and_recorded_data(tmp_path, rel):
+    """Changing test inputs or their execution configuration invalidates an otherwise unchanged source tree."""
+    path = tmp_path / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"original")
+    before = source_hash(tmp_path)
+    path.write_bytes(b"changed")
+    assert source_hash(tmp_path) != before
+
+
+@pytest.mark.parametrize("suite", ["pytest", "vitest", "playwright"])
+def test_partial_passing_json_cannot_hide_a_failed_runner(suite):
+    """A crash or collection/global error after some passing tests is still a failed validation run."""
+    from scripts.validate import _checked_results
+    from skyshift.contracts import TestResult
+
+    passed = TestResult(id="one", name="one", suite=suite, category="contracts", status="passed")
+    results = _checked_results(suite, [passed], 1)
+    assert results[0] == passed
+    assert results[-1].status == "error" and "exit code 1" in results[-1].message
+    assert _checked_results(suite, [passed], 0) == [passed]
+    assert _checked_results(suite, [], 0)[0].status == "error"
+
+
+def test_missing_runner_is_recorded_instead_of_aborting_report_generation(tmp_path):
+    """An unavailable executable yields a failed start; the other suites and final report can still run."""
+    from scripts.validate import _run
+
+    code, duration, started = _run([str(tmp_path / "missing-skyshift-runner.exe")], tmp_path)
+    assert code != 0 and duration >= 0 and started.endswith("Z")

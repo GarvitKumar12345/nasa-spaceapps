@@ -14,6 +14,7 @@ export interface SkyShiftContracts {
   CatalogOverlay?: CatalogOverlay;
   CatalogSource?: CatalogSource;
   ChangeIndicator?: ChangeIndicator;
+  ConventionAspect?: ConventionAspect;
   ConventionTest?: ConventionTest;
   Coverage?: Coverage;
   CurveComponent?: CurveComponent;
@@ -22,6 +23,7 @@ export interface SkyShiftContracts {
   DatasetSummary?: DatasetSummary;
   DerivedQuantity?: DerivedQuantity;
   DetectedSource?: DetectedSource;
+  DetectorFrameOffsets?: DetectorFrameOffsets;
   DifferenceInfo?: DifferenceInfo;
   Epoch?: Epoch;
   ErrorBudgetTerm?: ErrorBudgetTerm;
@@ -63,10 +65,12 @@ export interface SkyShiftContracts {
   RadialInjectionBin?: RadialInjectionBin;
   ReferenceStarResidual?: ReferenceStarResidual;
   RegistrationSummary?: RegistrationSummary;
+  ReportCache?: ReportCache;
   ReproductionCheck?: ReproductionCheck;
   ReproductionReport?: ReproductionReport;
   ResidualStatistics?: ResidualStatistics;
   ResolveResult?: ResolveResult;
+  SharedSystematics?: SharedSystematics;
   SimulationSection?: SimulationSection;
   SimulationTruth?: SimulationTruth;
   SkyPosition?: SkyPosition;
@@ -78,6 +82,7 @@ export interface SkyShiftContracts {
   TranslationEvaluation?: TranslationEvaluation;
   TruthPosition?: TruthPosition;
   TruthSource?: TruthSource;
+  UncertaintyTerm?: UncertaintyTerm;
   ValidationReport?: ValidationReport;
   ViewState?: ViewState;
   WCSDescription?: WCSDescription;
@@ -88,10 +93,12 @@ export interface SkyShiftContracts {
  * via the `definition` "AlignmentReport".
  */
 export interface AlignmentReport {
+  cache: ReportCache | null;
   catalog: string;
   convention: PredictionConvention;
   convention_test: ConventionTest;
   dataset_id: string;
+  detector_frame_offsets: DetectorFrameOffsets | null;
   field_assessment: string;
   frames: FrameAlignment[];
   limitations: string[];
@@ -109,10 +116,30 @@ export interface AlignmentReport {
   reason_texts: {
     [k: string]: string;
   };
+  /**
+   * How the offset classifications changed once shared errors were included
+   */
+  reassessment: string | null;
   release: string;
   selection_criteria: string[];
   status: "available" | "unavailable";
   status_reason: string;
+  uncertainty_budget: UncertaintyTerm[];
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ReportCache".
+ */
+export interface ReportCache {
+  computed_utc: string;
+  /**
+   * Input identities hashed into the key
+   */
+  inputs: {
+    [k: string]: string;
+  };
+  key: string;
+  served_from_cache: boolean;
 }
 /**
  * What a catalogue prediction on an archive frame represents, and how that was established.
@@ -121,13 +148,32 @@ export interface AlignmentReport {
  * via the `definition` "PredictionConvention".
  */
 export interface PredictionConvention {
+  aspects: ConventionAspect[];
   error_budget: ErrorBudgetTerm[];
   evidence: string[];
   excludes: string[];
   frame: string;
   includes: string[];
-  status: "resolved" | "approximate";
+  /**
+   * resolved = every aspect documented or tested; partially_resolved = the decisive aspects tested, the rest undocumented but bounded
+   */
+  status: "resolved" | "partially_resolved" | "approximate";
   wcs_convention: string;
+}
+/**
+ * One part of the archive-WCS coordinate convention and how far it is established.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "ConventionAspect".
+ */
+export interface ConventionAspect {
+  aspect: string;
+  /**
+   * Largest positional effect if this aspect were handled differently
+   */
+  bound_arcsec: number | null;
+  evidence: string;
+  status: "documented" | "tested" | "documented_and_tested" | "undocumented_bounded" | "untested_bounded";
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
@@ -164,6 +210,23 @@ export interface ConventionTest {
   p_catalog_frame: number | null;
 }
 /**
+ * Per-frame offsets in detector pixels: a detector-fixed estimator offset would appear in every frame.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "DetectorFrameOffsets".
+ */
+export interface DetectorFrameOffsets {
+  interpretation: string;
+  mean_x_px: number;
+  mean_y_px: number;
+  n_frames: number;
+  n_positive_x: number;
+  se_x_px: number;
+  se_y_px: number;
+  std_x_px: number;
+  std_y_px: number;
+}
+/**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
  * via the `definition` "FrameAlignment".
  */
@@ -195,11 +258,17 @@ export interface FrameAlignment {
   n_rejected: number;
   n_used: number;
   observation_id: string;
+  /**
+   * Weighted mean residual mapped to detector (x, y) pixels
+   */
+  offset_detector_px: [number, number] | null;
+  offset_detector_sigma_px: [number, number] | null;
   rejected_by_reason: {
     [k: string]: number;
   };
   residuals: ReferenceStarResidual[];
   saturated_source_ids: string[];
+  shared: SharedSystematics | null;
   statistics: ResidualStatistics | null;
   status: "ok" | "insufficient_reference_stars" | "estimator_not_validated" | "not_available";
   status_reason: string;
@@ -315,6 +384,48 @@ export interface ReferenceStarResidual {
   status: "used" | "rejected";
 }
 /**
+ * Errors common to all references of one frame: they do not average down with the number of stars.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "SharedSystematics".
+ */
+export interface SharedSystematics {
+  /**
+   * RMS of the two convention offsets, per sky axis
+   */
+  convention_arcsec: number;
+  /**
+   * 5x5 barycentre minus ePSF reference point (detector x, y)
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  convention_barycentre_px: [number, number];
+  /**
+   * Windowed centroid minus ePSF reference point (detector x, y)
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  convention_windowed_px: [number, number];
+  gaia_frame_arcsec: number;
+  /**
+   * Shared terms that could not be estimated for this frame (the total omits them)
+   */
+  missing_terms: string[];
+  n_zone_swaps: number;
+  /**
+   * Half the RMS zone-swap shift, per sky axis; null when no adjacent-zone ePSF exists (see missing_terms)
+   */
+  psf_mismatch_arcsec: number | null;
+  /**
+   * Quadrature sum of the terms that could be estimated
+   */
+  total_arcsec: number;
+  zone_swap_rms_x_px: number | null;
+  zone_swap_rms_y_px: number | null;
+}
+/**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
  * via the `definition` "ResidualStatistics".
  */
@@ -353,18 +464,41 @@ export interface ResidualStatistics {
  */
 export interface TranslationEvaluation {
   chi2: number | null;
+  chi2_random_only: number | null;
   decision: string;
   evaluated: boolean;
   extra_scatter_arcsec: number | null;
+  /**
+   * 2-D RMS after the leave-one-out offset
+   */
   heldout_rms_corrected_arcsec: number | null;
+  /**
+   * 2-D RMS sqrt(<dE^2 + dN^2>) of the references, uncorrected
+   */
   heldout_rms_uncorrected_arcsec: number | null;
   justified: boolean;
   n: number;
   offset_east_arcsec: number | null;
   offset_north_arcsec: number | null;
+  /**
+   * With the total uncertainty (decision basis)
+   */
   p_value: number | null;
+  /**
+   * Random errors only (previous criterion; shown for comparison)
+   */
+  p_value_random_only: number | null;
+  /**
+   * Total: random (shrinks as 1/sqrt(N)) and shared (does not) in quadrature
+   */
   sigma_east_arcsec: number | null;
   sigma_north_arcsec: number | null;
+  sigma_random_east_arcsec: number | null;
+  sigma_random_north_arcsec: number | null;
+  /**
+   * Shared per-frame error per axis (PSF mismatch, centroid convention, Gaia frame)
+   */
+  sigma_shared_arcsec: number | null;
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
@@ -400,6 +534,18 @@ export interface Provenance {
 export interface SoftwareVersion {
   name: string;
   version: string;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "UncertaintyTerm".
+ */
+export interface UncertaintyTerm {
+  enters_as: string;
+  kind: "random_per_star" | "unexplained_per_star" | "shared_per_frame" | "shared_all_frames";
+  range_arcsec: [number, number] | null;
+  source: string;
+  term: string;
+  typical_arcsec: number | null;
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema

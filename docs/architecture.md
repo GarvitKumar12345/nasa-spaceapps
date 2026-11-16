@@ -133,6 +133,15 @@ docs/                    architecture.md, providers/*.md, demo-script.md
 
 `science/epoch_propagation.py`: vectorised rigorous uniform-space-motion propagation (Gaia DR3 doc §4.1.7) with 6×6 covariance (Michalik et al. 2014 μ_r terms), explicit handling of missing motion / RV / weak parallax, and `predict_observed` = propagation + one observer-parallax term (no aberration, no light deflection). `imaging/epsf.py`: SPHEREx ePSF library (zones from the file's EPSF table, A&K normalisation, bicubic spline) and `fit_position` (LM, plane background, VARIANCE weights, flags excluded). `science/alignment.py`: reference selection with recorded reasons, residual statistics, held-out translation test, injection-recovery (global and near saturated regions), aberration convention test. `pipeline/observed_gaia.py` (`ObservedGaia`): per-frame predictions, overlay, source detail and the field `AlignmentReport`, disk-cached in `backend/cache/alignment/` under a hash of all inputs and the code.
 
+`science/alignment.py` (session 3, revised in session 4):
+- reference selection and the ePSF fits;
+- residual statistics with the Paule–Mandel extra scatter;
+- `shared_systematics`: PSF mismatch from adjacent-zone refits, and the centroid convention from the frame's ePSFs (windowed / barycentre centroids), with missing terms named;
+- `evaluate_translation`: random ⊕ shared σ, the shared part not shrinking with N, plus a held-out test;
+- the convention test.
+
+`science/estimator_stress.py` (session 4): an independent renderer (analytic PSFs integrated over each pixel), A&K ePSFs built from them, and the controlled variation matrix used by `tests/test_estimator_stress.py` and `scripts/estimator_review.py`.
+
 `notebook/evidence.py`: `validate_record` (schema, label vs origin, ids, truth only for simulated, fit freshness by recomputing `fit_input_hash`), `reproduce_record` (regenerate from seed, re-measure, re-fit; tolerances 1e-9 deg, 1e-6 relative flux, 1e-6 parameter units), `record_to_csv`.
 
 ## 5. HTTP API (FastAPI, prefix `/api`; JSON = contracts)

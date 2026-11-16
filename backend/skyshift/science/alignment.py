@@ -449,19 +449,29 @@ def weighted_offset(e: np.ndarray, n: np.ndarray, se: np.ndarray, sn: np.ndarray
     return float(np.sum(we * e) / np.sum(we)), float(np.sum(wn * n) / np.sum(wn)), float(1 / math.sqrt(np.sum(we))), float(1 / math.sqrt(np.sum(wn))), float(sx)
 
 
-def evaluate_translation(e: np.ndarray, n: np.ndarray, se: np.ndarray, sn: np.ndarray, min_refs: int = 5, alpha: float = 0.0027) -> dict:
+def evaluate_translation(e: np.ndarray, n: np.ndarray, se: np.ndarray, sn: np.ndarray, min_refs: int = 5, alpha: float = 0.0027,
+                         shared_sigma_arcsec: float = 0.0) -> dict:
     """Simplest correction model (a constant offset) evaluated on held-out references (leave-one-out).
 
-    Justified only if the offset differs from zero at the 3-sigma level (chi^2 with 2 dof, p < alpha)
-    AND applying the offset estimated from the other references reduces the held-out RMS.
+    The offset is the weighted mean residual. Its uncertainty has a random part (per-star errors plus
+    the Paule-Mandel extra scatter; shrinks as 1/sqrt(N)) and a shared part `shared_sigma_arcsec`
+    (per axis): errors common to every reference of the frame - PSF-model mismatch and the centroid
+    convention of the estimator - which do not shrink with N. Justified only if the offset differs
+    from zero at the 3-sigma level with the TOTAL uncertainty (chi^2, 2 dof, p < alpha) AND the
+    offset estimated from the other references reduces the held-out RMS. Held-out stars share the
+    frame's shared errors, so the held-out test cannot distinguish a shared estimator bias from a
+    WCS offset; only the shared term in the significance test protects against that.
     """
     e, n, se, sn = (np.asarray(v, dtype=float) for v in (e, n, se, sn))
     k = e.size
     if k < min_refs:
-        return {"evaluated": False, "justified": False, "n": int(k),
+        return {"evaluated": False, "justified": False, "n": int(k), "sigma_shared_arcsec": float(shared_sigma_arcsec),
                 "decision": f"not evaluated: {k} reference star(s), {min_refs} needed for a translation estimate with held-out evaluation"}
     oe, on, s_e, s_n, sx = weighted_offset(e, n, se, sn)
-    chi2 = (oe / s_e) ** 2 + (on / s_n) ** 2
+    t_e, t_n = math.hypot(s_e, shared_sigma_arcsec), math.hypot(s_n, shared_sigma_arcsec)
+    chi2_r = (oe / s_e) ** 2 + (on / s_n) ** 2
+    chi2 = (oe / t_e) ** 2 + (on / t_n) ** 2
+    p_r = float(stats.chi2.sf(chi2_r, 2))
     p = float(stats.chi2.sf(chi2, 2))
     held = []
     for i in range(k):
@@ -474,15 +484,120 @@ def evaluate_translation(e: np.ndarray, n: np.ndarray, se: np.ndarray, sn: np.nd
     significant = p < alpha
     improves = rms_cor < rms_unc
     justified = significant and improves
+    tail = f" (random-only p = {p_r:.2g}; shared {shared_sigma_arcsec:.3f}\" per axis included)"
     if justified:
-        decision = f"translation justified: offset significant (p = {p:.2g}) and held-out RMS {rms_unc:.3f}\" -> {rms_cor:.3f}\""
+        decision = f"translation justified: offset significant with shared errors (p = {p:.2g}) and held-out 2-D RMS {rms_unc:.3f}\" -> {rms_cor:.3f}\"" + tail
     elif not significant:
-        decision = f"no correction justified: offset consistent with zero (p = {p:.2g} >= {alpha}); held-out RMS {rms_unc:.3f}\" uncorrected vs {rms_cor:.3f}\" with the offset"
+        decision = f"no correction justified: offset within its total uncertainty (p = {p:.2g} >= {alpha}); held-out 2-D RMS {rms_unc:.3f}\" vs {rms_cor:.3f}\"" + tail
     else:
-        decision = f"no correction justified: offset formally significant (p = {p:.2g}) but held-out RMS does not improve ({rms_unc:.3f}\" -> {rms_cor:.3f}\")"
+        decision = f"no correction justified: offset significant (p = {p:.2g}) but held-out 2-D RMS does not improve ({rms_unc:.3f}\" -> {rms_cor:.3f}\")" + tail
     return {"evaluated": True, "justified": bool(justified), "n": int(k), "offset_east_arcsec": oe, "offset_north_arcsec": on,
-            "sigma_east_arcsec": s_e, "sigma_north_arcsec": s_n, "extra_scatter_arcsec": sx, "chi2": float(chi2), "p_value": p,
+            "sigma_east_arcsec": t_e, "sigma_north_arcsec": t_n, "sigma_random_east_arcsec": s_e, "sigma_random_north_arcsec": s_n,
+            "sigma_shared_arcsec": float(shared_sigma_arcsec), "extra_scatter_arcsec": sx, "chi2": float(chi2), "p_value": p,
+            "chi2_random_only": float(chi2_r), "p_value_random_only": p_r,
             "heldout_rms_uncorrected_arcsec": rms_unc, "heldout_rms_corrected_arcsec": rms_cor, "decision": decision}
+
+
+# ---------------------------------------------------------------------------------------------- shared systematics
+
+
+def zone_swap_shifts(frame: FrameInputs, refs: list[ReferenceResult], cfg: AlignmentConfig = AlignmentConfig()) -> np.ndarray:
+    """(M, 2) position shifts (px) when each reference is refitted with an adjacent zone's ePSF.
+
+    A measure of how much the position depends on the PSF model at the level of zone-to-zone PSF
+    changes (~97 px; ~50 px along the dispersion direction on D3)."""
+    img = np.asarray(frame.image, dtype=float)
+    var = np.asarray(frame.variance, dtype=float)
+    bad = (frame.flags.astype(np.int64) & excluded_mask(frame.flag_masks)) != 0
+    out = []
+    for r in refs:
+        if r.zone is None or r.x is None:
+            continue
+        for k in frame.epsf.neighbours(r.zone):
+            f = fit_position(img, var, bad, frame.epsf.model(k), r.x_pred, r.y_pred, half_window=cfg.half_window, max_shift_px=cfg.max_shift_px)
+            if f.status == "ok":
+                out.append((f.x - r.x, f.y - r.y))
+    return np.array(out, dtype=float).reshape(-1, 2)
+
+
+def windowed_centroid(stamp: np.ndarray, x0: float, y0: float, sigma: float, n_iter: int = 30) -> tuple[float, float]:
+    """SExtractor-style windowed centroid (iterative Gaussian window, XWIN/YWIN recipe)."""
+    ny, nx = stamp.shape
+    yy, xx = np.mgrid[0:ny, 0:nx]
+    x, y = float(x0), float(y0)
+    for _ in range(n_iter):
+        w = np.exp(-((xx - x) ** 2 + (yy - y) ** 2) / (2.0 * sigma * sigma))
+        s = float(np.sum(w * stamp))
+        if s <= 0:
+            break
+        x += 2.0 * float(np.sum(w * stamp * (xx - x))) / s
+        y += 2.0 * float(np.sum(w * stamp * (yy - y))) / s
+    return x, y
+
+
+def centroid_convention_offsets(model, n_grid: int = 6) -> tuple[tuple[float, float], tuple[float, float]]:  # noqa: ANN001
+    """Mean offsets (px) of two centroid-type estimators from the ePSF reference point, on noiseless native stamps.
+
+    Returns ((xwin - ref), (5x5 barycentre - ref)) averaged over a regular n_grid x n_grid grid of sub-pixel phases. The pipeline fitted
+    its WCS with SExtractor positions whose exact definition is not documented, so the spread between
+    the ePSF reference point and centroid-type definitions is an estimator-convention uncertainty that
+    is common to all stars of a zone (Gaia-free: computed from the ePSF alone)."""
+    w_off, c_off = [], []
+    phases = (np.arange(n_grid) + 0.5) / n_grid - 0.5
+    for px, py in ((float(a), float(b)) for a in phases for b in phases):
+        st = model.render((15, 15), 7 + px, 7 + py, 1.0)
+        yy, xx = np.mgrid[0:15, 0:15]
+        r = np.hypot(xx - (7 + px), yy - (7 + py)).ravel()
+        o = np.argsort(r)
+        c = np.cumsum(st.ravel()[o])
+        r50 = float(r[o][np.searchsorted(c, 0.5 * c[-1])])
+        xw, yw = windowed_centroid(st, 7 + px, 7 + py, max(2.0 * r50 / 2.354, 0.3))
+        w_off.append((xw - 7 - px, yw - 7 - py))
+        ix, iy = int(round(7 + px)), int(round(7 + py))
+        m5 = st[iy - 2 : iy + 3, ix - 2 : ix + 3]
+        y5, x5 = np.mgrid[-2:3, -2:3]
+        c_off.append((float((m5 * (x5 + ix)).sum() / m5.sum()) - 7 - px, float((m5 * (y5 + iy)).sum() / m5.sum()) - 7 - py))
+    w = np.mean(w_off, axis=0)
+    cc = np.mean(c_off, axis=0)
+    return (float(w[0]), float(w[1])), (float(cc[0]), float(cc[1]))
+
+
+def shared_systematics(frame: FrameInputs, refs: list[ReferenceResult], cfg: AlignmentConfig = AlignmentConfig()) -> dict:
+    """Per-frame errors common to all references (arcsec per sky axis, isotropic).
+
+    psf_mismatch: half the RMS zone-swap shift (assumes the zone ePSF is wrong at a star by at most half the
+    difference between adjacent zones); convention: RMS of the windowed-centroid and 5x5-barycentre offsets
+    from the ePSF reference point, averaged over the zones used; gaia_frame: Gaia DR3 reference-frame and
+    magnitude-dependent systematics (~0.02 mas; negligible). Detector-axis values are combined isotropically
+    because each frame's detector axes have a different orientation on the sky."""
+    scale = frame.pixel_scale_arcsec
+    shifts = zone_swap_shifts(frame, refs, cfg)
+    missing: list[str] = []
+    rms: tuple[float | None, float | None] = (None, None)
+    psf_as: float | None = None
+    iso = lambda v: float(np.sqrt(np.mean(np.asarray(v, dtype=float) ** 2)))  # noqa: E731
+    if len(shifts):
+        r = np.sqrt(np.mean(shifts**2, axis=0))
+        rms = (float(r[0]), float(r[1]))
+        psf_as = iso(0.5 * r) * scale
+    else:
+        missing.append("PSF-model mismatch: no adjacent-zone ePSF in this file (not estimated; the total omits it)")
+    zones = sorted({r.zone for r in refs if r.zone is not None})
+    xw, cm = [], []
+    for z in zones:
+        a, b = centroid_convention_offsets(frame.epsf.model(z))
+        xw.append(a)
+        cm.append(b)
+    xw_m = np.mean(xw, axis=0) if xw else np.zeros(2)
+    cm_m = np.mean(cm, axis=0) if cm else np.zeros(2)
+    conv_px = np.sqrt((xw_m**2 + cm_m**2) / 2.0)
+    conv_as, gaia_as = iso(conv_px) * scale, 2e-5
+    return {
+        "n_zone_swaps": int(len(shifts)), "zone_swap_rms_x_px": rms[0], "zone_swap_rms_y_px": rms[1],
+        "psf_mismatch_arcsec": psf_as, "convention_windowed_px": (float(xw_m[0]), float(xw_m[1])), "convention_barycentre_px": (float(cm_m[0]), float(cm_m[1])),
+        "convention_arcsec": conv_as, "gaia_frame_arcsec": gaia_as, "total_arcsec": float(math.sqrt((psf_as or 0.0) ** 2 + conv_as**2 + gaia_as**2)),
+        "missing_terms": missing,
+    }
 
 
 # ---------------------------------------------------------------------------------------------- estimator validation
@@ -685,5 +800,5 @@ def convention_test(offsets: list[tuple[float, float, float, float]], aberration
 __all__ = [
     "ALIGNMENT_METHOD_VERSION", "AlignmentConfig", "CatalogInputs", "FrameDiagnosis", "FrameInputs", "REASONS", "ReferenceResult",
     "aberration_displacement_arcsec", "convention_test", "diagnose_frame", "evaluate_translation", "excluded_mask", "extra_scatter", "extra_scatter_pm",
-    "injection_recovery", "local_wcs_jacobian", "residual_statistics", "weighted_offset",
+    "centroid_convention_offsets", "injection_recovery", "local_wcs_jacobian", "residual_statistics", "shared_systematics", "weighted_offset", "windowed_centroid", "zone_swap_shifts",
 ]

@@ -3,7 +3,18 @@
  * (derived measurements) are teal crosses. Neither is a detection of anything new: a prediction
  * without a counterpart is reported with its reason, never as a discovery. Source IDs are strings. */
 import { useEffect, useMemo, useState } from 'react'
-import type { AlignmentReport, Dataset, FrameAlignment, GaiaFrameOverlay, GaiaSourceDetail, ReferenceStarResidual } from '../../api/types'
+import type {
+  AlignmentReport,
+  ConventionAspect,
+  Dataset,
+  FrameAlignment,
+  GaiaFrameOverlay,
+  GaiaSourceDetail,
+  PredictionConvention,
+  ReferenceStarResidual,
+  TranslationEvaluation,
+  UncertaintyTerm,
+} from '../../api/types'
 import { fmt, fmtPm, fmtSigned, fmtUtc } from '../../lib/format'
 import { RESIDUAL_MAGNIFICATION, measuredDisplayPoint, predictionKind, useGaiaStore, visiblePredictions } from '../../state/gaia'
 import type { Load } from '../../state/observatory'
@@ -16,8 +27,8 @@ export function useGaiaOverlay(datasetId: string | null, frameId: string | null,
   const g = useGaiaStore()
   useEffect(() => {
     if (enabled && datasetId && frameId) void g.loadOverlay(datasetId, frameId)
-  }, [enabled, datasetId, frameId]) // eslint-disable-line react-hooks/exhaustive-deps
-  return enabled && frameId ? g.overlays[frameId] ?? { status: 'idle' } : null
+  }, [enabled, datasetId, frameId, g.datasetId]) // eslint-disable-line react-hooks/exhaustive-deps
+  return enabled && frameId && g.datasetId === datasetId ? g.overlays[frameId] ?? { status: 'idle' } : null
 }
 
 function residualMap(report: AlignmentReport | null, nativeFrameId: string | null): Map<string, ReferenceStarResidual> {
@@ -58,7 +69,7 @@ export function GaiaControls({ datasetId }: { datasetId: string | null }) {
   const needReport = g.show.measured || g.show.vectors
   useEffect(() => {
     if (needReport && datasetId) void g.loadAlignment(datasetId)
-  }, [needReport, datasetId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [needReport, datasetId, g.datasetId]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="display-controls gaia-controls" aria-label="Gaia DR3 overlay">
       <label className="toggle">
@@ -130,7 +141,7 @@ export function GaiaSourcePanel({ datasetId, frameId }: { datasetId: string; fra
   const g = useGaiaStore()
   useEffect(() => {
     if (g.selectedSourceId && frameId) void g.loadDetail(datasetId, frameId)
-  }, [g.selectedSourceId, frameId, datasetId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [g.selectedSourceId, frameId, datasetId, g.datasetId]) // eslint-disable-line react-hooks/exhaustive-deps
   if (!g.selectedSourceId) return null
   const close = (
     <button type="button" className="btn btn-sm" onClick={() => g.select(null)} data-testid="gaia-close">
@@ -254,10 +265,12 @@ function GaiaDetailBody({ d }: { d: GaiaSourceDetail }) {
 // ---------------------------------------------------------------- Gaia DR3 tab
 
 export function GaiaCatalogTab({ dataset, overlay }: { dataset: Dataset; overlay: Load<GaiaFrameOverlay> | null }) {
+  const g = useGaiaStore()
   if (!overlay || overlay.status === 'idle' || overlay.status === 'loading') return <LoadingState label="Propagating Gaia DR3 to this exposure…" />
   if (overlay.status === 'error' || overlay.status === 'unavailable') return <ErrorState message={overlay.message} />
   const o = overlay.data
-  const c = o.convention
+  // the overlay may have been fetched before the alignment report (and its convention test) existed: prefer the report's
+  const c = g.alignment.status === 'ready' && g.alignment.data.dataset_id === dataset.id ? g.alignment.data.convention : o.convention
   return (
     <div className="stack" data-testid="gaia-tab">
       <Callout tone="info">
@@ -282,7 +295,7 @@ export function GaiaCatalogTab({ dataset, overlay }: { dataset: Dataset; overlay
       <div>
         <div className="row" style={{ gap: 6 }}>
           <div className="eyebrow">Convention</div>
-          <StatusPill status={c.status === 'resolved' ? 'ok' : 'warning'} label={c.status} />
+          <ConventionPill status={c.status} />
         </div>
         <p className="small" data-testid="gaia-convention">
           {c.wcs_convention}
@@ -295,6 +308,7 @@ export function GaiaCatalogTab({ dataset, overlay }: { dataset: Dataset; overlay
             <li key={e}>{e}</li>
           ))}
         </ul>
+        {c.aspects.length > 0 && <ConventionAspects aspects={c.aspects} />}
       </div>
       <div>
         <div className="eyebrow">Positional error budget</div>
@@ -337,6 +351,52 @@ uv run pytest tests/test_gaia_dr3.py -m live                                    
   )
 }
 
+const CONVENTION_LABEL: Record<PredictionConvention['status'], string> = {
+  resolved: 'resolved',
+  partially_resolved: 'partially resolved',
+  approximate: 'approximate',
+}
+
+function ConventionPill({ status }: { status: PredictionConvention['status'] }) {
+  return <StatusPill status={status === 'resolved' ? 'ok' : 'warning'} label={CONVENTION_LABEL[status]} />
+}
+
+const ASPECT_LABEL: Record<ConventionAspect['status'], string> = {
+  documented: 'documented',
+  tested: 'tested',
+  documented_and_tested: 'documented and tested',
+  undocumented_bounded: 'undocumented, bounded',
+  untested_bounded: 'untested, bounded',
+}
+
+/** Which parts of the WCS convention are documented, tested or only bounded: rejecting full aberration is not a proof of every convention. */
+function ConventionAspects({ aspects }: { aspects: ConventionAspect[] }) {
+  return (
+    <table className="table" data-testid="convention-aspects">
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Status</th>
+          <th className="num nocase">Bound (″)</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {aspects.map((a) => (
+          <tr key={a.aspect} data-status={a.status}>
+            <td className="small">{a.aspect}</td>
+            <td>
+              <StatusPill status={a.status.endsWith('_bounded') ? 'warning' : 'ok'} label={ASPECT_LABEL[a.status]} />
+            </td>
+            <td className="num mono">{a.bound_arcsec != null ? a.bound_arcsec.toPrecision(2) : '—'}</td>
+            <td className="small">{a.evidence}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
 // ---------------------------------------------------------------- Alignment tab
 
 const FRAME_STATUS: Record<FrameAlignment['status'], string> = {
@@ -350,7 +410,7 @@ export function AlignmentTab({ datasetId, nativeFrameId }: { datasetId: string; 
   const g = useGaiaStore()
   useEffect(() => {
     void g.loadAlignment(datasetId)
-  }, [datasetId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [datasetId, g.datasetId]) // eslint-disable-line react-hooks/exhaustive-deps
   const [pick, setPick] = useState<string | null>(null)
   if (g.alignment.status === 'idle' || g.alignment.status === 'loading')
     return <LoadingState label="Fitting reference stars in every frame (first run ~1 min, then cached)…" />
@@ -365,12 +425,18 @@ export function AlignmentTab({ datasetId, nativeFrameId }: { datasetId: string; 
       </Callout>
       <div className="row" style={{ gap: 6 }}>
         <div className="eyebrow">Archive-WCS convention test</div>
-        <StatusPill status={r.convention.status === 'resolved' ? 'ok' : 'warning'} label={r.convention.status} />
+        <ConventionPill status={r.convention.status} />
       </div>
       <p className="small" data-testid="convention-test">
         {r.convention_test.decision} (χ² {fmt(r.convention_test.chi2_catalog_frame, 1)} vs {fmt(r.convention_test.chi2_apparent_frame, 0)} for {r.convention_test.dof} dof over{' '}
-        {r.convention_test.n_frames} frames).
+        {r.convention_test.n_frames} frames, with shared per-frame errors in each offset's uncertainty). This rejects full aberration; it does not prove every
+        convention of the pipeline's astrometric calibration (see the convention aspects on the Gaia DR3 tab).
       </p>
+      {r.reassessment && (
+        <Callout tone="warning">
+          <strong>Offset classifications reassessed.</strong> <span data-testid="alignment-reassessment">{r.reassessment}</span>
+        </Callout>
+      )}
       <table className="table" data-testid="alignment-frames">
         <thead>
           <tr>
@@ -378,9 +444,10 @@ export function AlignmentTab({ datasetId, nativeFrameId }: { datasetId: string; 
             <th>Status</th>
             <th className="num">Used / candidates</th>
             <th className="num nocase">Mean E, N (″)</th>
-            <th className="num nocase">RMS (″)</th>
+            <th className="num nocase">RMS E / N / 2-D (″)</th>
             <th className="num nocase">Extra scatter (″)</th>
-            <th>Translation (held out)</th>
+            <th className="num nocase">Shared σ (″)</th>
+            <th>Translation: p random-only → total</th>
             <th>Estimator</th>
           </tr>
         </thead>
@@ -399,9 +466,12 @@ export function AlignmentTab({ datasetId, nativeFrameId }: { datasetId: string; 
                   {x.n_used} / {x.n_candidates}
                 </td>
                 <td className="num mono">{s && s.n >= 2 ? `${fmtSigned(s.mean_east_arcsec, 3)} ± ${fmt(s.se_east_arcsec, 3)}, ${fmtSigned(s.mean_north_arcsec, 3)} ± ${fmt(s.se_north_arcsec, 3)}` : '—'}</td>
-                <td className="num mono">{s && s.n ? fmt(s.rms_total_arcsec, 3) : '—'}</td>
+                <td className="num mono">{s && s.n ? `${fmt(s.rms_east_arcsec, 3)} / ${fmt(s.rms_north_arcsec, 3)} / ${fmt(s.rms_total_arcsec, 3)}` : '—'}</td>
                 <td className="num mono">{s && s.n >= 2 ? fmt(s.extra_scatter_arcsec, 3) : '—'}</td>
-                <td className="small">{x.translation.evaluated ? (x.translation.justified ? 'justified' : 'not justified') : 'not evaluated'}</td>
+                <td className="num mono">{x.shared ? fmt(x.shared.total_arcsec, 3) + (x.shared.missing_terms.length ? ' (incomplete)' : '') : '—'}</td>
+                <td className="small" data-translation={x.translation.justified ? 'justified' : x.translation.evaluated ? 'not_justified' : 'not_evaluated'}>
+                  <TranslationCell t={x.translation} />
+                </td>
                 <td className="small">{x.estimator?.passed ? 'validated' : 'not validated'}</td>
               </tr>
             )
@@ -411,8 +481,26 @@ export function AlignmentTab({ datasetId, nativeFrameId }: { datasetId: string; 
       {f && <FrameDetail f={f} report={r} />}
       {r.pooled && r.pooled.n > 0 && (
         <p className="small" data-testid="alignment-pooled">
-          Pooled over {r.pooled_over}: {r.pooled.n} references, mean ({fmtSigned(r.pooled.mean_east_arcsec, 3)}″, {fmtSigned(r.pooled.mean_north_arcsec, 3)}″), RMS ({fmt(r.pooled.rms_east_arcsec, 3)}″,{' '}
-          {fmt(r.pooled.rms_north_arcsec, 3)}″), extra scatter {fmt(r.pooled.extra_scatter_arcsec, 3)}″.
+          Pooled over {r.pooled_over}: {r.pooled.n} references, mean ({fmtSigned(r.pooled.mean_east_arcsec, 3)}″ E, {fmtSigned(r.pooled.mean_north_arcsec, 3)}″ N); RMS east{' '}
+          {fmt(r.pooled.rms_east_arcsec, 3)}″, RMS north {fmt(r.pooled.rms_north_arcsec, 3)}″, two-dimensional RMS {fmt(r.pooled.rms_total_arcsec, 3)}″ (√(E² + N²), not a per-axis
+          value); robust σ ({fmt(r.pooled.robust_sigma_east_arcsec, 3)}″, {fmt(r.pooled.robust_sigma_north_arcsec, 3)}″); extra scatter {fmt(r.pooled.extra_scatter_arcsec, 3)}″.
+        </p>
+      )}
+      {r.uncertainty_budget.length > 0 && <UncertaintyBudget terms={r.uncertainty_budget} />}
+      {r.detector_frame_offsets && (
+        <p className="small" data-testid="detector-frame-offsets">
+          <strong>Frame offsets in detector pixels</strong> ({r.detector_frame_offsets.n_frames} frames): mean x {fmtSigned(r.detector_frame_offsets.mean_x_px, 4)} ±{' '}
+          {fmt(r.detector_frame_offsets.se_x_px, 4)} px, y {fmtSigned(r.detector_frame_offsets.mean_y_px, 4)} ± {fmt(r.detector_frame_offsets.se_y_px, 4)} px (frame-to-frame
+          scatter {fmt(r.detector_frame_offsets.std_x_px, 4)}, {fmt(r.detector_frame_offsets.std_y_px, 4)} px; x positive in {r.detector_frame_offsets.n_positive_x} of{' '}
+          {r.detector_frame_offsets.n_frames}). {r.detector_frame_offsets.interpretation}
+        </p>
+      )}
+      {r.cache && (
+        <p className="small muted" data-testid="alignment-cache">
+          Computed {fmtUtc(r.cache.computed_utc)} UTC{r.cache.served_from_cache ? ', served from the local disk cache' : ' in this server process'} · cache key{' '}
+          <span className="mono">{r.cache.key}</span> · inputs: Gaia response {r.cache.inputs.gaia_response_sha256_gz?.slice(0, 12)}… retrieved{' '}
+          {fmtUtc(r.cache.inputs.gaia_retrieved_utc ?? '')} UTC, {r.cache.inputs.n_frames} SPHEREx cutouts ({r.cache.inputs.spherex_cutouts_sha256_combined}), method{' '}
+          {r.cache.inputs.method_version}.
         </p>
       )}
       <div className="small">
@@ -429,6 +517,60 @@ export function AlignmentTab({ datasetId, nativeFrameId }: { datasetId: string; 
           ))}
         </ul>
       </div>
+    </div>
+  )
+}
+
+function pval(p: number | null | undefined): string {
+  if (p == null) return '—'
+  return p < 1e-3 ? p.toExponential(1) : p.toFixed(3)
+}
+
+function TranslationCell({ t }: { t: TranslationEvaluation }) {
+  if (!t.evaluated) return <>not evaluated</>
+  return (
+    <>
+      {t.justified ? 'justified' : 'not justified'} <span className="mono">(p {pval(t.p_value_random_only)} → {pval(t.p_value)})</span>
+    </>
+  )
+}
+
+const KIND_LABEL: Record<UncertaintyTerm['kind'], string> = {
+  random_per_star: 'random, per star',
+  unexplained_per_star: 'unexplained, per star',
+  shared_per_frame: 'shared within a frame',
+  shared_all_frames: 'shared by all frames',
+}
+
+/** Random per-star terms average down with the number of references; shared terms do not. */
+function UncertaintyBudget({ terms }: { terms: UncertaintyTerm[] }) {
+  return (
+    <div>
+      <div className="eyebrow">Uncertainty budget of a frame offset</div>
+      <table className="table" data-testid="uncertainty-budget">
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>Kind</th>
+            <th className="num nocase">Typical (″)</th>
+            <th className="num nocase">Range (″)</th>
+            <th>Enters as</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {terms.map((u) => (
+            <tr key={u.term} data-kind={u.kind}>
+              <td className="small">{u.term}</td>
+              <td className="small">{KIND_LABEL[u.kind]}</td>
+              <td className="num mono">{u.typical_arcsec != null ? u.typical_arcsec.toPrecision(2) : '—'}</td>
+              <td className="num mono">{u.range_arcsec ? `${u.range_arcsec[0].toPrecision(2)}–${u.range_arcsec[1].toPrecision(2)}` : '—'}</td>
+              <td className="small">{u.enters_as}</td>
+              <td className="small">{u.source}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -464,8 +606,24 @@ function FrameDetail({ f, report }: { f: FrameAlignment; report: AlignmentReport
           </table>
           <p className="small" data-testid="translation-decision">
             <strong>Translation model:</strong> {t.decision}
-            {t.evaluated && t.offset_east_arcsec != null && ` Estimated offset (${fmtSigned(t.offset_east_arcsec, 3)} ± ${fmt(t.sigma_east_arcsec, 3)}″ E, ${fmtSigned(t.offset_north_arcsec, 3)} ± ${fmt(t.sigma_north_arcsec, 3)}″ N); not applied to any product.`}
+            {t.evaluated &&
+              t.offset_east_arcsec != null &&
+              ` Estimated offset (${fmtSigned(t.offset_east_arcsec, 3)} ± ${fmt(t.sigma_east_arcsec, 3)}″ E, ${fmtSigned(t.offset_north_arcsec, 3)} ± ${fmt(t.sigma_north_arcsec, 3)}″ N; total σ = random (${fmt(t.sigma_random_east_arcsec, 3)}″, ${fmt(t.sigma_random_north_arcsec, 3)}″) ⊕ shared ${fmt(t.sigma_shared_arcsec, 3)}″ per axis); not applied to any product.`}
           </p>
+          {f.shared && (
+            <p className="small" data-testid="shared-systematics">
+              <strong>Shared within this frame</strong> (do not average down with N): PSF-model mismatch{' '}
+              {f.shared.psf_mismatch_arcsec != null
+                ? `${fmt(f.shared.psf_mismatch_arcsec, 3)}″ (half the RMS shift when ${f.shared.n_zone_swaps} fits are redone with adjacent-zone ePSFs: ${fmt(f.shared.zone_swap_rms_x_px, 3)}, ${fmt(f.shared.zone_swap_rms_y_px, 3)} px)`
+                : 'not estimated'}
+              ; centroid convention {fmt(f.shared.convention_arcsec, 3)}″ (windowed − ePSF reference ({fmtSigned(f.shared.convention_windowed_px[0], 3)}, {fmtSigned(f.shared.convention_windowed_px[1], 3)}) px,
+              5×5 barycentre − reference ({fmtSigned(f.shared.convention_barycentre_px[0], 3)}, {fmtSigned(f.shared.convention_barycentre_px[1], 3)}) px, from this frame's ePSFs only); Gaia
+              frame {f.shared.gaia_frame_arcsec.toPrecision(1)}″; total {fmt(f.shared.total_arcsec, 3)}″.
+              {f.shared.missing_terms.length > 0 && ` Not estimated: ${f.shared.missing_terms.join('; ')}.`}
+              {f.offset_detector_px &&
+                ` Weighted-mean residual in detector pixels (${fmtSigned(f.offset_detector_px[0], 3)} ± ${fmt(f.offset_detector_sigma_px?.[0], 3)}, ${fmtSigned(f.offset_detector_px[1], 3)} ± ${fmt(f.offset_detector_sigma_px?.[1], 3)}) px.`}
+            </p>
+          )}
           {f.estimator && (
             <div className="small" data-testid="estimator-validation">
               <strong>Estimator validation ({f.estimator.passed ? 'passed' : 'not passed'}):</strong> {f.estimator.method}.{' '}

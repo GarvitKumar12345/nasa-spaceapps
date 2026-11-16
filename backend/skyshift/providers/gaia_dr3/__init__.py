@@ -71,13 +71,21 @@ def load_recorded_field(field_id: str) -> RecordedField:
     with _lock:
         if key in _cache:
             return _cache[key]
-        manifest = json.loads(mpath.read_text(encoding="utf-8"))
+        try:
+            manifest = json.loads(mpath.read_text(encoding="utf-8"))
+            expected_gz, expected_raw = manifest["field_query"]["response_sha256_gz"], manifest["field_query"]["response_sha256"]
+            expected_rows = manifest["count_query"]["n_rows"]
+        except (OSError, ValueError, KeyError, TypeError) as exc:  # a broken manifest is not a recorded response
+            raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"manifest for {field_id} unreadable ({type(exc).__name__}: {exc})") from None
         gz = rpath.read_bytes()
-        if hashlib.sha256(gz).hexdigest() != manifest["field_query"]["response_sha256_gz"]:
+        if hashlib.sha256(gz).hexdigest() != expected_gz:
             raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"recorded response for {field_id} does not match its manifest sha256")
-        cat = parse_gaia_votable(gz)
-        cat.sha256 = manifest["field_query"]["response_sha256"]
-        failed = [c for c in schema_checks(cat, expected_rows=manifest["count_query"]["n_rows"]) if c.status == "fail"]
+        try:
+            cat = parse_gaia_votable(gz)
+        except Exception as exc:  # noqa: BLE001 - hash matched but the bytes do not parse: never serve partial data
+            raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"recorded response for {field_id} does not parse ({type(exc).__name__})") from None
+        cat.sha256 = expected_raw
+        failed = [c for c in schema_checks(cat, expected_rows=expected_rows) if c.status == "fail"]
         if failed:
             raise ProviderUnavailable("gaia_dr3", "load_recorded_field", "recorded response fails checks: " + "; ".join(c.id for c in failed))
         rec = RecordedField(field_id, manifest, cat)
@@ -91,13 +99,19 @@ class GaiaDR3Provider:
 
     def status(self) -> ProviderStatus:
         live = {k: live_status(v) for k, v in LIVE_TESTS.items()}
-        fields = []
+        fields, last_ok = [], []
         for f in recorded_fields():
             try:
                 m = json.loads(manifest_path(f).read_text(encoding="utf-8"))
                 fields.append(f"{f}: {m['field_query']['n_rows']} sources recorded {m['retrieved_utc']} (radius {m['geometry']['radius_deg']:.4f} deg)")
+                rec = m["field_query"].get("record") or {}
+                last_ok.append(f"{f} {m['retrieved_utc']} (HTTP {rec.get('status', '?')}, job {m['field_query'].get('job_id', '?')}, {m['field_query']['n_rows']} rows)")
             except (OSError, KeyError, ValueError) as exc:  # a broken manifest must not look recorded
                 fields.append(f"{f}: manifest unreadable ({exc})")
+        if last_ok:
+            # An unreachable archive leaves the live checks without a result; the last successful retrieval is stated, never relabelled as a pass.
+            suffix = " Last successful retrieval from the archive (recorded, not a live check): " + "; ".join(last_ok) + "."
+            live = {k: (s, t, d.rstrip(".") + "." + suffix) if s in ("unavailable", "failed", "not_run") else (s, t, d) for k, (s, t, d) in live.items()}
         return ProviderStatus(
             id="gaia_dr3",
             name="Gaia DR3 reference catalog (ESA)",

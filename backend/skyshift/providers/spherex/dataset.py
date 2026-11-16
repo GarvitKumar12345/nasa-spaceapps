@@ -91,15 +91,26 @@ UNAVAILABLE: list[AnalysisCapability] = [
 ]
 
 
-def capabilities_for(field_id: str) -> list[AnalysisCapability]:
-    """Analysis capabilities of an observed SPHEREx dataset (Gaia items depend on a recorded Gaia DR3 response)."""
-    from skyshift.providers.gaia_dr3.paths import manifest_path as gaia_manifest_path
-    from skyshift.providers.gaia_dr3.paths import response_path as gaia_response_path
+def capabilities_for(field_id: str, n_frames_available: int | None = None) -> list[AnalysisCapability]:
+    """Analysis capabilities of an observed SPHEREx dataset.
+
+    The Gaia items need a recorded Gaia DR3 response that passes its own checks (sha256 against the manifest,
+    schema/provenance; the same loader the API uses) and at least one cached SPHEREx cutout to place it on.
+    Anything else makes them unavailable with the reason - never a substitute."""
+    from skyshift.providers.base import ProviderUnavailable
+    from skyshift.providers.gaia_dr3 import load_recorded_field
 
     caps = list(UNAVAILABLE)
-    gaia_ok = gaia_manifest_path(field_id).exists() and gaia_response_path(field_id).exists()
     fetch = f"cd backend && uv run python -m skyshift.providers.gaia_dr3.fetch --field {field_id}"
-    if gaia_ok:
+    reason, requirement = None, ""
+    try:
+        load_recorded_field(field_id)
+    except ProviderUnavailable as exc:
+        reason, requirement = f"Gaia DR3 response not usable ({exc.reason}); run: {fetch}", "Recorded Gaia DR3 query for the field that passes its checks (fixtures/gaia_dr3/<field>/)"
+    if reason is None and n_frames_available == 0:
+        reason = f"No SPHEREx cutout of this field is in the local cache; run: {FETCH_COMMAND.format(field=field_id)}"
+        requirement = "Cached SPHEREx cutouts (backend/cache/spherex/<field>/)"
+    if reason is None:
         caps.insert(0, AnalysisCapability(
             id="catalog_overlay", status="available",
             reason="Gaia DR3 sources (recorded query) propagated to each exposure mid-time and placed through the archive WCS: model predictions, not measurements."))
@@ -108,9 +119,8 @@ def capabilities_for(field_id: str) -> list[AnalysisCapability]:
             reason="Image-minus-Gaia residuals of isolated, unsaturated reference stars (ePSF positions on native pixels) before any correction; "
                    "per-frame status, rejected-star reasons and estimator validation in the report."))
     else:
-        for cid in ("catalog_overlay", "alignment_diagnostics"):
-            caps.insert(0, AnalysisCapability(id=cid, status="unavailable", reason=f"No recorded Gaia DR3 response for this field; run: {fetch}",  # type: ignore[arg-type]
-                                              requirements=["Recorded Gaia DR3 query for the field (fixtures/gaia_dr3/<field>/)"]))
+        for cid in ("alignment_diagnostics", "catalog_overlay"):
+            caps.insert(0, AnalysisCapability(id=cid, status="unavailable", reason=reason, requirements=[requirement]))  # type: ignore[arg-type]
     return caps
 
 
@@ -401,7 +411,7 @@ def build_bundle(preset: FieldPreset, manifest: dict | None = None) -> DatasetBu
             "Wavelength compatibility is evaluated only at the field centre; other positions in the cutout see different wavelengths.",
             "The ePSF of the zone containing a star is used without interpolation between zones (zone width ~97 px; ~50 px along the spectral direction on D3).",
         ],
-        capabilities=capabilities_for(ds_id), archive_query=summary,
+        capabilities=capabilities_for(ds_id, n_frames_available=len(available)), archive_query=summary,
         provenance=Provenance(origin="observed", provider="spherex", dataset_id=ds_id, release=preset.collection, source_url=disc["url"], retrieved_utc=disc["retrieved_utc"],
                               method="IRSA SIA2 discovery + byte-range screening + IBE cutouts (skyshift.providers.spherex.fetch)", notes=[preset.centre_note]),
         quality=Quality(status="warning" if available else "unavailable",

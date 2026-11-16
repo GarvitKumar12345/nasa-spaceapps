@@ -388,6 +388,41 @@ def test_missing_cache_failed_downloads_and_hash_mismatch_are_explicit(spherex_b
     assert not any(b.compatibility.blinkable for b in empty.dataset.bands)
 
 
+@pytest.mark.archive
+def test_gaia_capabilities_require_a_verified_response_and_cached_cutouts(tmp_path, monkeypatch):
+    """[archive] catalog_overlay / alignment_diagnostics are 'available' only if the recorded Gaia response passes the
+    loader's checks and at least one cutout is cached; a corrupted response or an empty cache makes both
+    unavailable with the reason and the command to run. Measurement capabilities stay unavailable throughout."""
+    import shutil
+
+    import skyshift.providers.gaia_dr3 as gaia
+    from skyshift.providers.spherex.dataset import capabilities_for
+
+    def caps(**kw):  # noqa: ANN202
+        return {c.id: c for c in capabilities_for(DS, **kw)}
+
+    ok = caps(n_frames_available=3)
+    assert ok["catalog_overlay"].status == ok["alignment_diagnostics"].status == "available"
+    empty = caps(n_frames_available=0)
+    assert all(empty[k].status == "unavailable" and "spherex.fetch" in empty[k].reason for k in ("catalog_overlay", "alignment_diagnostics"))
+    src_m, src_r = gaia.manifest_path(DS), gaia.response_path(DS)
+    m, r = tmp_path / src_m.name, tmp_path / src_r.name
+    shutil.copy(src_m, m)
+    blob = bytearray(src_r.read_bytes())
+    blob[len(blob) // 2] ^= 0xFF
+    r.write_bytes(bytes(blob))
+    monkeypatch.setattr(gaia, "manifest_path", lambda f: m)
+    monkeypatch.setattr(gaia, "response_path", lambda f: r)
+    bad = caps(n_frames_available=3)
+    for k in ("catalog_overlay", "alignment_diagnostics"):
+        assert bad[k].status == "unavailable" and "sha256" in bad[k].reason
+    m.write_text("{not json", encoding="utf-8")  # a broken manifest must not break the dataset build either
+    broken = caps(n_frames_available=3)
+    assert all(broken[k].status == "unavailable" and "manifest" in broken[k].reason for k in ("catalog_overlay", "alignment_diagnostics"))
+    for k in ("photometry", "astrometric_fit", "difference_imaging", "source_measurement", "registration", "source_detection"):
+        assert ok[k].status == empty[k].status == bad[k].status == "unavailable"
+
+
 @pytest.mark.api
 def test_api_serves_observed_pixels_and_refuses_analyses(spherex_bundle):
     """[api] Observed dataset: native/display pixels with units and uint32 flags; analyses answer 409 not_available; no truth."""

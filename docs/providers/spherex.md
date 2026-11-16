@@ -88,7 +88,7 @@ shows it alone and refuses blink, because detector number alone does not establi
 | Spectral WCS | `WAVE-TAB` lookup (`W` keys) over a 9×9 control grid; astropy `-TAB` and an independent bilinear implementation agree to ~1e-16 µm; cutout and full-file lookups agree | data-product docs (visualization only, ~1 nm) |
 | Timing | `TIMESYS=UTC`; `MJD-AVG` = midpoint of `MJD-BEG`/`MJD-END`; `XPOSURE` 113.58 s ≤ `TELAPSE`; SIA `t_min` = `MJD-BEG` (UTC) | ES Table A.35 |
 | Quality | `FINAST=0`, `L1DQAFLG`/`L2DQAFLG='Pass'` on all 17 | ES 3.2.8, 3.2.12 |
-| ePSF | 441 zones (21×21), 33×33 samples, `OVSMPX=OVSMPY=5`, unit sum; recognised and recorded, **not evaluated** | ES 4.2.3 |
+| ePSF | 441 zones (21×21), 33×33 samples, `OVSMPX=OVSMPY=5`, unit sum (Anderson & King flux fractions = 25 × stored; already includes the pixel response); evaluated only to fit Gaia reference stars, checked against photutils `ImagePSF` and the IRSA tutorial (zone choice, detector coordinates) | ES 4.2.3; IRSA ePSF tutorial |
 | Background | ZODI model `KEL98_WAVESCL_V1`, not subtracted from IMAGE (and not by SkyShift) | data-product docs |
 | Observer | header gives the geocentric spacecraft position (|r| ≈ 7000 km); recorded, geocentre bound 7100 km | header (X_SC…) |
 
@@ -103,17 +103,23 @@ includes_pixel_response=True)`, `BackgroundInfo(included_in_image=True, subtract
 `kind='archive_wcs_reprojection'`, `display_only=True`, 64×64 north-up grid, bilinear image, nearest-pixel flags,
 `SKYSHIFT_NO_COVERAGE` (bit 31) outside the cutout.
 
-## Gaia DR3 predictions and alignment diagnostics (session 3)
-The archive WCS is fitted to Gaia DR3 positions propagated with proper motion (ES v2.1 §3.2.8). The per-frame residuals
-confirm a catalogue-frame WCS: χ² 197 (30 dof), frame offsets ≤ 0.30″, against the 4.7–12.8″ that applied aberration would
-produce. Gaia DR3 predictions (no aberration, geocentric parallax applied once) are therefore placed through the archive WCS
-on every frame. Reference stars are fitted with each frame's own ePSF (validated by injection into the real pixels).
+## Gaia DR3 predictions and alignment diagnostics (sessions 3–4)
+The archive WCS is fitted to Gaia DR3 positions propagated with proper motion (ES v2.1 §3.2.8).
+- **Convention test:** the per-frame residuals reject full aberration. With each offset's total uncertainty, catalogue frame χ² = 12.5 against 39 884 for the 4.7–12.8″ aberrated frame (30 dof); frame offsets ≤ 0.30″.
+  - This is evidence against full aberration, not proof of every convention. The calibrator parallax and the centroid definition of the pipeline are undocumented and only bounded, so the status is *partially resolved*.
+- **Placement:** Gaia DR3 predictions (no aberration, geocentric parallax applied once) are placed through the archive WCS on every frame.
+- **Reference fits:** each frame's own ePSF; injection into the real pixels checks internal consistency, and independent-renderer stress tests check accuracy.
 - **Usable frames:** 15 of 17 have 5–13 references.
-- **Pooled residual before correction:** mean (+0.016″, −0.015″), RMS (0.210″, 0.228″), extra scatter 0.11″.
-- **Constant offset:** justified in 5 frames (mean offsets 0.14–0.43″), evaluated on held-out stars and never applied.
+- **Pooled residual before correction:** mean (+0.016″, −0.015″); RMS east 0.210″, RMS north 0.228″, two-dimensional RMS 0.310″; extra scatter 0.11″.
+- **Constant offset:** none justified once errors shared by all references of a frame are included (PSF mismatch + centroid convention, 0.12–0.23″ per axis, not averaged down with N). Five frames were "justified" with random errors only. No offset is ever applied.
 - **Too few references:** two frames (PERSIST-dominated D3; D6 with 4).
+- **Unresolved estimator effects (documented, not corrected):**
+  - D1–D4 χ²_red ≈ 6–54, from sky-fixed faint structure plus a star-to-star misfit.
+  - Neighbour shifts admitted by the 2 px / 10 % rule.
+  - A detector-fixed +0.015 px x offset of centroid-convention size.
+  - See the [estimator review](../reviews/2026-11-15-estimator-api-tests-review.md).
 
-Details, per-frame table and error budget: [gaia_dr3.md](gaia_dr3.md).
+Details, per-frame table and uncertainty budget: [gaia_dr3.md](gaia_dr3.md).
 
 ## Not done (scientific limitations)
 - No SPHEREx photometry: flux calibration from MJy/sr (pixel solid angles) and the documented systematic floor are not

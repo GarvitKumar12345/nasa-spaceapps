@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ApiError, GAIA_SOURCE_ID, api, assertGaiaSourceId } from '../api/client'
-import type { GaiaPrediction } from '../api/types'
-import { RESIDUAL_MAGNIFICATION, measuredDisplayPoint, predictionKind, visiblePredictions } from './gaia'
+import type { AlignmentReport, GaiaFrameOverlay, GaiaPrediction, GaiaSourceDetail } from '../api/types'
+import { RESIDUAL_MAGNIFICATION, measuredDisplayPoint, predictionKind, useGaiaStore, visiblePredictions } from './gaia'
 
 const BARNARD = '4472832130942575872' // Gaia DR3 source_id > 2^53
 
@@ -50,6 +50,110 @@ describe('[api] Gaia overlay transport', () => {
     expect(ov.predictions[0].source_id).toBe(BARNARD)
     expect(calls[0]).toContain('frame_id=a%3Ab%3Adisplay')
     await expect(api.gaiaSource('d', '12.5', 'f')).rejects.toThrow(/decimal string/)
+  })
+})
+
+describe('[api] failed Gaia/alignment requests leave no data behind', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    useGaiaStore.getState().reset(null)
+  })
+  const reply = (status: number, code: string, message: string) =>
+    new Response(JSON.stringify({ detail: { code, message, details: {} } }), { status, headers: { 'Content-Type': 'application/json' } })
+
+  it('[api] 409 not_available -> "unavailable" with the stated reason; 503 -> "error"; never a report', async () => {
+    const s = useGaiaStore.getState()
+    s.reset('ds-a')
+    vi.stubGlobal('fetch', vi.fn(async () => reply(409, 'not_available', 'No recorded Gaia DR3 response for this field')))
+    await useGaiaStore.getState().loadAlignment('ds-a')
+    expect(useGaiaStore.getState().alignment).toEqual({ status: 'unavailable', message: 'No recorded Gaia DR3 response for this field' })
+    vi.stubGlobal('fetch', vi.fn(async () => reply(503, 'provider_unavailable', 'gaia_dr3: recorded response does not match its manifest sha256')))
+    await useGaiaStore.getState().loadOverlay('ds-a', 'f1')
+    const ov = useGaiaStore.getState().overlays.f1
+    expect(ov.status).toBe('error')
+    expect('data' in ov).toBe(false)
+  })
+
+  it('[api] a failure that arrives after switching datasets is not shown for the new dataset', async () => {
+    let release: (r: Response) => void = () => {}
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((res) => (release = res))))
+    useGaiaStore.getState().reset('ds-a')
+    const pending = useGaiaStore.getState().loadAlignment('ds-a')
+    useGaiaStore.getState().reset('ds-b')
+    release(reply(503, 'provider_unavailable', 'archive unreachable'))
+    await pending
+    expect(useGaiaStore.getState().datasetId).toBe('ds-b')
+    expect(useGaiaStore.getState().alignment.status).toBe('idle')
+  })
+})
+
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  let reject!: (reason: unknown) => void
+  const promise = new Promise<T>((res, rej) => { resolve = res; reject = rej })
+  return { promise, resolve, reject }
+}
+
+describe.each(['success', 'failure'] as const)('[api] obsolete Gaia %s after returning to a selection', (outcome) => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    useGaiaStore.getState().reset(null)
+  })
+
+  function finishOld<T>(old: ReturnType<typeof deferred<T>>, value: T) {
+    if (outcome === 'success') old.resolve(value)
+    else old.reject(new ApiError(503, 'provider_unavailable', 'obsolete request failed', {}))
+  }
+
+  it('[api] an old overlay cannot overwrite a newer overlay after A → B → A', async () => {
+    const old = deferred<GaiaFrameOverlay>()
+    const fresh = { frame_id: 'f1', predictions: [pred()] } as GaiaFrameOverlay
+    vi.spyOn(api, 'gaiaOverlay').mockReturnValueOnce(old.promise).mockResolvedValueOnce(fresh)
+    const s = useGaiaStore.getState()
+    s.reset('ds-a')
+    const request = s.loadOverlay('ds-a', 'f1')
+    s.reset('ds-b')
+    s.reset('ds-a')
+    await s.loadOverlay('ds-a', 'f1')
+    finishOld(old, { ...fresh, predictions: [] })
+    await request
+    expect(useGaiaStore.getState().overlays.f1).toEqual({ status: 'ready', data: fresh })
+  })
+
+  it('[api] an old alignment cannot overwrite a newer report after A → B → A', async () => {
+    const old = deferred<AlignmentReport>()
+    const fresh = { dataset_id: 'ds-a', status_reason: 'current report' } as AlignmentReport
+    vi.spyOn(api, 'alignment').mockReturnValueOnce(old.promise).mockResolvedValueOnce(fresh)
+    const s = useGaiaStore.getState()
+    s.reset('ds-a')
+    const request = s.loadAlignment('ds-a')
+    s.reset('ds-b')
+    s.reset('ds-a')
+    await s.loadAlignment('ds-a')
+    finishOld(old, { ...fresh, status_reason: 'obsolete report' })
+    await request
+    expect(useGaiaStore.getState().alignment).toEqual({ status: 'ready', data: fresh })
+  })
+
+  it.each(['dataset', 'source'] as const)('[api] old source details are ignored after a %s round trip', async (selection) => {
+    const old = deferred<GaiaSourceDetail>()
+    const fresh = { dataset_id: 'ds-a', frame_id: 'f1', source: { source_id: BARNARD } } as GaiaSourceDetail
+    vi.spyOn(api, 'gaiaSource').mockReturnValueOnce(old.promise).mockResolvedValueOnce(fresh)
+    const s = useGaiaStore.getState()
+    s.reset('ds-a')
+    s.select(BARNARD)
+    const request = s.loadDetail('ds-a', 'f1')
+    if (selection === 'dataset') {
+      s.reset('ds-b')
+      s.reset('ds-a')
+    } else s.select('4472832130942575873')
+    s.select(BARNARD)
+    expect(useGaiaStore.getState().detail.status).toBe('idle')
+    await s.loadDetail('ds-a', 'f1')
+    finishOld(old, { ...fresh, frame_id: 'obsolete' })
+    await request
+    expect(useGaiaStore.getState().detail).toEqual({ status: 'ready', data: fresh })
+    expect(useGaiaStore.getState().selectedSourceId).toBe(BARNARD)
   })
 })
 

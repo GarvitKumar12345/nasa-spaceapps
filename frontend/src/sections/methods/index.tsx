@@ -12,14 +12,14 @@ type Load<T> = { status: 'loading' } | { status: 'ready'; data: T } | { status: 
 
 const GROUPS: { id: string; title: string; categories: string[]; blurb: string }[] = [
   { id: 'math', title: 'Mathematical checks', categories: ['math', 'coords'], blurb: 'Kepler, astrometric model, time scales, coordinates and WCS against independent methods (astropy, scipy, published relations).' },
-  { id: 'measurement', title: 'Source-measurement checks', categories: ['measurement'], blurb: 'Synthetic: PSF rendering/fitting and detection, Monte-Carlo calibration of uncertainties. SPHEREx: ePSF normalisation and lattice samples, noiseless recovery, injection into real pixels.' },
+  { id: 'measurement', title: 'Source-measurement checks', categories: ['measurement'], blurb: 'Synthetic: PSF rendering/fitting and detection, Monte-Carlo calibration of uncertainties. SPHEREx: ePSF normalisation and lattice samples, noiseless recovery, injection into real pixels (internal consistency); independent renderers (analytic pixel-integrated PSFs, photutils) with PSF-shape, phase, brightness, background, mask and neighbour variations, errors against an independent Cramér–Rao bound.' },
   { id: 'registration', title: 'Image-registration and alignment checks', categories: ['registration'], blurb: 'Synthetic registration against the simulation-truth WCS; SPHEREx alignment diagnostics: residual statistics and decisions against direct formulas, reference selection on a constructed frame, real frames vs Gaia DR3.' },
   { id: 'catalog', title: 'Catalog propagation and matching', categories: ['catalog'], blurb: 'Gaia DR3 epoch propagation vs the archive\'s own ESDC_EPOCH_PROP(_ERROR), ERFA and a Monte Carlo; J2016.0 TCB; missing motion/RV and weak parallaxes; observer parallax applied once; synthetic matching.' },
   { id: 'pipeline', title: 'End-to-end synthetic pipeline', categories: ['pipeline'], blurb: 'Injected motion recovered from image measurements; truth used only for validation.' },
   { id: 'contracts', title: 'Contracts, API and export', categories: ['contracts', 'api'], blurb: 'Schema validation, origins, provenance, evidence round trip, staleness, reproduction, CSV.' },
   { id: 'archive', title: 'Archive product checks (SPHEREx DR1, Gaia DR3)', categories: ['archive'], blurb: 'Recorded real products checked offline: SPHEREx SIA2 response, manifest, cutout fixture and cache against the DR1 format; the Gaia DR3 field response (units, datatypes, RELEASE, COOSYS, COUNT, truncation probe) and its search-radius derivation.' },
   { id: 'browser', title: 'Browser checks', categories: ['browser', 'ui'], blurb: 'Primary controls, failure states, selection, view switching, persistence, exports, responsive layout.' },
-  { id: 'live', title: 'Live-data integration checks', categories: ['live'], blurb: 'Real archive requests (run with --live). SPHEREx: discovery, byte-range screening, a cutout download. Gaia DR3: the field query and the archive-side propagation. A changed row count is a note, not a failure; schema, provenance and pinned values must match. WISE and NEOSSat are not implemented.' },
+  { id: 'live', title: 'Live-data integration checks', categories: ['live'], blurb: 'Real archive requests (run with --live). SPHEREx: discovery, byte-range screening, a cutout download. Gaia DR3: the field query and the archive-side propagation. A changed row count is a note, not a failure; schema, provenance and pinned values must match. A run that never reaches the service is reported as unavailable (with the last successful retrieval), never as passed. WISE and NEOSSat are not implemented.' },
 ]
 
 const STATUS_HELP: [string, string][] = [
@@ -349,12 +349,26 @@ function ScienceSection() {
             interval since J2016.0) and a neighbour margin; the response, an independent COUNT(*) and the archive’s own propagation of pinned sources are recorded. Each
             source is propagated to each exposure mid-time with the rigorous uniform-space-motion model of the Gaia DR3 documentation (radial velocity where catalogued,
             6×6 covariance), then the geocentric observer parallax is applied once. Aberration and light deflection are not applied: the SPHEREx WCS is fitted to
-            proper-motion-propagated Gaia positions (Explanatory Supplement §3.2.8), and the residuals confirm it (catalogue frame, not the 5–13″ aberrated frame).
+            proper-motion-propagated Gaia positions (Explanatory Supplement §3.2.8), and the residuals reject the full-aberration alternative (catalogue frame χ² 12.5
+            vs 39 884 for the 5–13″ aberrated frame, 30 dof). That is evidence against full aberration, not proof of every convention: the pipeline’s calibrator parallax
+            (≤ 2.6 mas) and centroid definition are undocumented and only bounded, so the convention is reported as partially resolved.
           </p>
           <p>
             Reference stars (5/6-parameter, RUWE ≤ 1.4, isolated by the pipeline’s 10 %-within-2-px rule, unsaturated, ≥ 8 px from saturated regions, clean cores, S/N ≥ 10)
-            are fitted with the frame’s own per-zone effective PSF; the estimator is validated in every frame by injecting ePSF stars into its real pixels. Residuals are
-            reported before any correction, per frame and pooled; a constant offset is the only correction model, evaluated on held-out stars and never applied.
+            are fitted with the frame’s own per-zone effective PSF (A&amp;K flux fractions, 25 × the stored array; bicubic spline; zone from detector pixels = cutout + 1 −
+            CRPIX1A). The evaluation agrees with photutils ImagePSF to 6e-16 of the peak and the zone choice with the IRSA tutorial rule; the stored ePSF already contains
+            the pixel response (integrating it again worsens χ² on every detector). The estimator is checked in every frame by injecting ePSF stars into its real pixels
+            (internal consistency) and, independently, against analytic pixel-integrated PSFs and photutils renderings with controlled PSF-shape, phase, brightness,
+            background, mask and neighbour variations (errors equal the Cramér–Rao bound for a matched PSF; a 10 % width error gives a 0.01–0.02 px phase error;
+            an asymmetry shifts the fit by the first-order light-centroid shift; a plane background is absorbed exactly).
+          </p>
+          <p>
+            Residuals are reported before any correction, per frame and pooled, with RMS east, RMS north and the two-dimensional RMS √(E² + N²) given separately (pooled:
+            0.210″, 0.228″, 0.310″). Each frame offset’s uncertainty separates random per-star terms (ePSF centroid, Gaia prediction, Paule–Mandel extra scatter; they shrink
+            as 1/√N) from shared per-frame terms that do not average down: PSF-model mismatch (half the shift when refitted with adjacent-zone ePSFs, 0.03–0.12″) and the
+            centroid convention (ePSF reference point vs windowed and barycentre centroids, computed from the frame’s ePSFs only, 0.11–0.19″). A constant offset is the only
+            correction model; with the shared terms included no frame justifies one (the five frames that did with random errors alone have p = 0.16–0.62), and none is
+            applied.
           </p>
         </section>
         <section>
@@ -399,6 +413,17 @@ function LimitationsSection() {
           Gaia DR3 overlays are model predictions placed through the archive WCS (documented RMS &lt; 0.3″). The SPHEREx alignment diagnostics measure only Gaia reference stars;
           they use Gaia G/RP as the isolation flux proxy, the ePSF of the containing zone (no interpolation), and test only a constant offset, which is never applied. Frames
           with fewer than 5 usable references are reported as insufficient.
+        </li>
+        <li>
+          Unresolved estimator effects, documented rather than corrected: on D1–D4 references fit with χ²_red ≈ 6–54, rising with brightness. Part of this is structure
+          fixed on the sky that VARIANCE does not describe; the rest is a star-to-star misfit of unknown cause, since the stacked residual is flat to 1 %. The 2 px / 10 %
+          isolation rule admits neighbours that shift fits by up to several hundredths of a pixel. A detector-fixed +0.015 px offset in x matches the centroid-convention
+          term and is not removed. Centroids are never adjusted to agree with Gaia.
+        </li>
+        <li>
+          Illustrative error-budget estimates of inter-epoch displacement thresholds (5σ, two-dimensional, archive WCS as is): about 1.0–1.3″ for one pair of frames of a bright
+          unsaturated star (formal S/N ≥ 150), about 2″ at S/N 50 on D1–D4, and about 0.3–0.6″ when about 10 frames per season are averaged (if their errors are
+          independent). These estimates are not validated target detection or completeness measurements. Target motion fitting stays unavailable.
         </li>
         <li>
           The SPHEREx field is centred on Barnard’s Star, which saturates every selected frame (OVERFLOW, SUR_ERROR and BLOOM within 2.5 px); it is shown only as a prediction and
@@ -453,8 +478,9 @@ function ReferencesSection() {
         ))}
       </ul>
       <p className="small muted">
-        Software: Astropy, NumPy, SciPy, FastAPI, pydantic, React. Once Gaia data are displayed, SkyShift will carry the acknowledgement: “This work has made use of data from
-        the European Space Agency (ESA) mission Gaia, processed by the Gaia Data Processing and Analysis Consortium (DPAC).” No Gaia data are used yet.
+        Software: Astropy, NumPy, SciPy, FastAPI, pydantic, React. This work has made use of data from
+        the European Space Agency (ESA) mission Gaia, processed by the Gaia Data Processing and Analysis Consortium (DPAC).
+        Gaia DR3 recorded catalog data support the overlays and reference-star diagnostics; current live-check availability is reported above.
       </p>
     </Panel>
   )

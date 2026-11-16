@@ -29,7 +29,9 @@ from astropy.time import Time
 from skyshift._astropy_config import SOLAR_SYSTEM_EPHEMERIS
 from skyshift.contracts import (
     AlignmentReport,
+    ConventionAspect,
     ConventionTest,
+    DetectorFrameOffsets,
     Epoch,
     ErrorBudgetTerm,
     EstimatorValidation,
@@ -44,8 +46,11 @@ from skyshift.contracts import (
     PropagatedParameters,
     Provenance,
     ReferenceStarResidual,
+    ReportCache,
     ResidualStatistics,
+    SharedSystematics,
     TranslationEvaluation,
+    UncertaintyTerm,
 )
 from skyshift.coords.observer import AU_KM, observer_barycentric_au
 from skyshift.coords.time import make_epoch
@@ -55,6 +60,7 @@ from skyshift.providers.gaia_dr3 import RecordedField
 from skyshift.providers.gaia_dr3 import reference as gref
 from skyshift.providers.gaia_dr3.rows import gaia_row_to_catalog_source
 from skyshift.providers.spherex import reference as sref
+from skyshift.providers.spherex.http import utc_now
 from skyshift.science.alignment import (
     ALIGNMENT_METHOD_VERSION,
     REASONS,
@@ -69,6 +75,7 @@ from skyshift.science.alignment import (
     injection_near_saturated,
     injection_recovery,
     residual_statistics,
+    shared_systematics,
 )
 from skyshift.science.epoch_propagation import (
     AU_MAS_YR_KM_S,
@@ -343,7 +350,18 @@ class ObservedGaia:
         se = np.array([r.s_east_arcsec for r in used], dtype=float)
         sn = np.array([r.s_north_arcsec for r in used], dtype=float)
         st = residual_statistics(e, n, se, sn)
-        tr = evaluate_translation(e, n, se, sn, min_refs=self.cfg.min_references)
+        fi = self._frame_inputs(native_id)
+        shared = shared_systematics(fi, used, self.cfg) if used else None
+        tr = evaluate_translation(e, n, se, sn, min_refs=self.cfg.min_references, shared_sigma_arcsec=shared["total_arcsec"] if shared else 0.0)
+        if shared and shared["missing_terms"] and tr["evaluated"]:
+            tr["decision"] += " Shared terms not estimated for this frame (the significance is then optimistic): " + "; ".join(shared["missing_terms"]) + "."
+        off_px = off_sig = None
+        if len(used) >= 2 and st.get("wse_east_arcsec"):
+            J = self._sky_jacobian(native_id)
+            Ji = np.linalg.inv(J)
+            d = Ji @ np.array([st["wmean_east_arcsec"], st["wmean_north_arcsec"]])
+            c = Ji @ np.diag([st["wse_east_arcsec"] ** 2, st["wse_north_arcsec"] ** 2]) @ Ji.T
+            off_px, off_sig = (float(d[0]), float(d[1])), (float(math.sqrt(c[0, 0])), float(math.sqrt(c[1, 1])))
         est = EstimatorValidation(
             method="Injection-recovery of ePSF point sources in this frame's real pixels (seeded by the frame id), refitted with the same estimator",
             passed=bool(inj["passed"]), criteria=inj["criteria"], pixel_noise_median=_flt(inj.get("pixel_noise_median")),
@@ -369,9 +387,19 @@ class ObservedGaia:
             rejected_by_reason={k: v for k, v in diag.rejected_counts().items() if k != "too_faint"},
             statistics=ResidualStatistics(**st) if st.get("n") else ResidualStatistics(n=0),
             translation=TranslationEvaluation(**tr), estimator=est, aberration_if_apparent_arcsec=ab,
+            shared=SharedSystematics(**shared) if shared else None, offset_detector_px=off_px, offset_detector_sigma_px=off_sig,
             saturated_source_ids=[self.catalog.source_id[i] for i in diag.saturated],
             residuals=[self._residual_contract(native_id, r) for r in diag.results if r.reason != "too_faint"],
         )
+
+    def _sky_jacobian(self, native_id: str) -> np.ndarray:
+        """d(east, north arcsec)/d(x, y px) at the field centre of this native frame (full WCS incl. SIP)."""
+        from skyshift.science.alignment import local_wcs_jacobian
+
+        fi = self._frame_inputs(native_id)
+        c = self.dataset.field.center
+        x, y = fi.sky_to_pixel(np.array([c.ra_deg]), np.array([c.dec_deg]))
+        return local_wcs_jacobian(fi.pixel_to_sky, float(x[0]), float(y[0]), c.ra_deg, c.dec_deg)
 
     def _frame_report(self, native_id: str) -> FrameAlignment | None:
         return next((f for f in self.report().frames if f.frame_id == native_id), None)
@@ -402,17 +430,29 @@ class ObservedGaia:
 
         return cache_root().parent / "alignment" / self.dataset.id / f"report-{self.cache_key()}.json"
 
-    def report(self) -> AlignmentReport:
+    def cached_report(self) -> AlignmentReport | None:
+        """The report if already computed in this process or present in the disk cache under the current key (never computes)."""
         with self._lock:
             if self._report is not None:
                 return self._report
             path = self._cache_path()
-            if path.exists():
-                try:
-                    self._report = AlignmentReport.model_validate_json(path.read_text(encoding="utf-8"))
-                    return self._report
-                except ValueError:
-                    path.unlink(missing_ok=True)
+            if not path.exists():
+                return None
+            try:
+                cached = AlignmentReport.model_validate_json(path.read_text(encoding="utf-8"))
+            except ValueError:
+                path.unlink(missing_ok=True)  # unreadable: recomputed on the next report()
+                return None
+            if cached.cache is None or cached.cache.key != self.cache_key():
+                return None  # written by other inputs or code: never served
+            self._report = cached.model_copy(update={"cache": cached.cache.model_copy(update={"served_from_cache": True})})
+            return self._report
+
+    def report(self) -> AlignmentReport:
+        with self._lock:
+            if self.cached_report() is not None:
+                return self._report  # type: ignore[return-value]
+            path = self._cache_path()
             self._report = self.compute_report()
             try:
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -430,7 +470,8 @@ class ObservedGaia:
             for f in ok:
                 s = f.statistics
                 if s and s.n >= self.cfg.min_references and s.wse_east_arcsec:
-                    offsets.append((s.wmean_east_arcsec, s.wmean_north_arcsec, s.wse_east_arcsec, s.wse_north_arcsec))
+                    sh = f.shared.total_arcsec if f.shared else 0.0
+                    offsets.append((s.wmean_east_arcsec, s.wmean_north_arcsec, math.hypot(s.wse_east_arcsec, sh), math.hypot(s.wse_north_arcsec, sh)))
                     abers.append(f.aberration_if_apparent_arcsec)
             ct = convention_test(offsets, abers)
             allres = [r for f in ok for r in f.residuals if r.status == "used"]
@@ -441,7 +482,8 @@ class ObservedGaia:
             n_ins = sum(1 for f in frames if f.status == "insufficient_reference_stars")
             n_nv = sum(1 for f in frames if f.status == "estimator_not_validated")
             convention = self.convention(ct)
-            available = convention.status == "resolved" and bool(ok)
+            available = convention.status in ("resolved", "partially_resolved") and bool(ok)
+            budget, det_off, reassess = self._budget(frames, ok)
             per_frame = [f.n_used for f in frames]
             assessment = (
                 f"{len(ok)} of {len(frames)} frames have >= {self.cfg.min_references} usable reference stars with a validated estimator "
@@ -455,18 +497,31 @@ class ObservedGaia:
                 dataset_id=self.dataset.id, catalog=gref.GAIA_TABLE, release=m["release"], method="skyshift.science.alignment.diagnose_frame",
                 method_version=f"alignment {ALIGNMENT_METHOD_VERSION}; propagation {EPOCH_PROPAGATION_VERSION}",
                 status="available" if available else "unavailable",
-                status_reason=("Archive-WCS convention resolved; residuals computed on frames with enough validated references."
-                               if available else "Quantitative alignment results withheld: " + ("WCS convention not resolved." if convention.status != "resolved" else "no frame passed.")),
+                status_reason=(("Archive-WCS convention partially resolved: the data reject the full-aberration (apparent-place) hypothesis. "
+                                "Calibrator parallax (<= 2.6 mas), light deflection (~4 mas) and time scale are bounded far below the residual scatter; "
+                                "the undocumented centroid definition (<= 0.25\", comparable to the scatter) is carried as a shared term in every frame "
+                                "offset's uncertainty (see the convention aspects). Residuals computed on frames with enough validated references.")
+                               if available else "Quantitative alignment results withheld: " + ("WCS convention not resolved." if convention.status == "approximate" else "no frame passed.")),
                 convention=convention, convention_test=ConventionTest(**ct), selection_criteria=self.cfg.criteria(), reason_texts=REASONS,
                 frames=frames, pooled=ResidualStatistics(**pooled), n_frames_ok=len(ok), n_frames_insufficient=n_ins, n_frames_not_validated=n_nv,
                 pooled_over=(f"references of the {len(ok)} frames with status 'ok' (>= {self.cfg.min_references} references, estimator validated); "
                              "per-frame offsets are not removed"),
+                uncertainty_budget=budget, detector_frame_offsets=det_off, reassessment=reassess,
+                cache=ReportCache(key=self.cache_key(), computed_utc=utc_now(), served_from_cache=False, inputs=self._cache_inputs()),
                 field_assessment=assessment,
                 limitations=[
                     "Residuals describe the archive WCS together with SkyShift's ePSF position estimator and the Gaia predictions; they are not corrected here.",
                     "Isolation uses Gaia G/RP as the flux proxy; sources bright in the infrared but faint or absent in Gaia can still contaminate a reference.",
-                    "The ePSF of the zone containing each star is used without interpolation between zones; the SWIR fits show chi2_red >> 1 for bright stars "
-                    "(PSF model mismatch), so their uncertainties are inflated by sqrt(chi2_red).",
+                    "The isolation rule (2 px, 10 %) admits neighbours that shift a 7x7 ePSF fit: simulated from each reference's catalogued Gaia neighbours "
+                    "(validation/estimator_review.json) the shift is typically < 0.01 px but reaches several hundredths of a pixel for some references; it is "
+                    "part of the star-to-star scatter and is not corrected.",
+                    "The ePSF of the zone containing each star is used without interpolation between zones. On D1-D4 references fit with chi2_red ~ 6-50, rising "
+                    "with brightness. A brightness-independent part comes from structure fixed on the sky (faint sources, background) that VARIANCE does "
+                    "not describe: high-pass pixels correlate between epochs on D1-D4, not on D5-D6. The stacked residual is flat to ~1 % of the flux per "
+                    "pixel, so the brightness-dependent part is a star-to-star misfit of unresolved cause, not an average shape error. Uncertainties are "
+                    "inflated by sqrt(chi2_red) and a shared PSF-mismatch term enters each frame offset.",
+                    "A detector-fixed offset of ~+0.015 px in detector x appears in 14 of 15 frames; it is of the size of the difference between the ePSF "
+                    "reference point and centroid-type estimators (pipeline centroid convention undocumented) and is not removed.",
                     "A translation is the only correction model evaluated; with 5-15 references per 6' cutout, rotation/scale/distortion are not constrained.",
                     "Photometry, target motion fits and difference imaging remain unavailable for SPHEREx data.",
                 ],
@@ -474,6 +529,74 @@ class ObservedGaia:
                                       retrieved_utc=m["retrieved_utc"], method="skyshift.pipeline.observed_gaia.ObservedGaia.report",
                                       method_version=ALIGNMENT_METHOD_VERSION, parents=[f"fixtures/gaia_dr3/{self.recorded.field_id}/manifest.json"]),
             )
+
+    def _cache_inputs(self) -> dict[str, str]:
+        import hashlib
+
+        h = hashlib.sha256("".join(sorted(img.sha256 for img in self.images.values())).encode()).hexdigest()[:16]
+        return {"gaia_response_sha256_gz": self.recorded.manifest["field_query"]["response_sha256_gz"],
+                "gaia_retrieved_utc": self.recorded.manifest["retrieved_utc"], "spherex_cutouts_sha256_combined": h,
+                "n_frames": str(len(self.images)), "method_version": ALIGNMENT_METHOD_VERSION}
+
+    def _budget(self, frames: list[FrameAlignment], ok: list[FrameAlignment]) -> tuple[list[UncertaintyTerm], DetectorFrameOffsets | None, str]:
+        used = [(f, r) for f in ok for r in f.residuals if r.status == "used"]
+        scale = float(self.dataset.instrument.pixel_scale_arcsec or 6.15)
+        cen = [math.sqrt(0.5 * (r.sigma_x_px**2 + r.sigma_y_px**2)) * scale for _, r in used if r.sigma_x_px is not None]
+        gaia = []
+        for f in ok:
+            pred = self.prediction(f.frame_id)
+            for r in f.residuals:
+                if r.status == "used" and r.source_id in self.catalog.index:
+                    i = self.catalog.index[r.source_id]
+                    gaia.append(math.sqrt(0.5 * (pred.sigma_ra_cosdec_mas[i] ** 2 + pred.sigma_dec_mas[i] ** 2)) / 1000.0)
+        xs = [f.statistics.extra_scatter_arcsec for f in ok if f.statistics and f.statistics.extra_scatter_arcsec is not None]
+        psf = [f.shared.psf_mismatch_arcsec for f in ok if f.shared and f.shared.psf_mismatch_arcsec is not None]
+        conv = [f.shared.convention_arcsec for f in ok if f.shared]
+
+        def rng_of(v: list[float]) -> tuple[float, float] | None:
+            return (float(np.min(v)), float(np.max(v))) if v else None
+
+        def med(v: list[float]) -> float | None:
+            return float(np.median(v)) if v else None
+
+        budget = [
+            UncertaintyTerm(term="ePSF centroid (fit sigma x sqrt(chi2_red) when > 1)", kind="random_per_star", typical_arcsec=med(cen), range_arcsec=rng_of(cen),
+                            enters_as="per star; the frame offset's random part shrinks as 1/sqrt(N)", source="fit covariance; calibrated by injection (pulls 0.5-1.4)"),
+            UncertaintyTerm(term="Gaia DR3 prediction (propagated 6x6 covariance + parallax term)", kind="random_per_star", typical_arcsec=med(gaia), range_arcsec=rng_of(gaia),
+                            enters_as="per star", source="Gaia DR3 errors and correlations propagated to the exposure"),
+            UncertaintyTerm(term="Unexplained star-to-star scatter (Paule-Mandel extra scatter)", kind="unexplained_per_star", typical_arcsec=med(xs), range_arcsec=rng_of(xs),
+                            enters_as="added in quadrature per star (assumed independent between stars)", source="residuals about the weighted mean"),
+            UncertaintyTerm(term="PSF-model mismatch common to the frame (half the zone-swap shift RMS)", kind="shared_per_frame", typical_arcsec=med(psf), range_arcsec=rng_of(psf),
+                            enters_as="added to the frame-offset uncertainty without 1/sqrt(N)", source="refits of every reference with adjacent-zone ePSFs"),
+            UncertaintyTerm(term="Centroid convention (ePSF reference point vs windowed / barycentre centroids)", kind="shared_per_frame", typical_arcsec=med(conv), range_arcsec=rng_of(conv),
+                            enters_as="added to the frame-offset uncertainty without 1/sqrt(N)", source="computed from the frame's ePSFs only (Gaia-free); pipeline centroid definition undocumented"),
+            UncertaintyTerm(term="Gaia DR3 reference-frame / magnitude systematics", kind="shared_all_frames", typical_arcsec=2e-5,
+                            enters_as="added to the frame-offset uncertainty", source="Gaia EDR3/DR3 frame alignment ~0.02 mas"),
+            UncertaintyTerm(term="Parallax convention of the pipeline's calibrators (undocumented)", kind="shared_all_frames", typical_arcsec=None,
+                            range_arcsec=(0.0, next((t.bound_arcsec for t in self.convention().error_budget if t.term.startswith("Parallax treatment")), 0.0026) or 0.0026),
+                            enters_as="bound only (not added): far below the shared terms above", source="99th-percentile calibrator parallax in the field"),
+        ]
+        rows = [f for f in ok if f.offset_detector_px is not None]
+        det = None
+        if len(rows) >= 3:
+            dx = np.array([f.offset_detector_px[0] for f in rows])
+            dy = np.array([f.offset_detector_px[1] for f in rows])
+            det = DetectorFrameOffsets(
+                n_frames=len(rows), mean_x_px=float(dx.mean()), mean_y_px=float(dy.mean()), se_x_px=float(dx.std(ddof=1) / math.sqrt(len(rows))),
+                se_y_px=float(dy.std(ddof=1) / math.sqrt(len(rows))), std_x_px=float(dx.std(ddof=1)), std_y_px=float(dy.std(ddof=1)),
+                n_positive_x=int((dx > 0).sum()),
+                interpretation=("Frame offsets mapped to detector pixels. A common detector-x offset is consistent with an estimator or centroid-convention "
+                                "effect, but detector-linked archive-WCS calibration can also contribute; the origin is not uniquely identified. "
+                                "Its size is compared with the Gaia-free "
+                                "centroid-convention term; it is reported, not removed."),
+            )
+        changed = [f for f in frames if f.translation.evaluated and f.translation.p_value_random_only is not None
+                   and (f.translation.p_value_random_only < 0.0027) != (f.translation.p_value < 0.0027)]
+        just = [f for f in frames if f.translation.justified]
+        reassess = (f"With shared per-frame errors added to each offset's uncertainty (they do not shrink with N), {len(just)} frame(s) keep a justified "
+                    f"translation; {len(changed)} frame(s) changed significance relative to random errors only"
+                    + (": " + ", ".join(f"{f.observation_id.split(':')[1]} D{f.detector}" for f in changed) if changed else "") + ".")
+        return budget, det, reassess
 
     # ------------------------------------------------------------------ convention and error budget
 
@@ -522,17 +645,47 @@ class ObservedGaia:
         ]
         evidence = list(CONVENTION_EVIDENCE_DOC)
         status = "approximate"
-        if test is None and self._report is not None:
-            test = self._report.convention_test.model_dump()
+        computed = test is not None
+        if test is None:
+            rep = self.cached_report()
+            if rep is not None:
+                test, computed = rep.convention_test.model_dump(), True
+        not_run = ("Empirical convention test not computed yet (it runs with the alignment report: Alignment tab or GET .../alignment); "
+                   "until then the convention rests on the documentation only.")
+        aberration_status, aberration_evidence = "untested_bounded", (
+            "Convention test not available (no frame with enough validated references)." if computed else not_run)
         if test and test.get("n_frames"):
             evidence.append(
                 f"Empirical test over {test['n_frames']} validated frames: chi2 = {test['chi2_catalog_frame']:.1f} for 'catalogue frame' vs "
                 f"{test['chi2_apparent_frame']:.0f} for 'apparent frame' ({test['dof']} dof). Decision: {test['decision']}."
             )
             if test["decision"].startswith("catalogue frame"):
-                status = "resolved"
-        else:
+                status = "partially_resolved"
+                aberration_status = "documented_and_tested"
+                aberration_evidence = (f"A WCS in the apparent frame (annual + orbital aberration, {test.get('min_aberration_arcsec', 0):.1f}-{test['max_aberration_arcsec']:.1f}\" here) "
+                                       f"is rejected: chi2 {test['chi2_catalog_frame']:.0f} vs {test['chi2_apparent_frame']:.0f} ({test['dof']} dof), frame offsets <= "
+                                       f"{test.get('max_frame_offset_arcsec', float('nan')):.2f}\". This is evidence against FULL aberration; partial or smaller "
+                                       "convention differences below the frame-offset scatter (~0.1-0.3\") are not tested.")
+        elif computed:
             evidence.append("Empirical test not available (no frame with enough validated references): the convention rests on the documentation only.")
+        else:
+            evidence.append(not_run)
+        aspects = [
+            ConventionAspect(aspect="Reference catalogue and epoch (Gaia DR3 propagated with proper motion to the observation epoch)", status="documented",
+                             evidence="SPHEREx ES v2.1 Sect. 3.2.8 and Table 17. The exact epoch (start/mid) and perspective handling are not stated.",
+                             bound_arcsec=2e-5),
+            ConventionAspect(aspect="Stellar aberration (apparent vs catalogue place)", status=aberration_status, evidence=aberration_evidence, bound_arcsec=0.033),
+            ConventionAspect(aspect="Observer parallax of the pipeline's calibrators", status="undocumented_bounded",
+                             evidence="Not mentioned in the Supplement; bounded by the 99th-percentile calibrator parallax in the field.",
+                             bound_arcsec=plx_bound / 1000.0 if math.isfinite(plx_bound) else None),
+            ConventionAspect(aspect="Gravitational light deflection", status="untested_bounded",
+                             evidence="Not mentioned; ~4 mas and nearly uniform over a 6' cutout, so absorbed by the fitted pointing.", bound_arcsec=0.004),
+            ConventionAspect(aspect="Centroid definition used to fit the WCS (SExtractor settings)", status="undocumented_bounded",
+                             evidence="Not documented; differs from the ePSF reference point by 0.005-0.04 px depending on the definition (shared term in each frame's budget).",
+                             bound_arcsec=0.25),
+            ConventionAspect(aspect="Time scale and time of the WCS solution (UTC mid-exposure assumed)", status="untested_bounded",
+                             evidence="A 57 s or 69 s (TT-UTC) difference moves the fastest star by < 0.03 mas.", bound_arcsec=3e-5),
+        ]
         return PredictionConvention(
             frame="ICRS (Gaia DR3 catalogue frame) as seen from the geocentre at the exposure mid-time",
             includes=["proper motion and perspective acceleration (uniform space motion from J2016.0 TCB; radial velocity where catalogued)",
@@ -542,7 +695,7 @@ class ObservedGaia:
                       "spacecraft orbit offset from the geocentre (bounded)"],
             wcs_convention=("The SPHEREx L2 WCS (TAN-SIP, RADESYS ICRS) is fitted to Gaia DR3 positions propagated with proper motion to the exposure "
                             "epoch, so it maps pixels to catalogue-frame directions; predictions are therefore placed with the same convention."),
-            status=status, evidence=evidence, error_budget=budget,
+            status=status, evidence=evidence, aspects=aspects, error_budget=budget,
         )
 
 

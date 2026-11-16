@@ -98,6 +98,43 @@ def test_translation_is_justified_only_when_significant_and_held_out_residuals_i
 
 
 @pytest.mark.registration
+def test_shared_error_does_not_average_down_with_the_number_of_references():
+    """[registration] A 0.15" offset measured with 10 or 160 stars of sigma 0.1": the random part of the offset
+    error falls as 1/sqrt(N) but the total never drops below the shared 0.1" term, so more stars cannot make an
+    offset that is within the shared error significant; without the shared term the 160-star offset would be."""
+    rng = np.random.default_rng(23)
+    res = {}
+    for n_star in (10, 160):
+        se = np.full(n_star, 0.1)
+        e, n = 0.15 + rng.normal(0, 0.1, n_star), rng.normal(0, 0.1, n_star)
+        res[n_star] = (evaluate_translation(e, n, se, se, shared_sigma_arcsec=0.1), evaluate_translation(e, n, se, se))
+    t10, t160 = res[10][0], res[160][0]
+    # random part ~ sqrt((0.1^2 + extra^2) / N): times sqrt(N) it is ~0.1" for both N (extra scatter ~0 here)
+    for n_star, t in ((10, t10), (160, t160)):
+        assert 0.1 <= t["sigma_random_east_arcsec"] * math.sqrt(n_star) < 0.12
+    for t in (t10, t160):
+        assert t["sigma_east_arcsec"] == pytest.approx(math.hypot(t["sigma_random_east_arcsec"], 0.1)) and t["sigma_east_arcsec"] >= 0.1
+        assert t["p_value"] >= t["p_value_random_only"]
+    assert not t160["justified"] and t160["p_value"] > 0.0027
+    assert res[160][1]["justified"] and res[160][1]["p_value"] < 1e-6  # the same data, random errors only
+
+
+@pytest.mark.registration
+def test_windowed_centroid_is_exact_for_a_symmetric_source_and_moves_toward_the_light_centroid():
+    """[registration] The XWIN-type iteration converges to the centre of a well-sampled symmetric (Gaussian) stamp,
+    and for a stamp with a 10 % satellite at +1 px it lands between the core (0) and the light centroid (+0.1 px).
+    (On undersampled stamps it carries a pixel-phase bias - which is why it defines a different 'position'.)"""
+    from skyshift.science.alignment import windowed_centroid
+
+    yy, xx = np.mgrid[0:41, 0:41]
+    g = lambda x0, y0: np.exp(-((xx - x0) ** 2 + (yy - y0) ** 2) / (2 * 2.0**2))  # noqa: E731
+    x, y = windowed_centroid(g(20.23, 19.81), 20.0, 20.0, 2.5)
+    assert abs(x - 20.23) < 1e-5 and abs(y - 19.81) < 1e-5
+    x, _ = windowed_centroid(0.9 * g(20.0, 20.0) + 0.1 * g(21.0, 20.0), 20.0, 20.0, 2.5)
+    assert 0.0 < x - 20.0 < 0.1
+
+
+@pytest.mark.registration
 def test_convention_test_distinguishes_catalogue_and_apparent_frames():
     """[registration] Offsets ~0.1" with aberrations ~9" -> catalogue frame; offsets equal to the aberration -> apparent; tiny aberrations -> undetermined."""
     rng = np.random.default_rng(5)
@@ -253,7 +290,10 @@ def gaia_session(spherex_bundle):
 def test_field_report_on_all_real_frames(gaia_session):
     """[registration] 17 frames: counts add up, >= 10 frames usable, convention = catalogue frame, pooled RMS < 2 x the documented 0.3", Barnard's Star saturated in every frame."""
     rep = gaia_session.report()
-    assert rep.status == "available" and rep.convention.status == "resolved" and len(rep.frames) == 17
+    # full aberration is rejected by the data, but the pipeline's parallax/deflection/centroid conventions are only bounded
+    assert rep.status == "available" and rep.convention.status == "partially_resolved" and len(rep.frames) == 17
+    statuses = {a.aspect.split(" (")[0]: a.status for a in rep.convention.aspects}
+    assert any(s == "documented_and_tested" for s in statuses.values()) and any(s.endswith("_bounded") for s in statuses.values())
     assert rep.convention_test.decision.startswith("catalogue frame") and rep.convention_test.max_frame_offset_arcsec < 1.0
     assert rep.n_frames_ok >= 10 and rep.n_frames_ok + rep.n_frames_insufficient + rep.n_frames_not_validated == 17
     for f in rep.frames:
@@ -269,6 +309,30 @@ def test_field_report_on_all_real_frames(gaia_session):
             assert r.source_id != BARNARD or r.reason == "saturated"
     p = rep.pooled
     assert p.n >= 50 and p.rms_east_arcsec < 0.6 and p.rms_north_arcsec < 0.6 and abs(p.mean_east_arcsec) < 0.1 and abs(p.mean_north_arcsec) < 0.1
+    assert p.rms_total_arcsec == pytest.approx(math.hypot(p.rms_east_arcsec, p.rms_north_arcsec))  # 2-D RMS, not a per-axis value
+
+
+@pytest.mark.registration
+def test_report_budget_separates_random_and_shared_errors_and_records_its_cache_provenance(gaia_session):
+    """[registration] Every ok frame carries a shared term that enters its translation sigma without 1/sqrt(N); the
+    budget lists random, unexplained and shared kinds; the cache record names its key, inputs and computation time."""
+    rep = gaia_session.report()
+    kinds = {u.kind for u in rep.uncertainty_budget}
+    assert kinds == {"random_per_star", "unexplained_per_star", "shared_per_frame", "shared_all_frames"}
+    for f in rep.frames:
+        if f.status != "ok":
+            continue
+        sh, t = f.shared, f.translation
+        assert sh is not None and sh.total_arcsec >= sh.convention_arcsec > 0
+        assert (sh.psf_mismatch_arcsec is None) == bool(sh.missing_terms)
+        if t.evaluated:
+            assert t.sigma_shared_arcsec == pytest.approx(sh.total_arcsec)
+            assert t.sigma_east_arcsec == pytest.approx(math.hypot(t.sigma_random_east_arcsec, sh.total_arcsec))
+            assert t.p_value == pytest.approx(stats.chi2.sf(t.chi2, 2)) and t.p_value_random_only == pytest.approx(stats.chi2.sf(t.chi2_random_only, 2))
+    assert rep.reassessment and "do not shrink with N" in rep.reassessment
+    c = rep.cache
+    assert c is not None and c.key == gaia_session.cache_key() and c.computed_utc.endswith("Z")
+    assert c.inputs["gaia_retrieved_utc"] == gaia_session.recorded.manifest["retrieved_utc"] and int(c.inputs["n_frames"]) == 17
 
 
 @pytest.mark.api
@@ -282,7 +346,7 @@ def test_api_serves_gaia_predictions_with_string_ids_and_keeps_analyses_unavaila
     ov = c.get(f"/api/datasets/{FIELD}/gaia/overlay", params={"frame_id": frame.id})
     assert ov.status_code == 200
     body = ov.json()
-    assert body["convention"]["status"] == "resolved" and body["epoch"]["iso_utc"]
+    assert body["convention"]["status"] == "partially_resolved" and body["convention"]["aspects"] and body["epoch"]["iso_utc"]
     assert all(isinstance(p["source_id"], str) and p["origin"] == "model_prediction" for p in body["predictions"])
     raw = ov.text
     assert f'"source_id":"{BARNARD}"' in raw.replace(" ", "")  # serialised as a string, never a JSON number
@@ -311,11 +375,72 @@ def test_api_serves_gaia_predictions_with_string_ids_and_keeps_analyses_unavaila
     assert "not evidence of a new or vanished object" in text
 
 
+@pytest.mark.api
+def test_cached_alignment_report_is_served_only_under_its_own_key_and_keeps_its_provenance(spherex_bundle, gaia_session, tmp_path):
+    """[api] Disk cache: absent -> nothing (and the convention says 'not computed yet', not 'no frames'); garbage ->
+    deleted; another key -> never served; the right key -> the same report with served_from_cache and the
+    original computation time and inputs."""
+    from skyshift.pipeline.observed_gaia import ObservedGaia
+
+    rep = gaia_session.report()
+    fresh = ObservedGaia(spherex_bundle, load_recorded_field(FIELD))
+    path = tmp_path / "report.json"
+    fresh._cache_path = lambda: path  # type: ignore[method-assign]
+    assert fresh.cached_report() is None
+    conv = fresh.convention()
+    assert conv.status == "approximate" and any("not computed yet" in e for e in conv.evidence)
+    path.write_text("{not json", encoding="utf-8")
+    assert fresh.cached_report() is None and not path.exists()
+    other = rep.model_copy(update={"cache": rep.cache.model_copy(update={"key": "0" * 24, "served_from_cache": False})})
+    path.write_text(other.model_dump_json(), encoding="utf-8")
+    assert fresh.cached_report() is None and path.exists()
+    path.write_text(rep.model_copy(update={"cache": rep.cache.model_copy(update={"served_from_cache": False})}).model_dump_json(), encoding="utf-8")
+    got = fresh.cached_report()
+    assert got is not None and got.cache.served_from_cache is True
+    assert got.cache.key == rep.cache.key and got.cache.computed_utc == rep.cache.computed_utc and got.cache.inputs == rep.cache.inputs
+    assert got.provenance == rep.provenance and got.pooled == rep.pooled and len(got.frames) == len(rep.frames)
+    assert fresh.convention().status == "partially_resolved"  # the overlay now uses the cached convention test
+
+
+@pytest.mark.api
+def test_gaia_failures_answer_503_or_409_and_never_substitute(spherex_bundle, monkeypatch):
+    """[api] A recorded Gaia response that fails its checks -> 503 provider_unavailable on overlay, detail and alignment
+    (no predictions, no frames in the body); a dataset whose capability is unavailable -> 409 not_available."""
+    import skyshift.api.app as appmod
+    from skyshift.providers.base import ProviderUnavailable
+
+    def broken(field_id: str):  # noqa: ANN202
+        raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"recorded response for {field_id} does not match its manifest sha256")
+
+    c = TestClient(appmod.app)
+    frame = next(f for f in spherex_bundle.dataset.frames if f.kind == "archive_wcs_reprojection")
+    monkeypatch.setattr(appmod, "load_recorded_field", broken)
+    for path, params in ((f"/api/datasets/{FIELD}/gaia/overlay", {"frame_id": frame.id}), (f"/api/datasets/{FIELD}/gaia/sources/{BARNARD}", {"frame_id": frame.id}),
+                         (f"/api/datasets/{FIELD}/alignment", None)):
+        r = c.get(path, params=params)
+        assert r.status_code == 503 and r.json()["detail"]["code"] == "provider_unavailable", path
+        assert "predictions" not in r.text and "frames" not in r.json()
+    monkeypatch.undo()
+    from skyshift.api.app import ObservedSession
+    from skyshift.contracts import AnalysisCapability
+
+    monkeypatch.setattr(ObservedSession, "capability", lambda self, cid: AnalysisCapability(id=cid, status="unavailable", reason="test: no recorded response", requirements=[]))
+    for path in (f"/api/datasets/{FIELD}/gaia/overlay?frame_id={frame.id}", f"/api/datasets/{FIELD}/alignment"):
+        r = c.get(path)
+        assert r.status_code == 409 and r.json()["detail"]["code"] == "not_available" and r.json()["detail"]["message"] == "test: no recorded response"
+
+
 @pytest.mark.registration
 def test_translation_decisions_are_consistent_with_chi2(gaia_session):
-    """[registration] Where a translation is justified, its chi2 p-value is < 0.0027 and the per-frame offset agrees with the weighted mean of the residuals."""
+    """[registration] For every evaluated frame: chi2 = (offset / total sigma)^2 summed over both axes, the decision
+    follows from p < 0.0027 and the held-out test, and the offset is the weighted mean of the residuals."""
+    n_eval = 0
     for f in gaia_session.report().frames:
         t = f.translation
-        if t.justified:
-            assert t.p_value == pytest.approx(stats.chi2.sf(t.chi2, 2))
-            assert t.offset_east_arcsec == pytest.approx(f.statistics.wmean_east_arcsec, abs=1e-9)
+        if not t.evaluated:
+            continue
+        n_eval += 1
+        assert t.chi2 == pytest.approx((t.offset_east_arcsec / t.sigma_east_arcsec) ** 2 + (t.offset_north_arcsec / t.sigma_north_arcsec) ** 2, rel=1e-6)
+        assert t.justified == (t.p_value < 0.0027 and t.heldout_rms_corrected_arcsec < t.heldout_rms_uncorrected_arcsec)
+        assert t.offset_east_arcsec == pytest.approx(f.statistics.wmean_east_arcsec, abs=1e-9)
+    assert n_eval >= 10

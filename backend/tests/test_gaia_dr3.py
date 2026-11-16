@@ -199,6 +199,24 @@ def test_live_status_separates_unreachable_services_from_failed_checks(monkeypat
     assert status == "tested" and "row count changed" in detail
 
 
+@pytest.mark.contracts
+def test_unreachable_live_checks_keep_their_status_and_state_the_last_successful_retrieval(monkeypatch, manifest):
+    """[contracts] With the ESA archive unreachable in the latest run, both live Gaia capabilities read 'unavailable'
+    (never 'tested') and name the last successful retrieval recorded in the manifest (time, HTTP status, job id)."""
+    from skyshift.contracts import TestResult, ValidationReport
+    from skyshift.providers.gaia_dr3 import LIVE_TESTS, GaiaDR3Provider
+
+    import skyshift.validation.report as rep_mod
+
+    msg = "E   ArchiveRequestFailed: URLError: <urlopen error [WinError 10060] A connection attempt failed> (attempts=6)"
+    results = [TestResult(id=f"tests/test_gaia_dr3.py::{t}", name=t, suite="pytest", category="live", status="failed", message=msg) for t in LIVE_TESTS.values()]
+    monkeypatch.setattr(rep_mod, "load_report", lambda: ValidationReport(generated_utc="2026-11-15T21:00:00Z", source_hash="h", results=results, available=True))
+    caps = GaiaDR3Provider().status().capabilities[:2]
+    for c in caps:
+        assert c.status == "unavailable" and c.checked_utc == "2026-11-15T21:00:00Z"
+        assert "Last successful retrieval" in c.detail and manifest["retrieved_utc"] in c.detail and manifest["field_query"]["job_id"] in c.detail
+
+
 # ---------------------------------------------------------------- live (ESA Gaia archive)
 
 

@@ -1,7 +1,7 @@
 {
  "schema_version": "skyshift.validation/1",
- "generated_utc": "2026-11-15T18:51:04Z",
- "source_hash": "ac0bea8ba179bf14f743fd0e66f15a5a3af57f9814eae107744b4741a9d5b2f8",
+ "generated_utc": "2026-11-15T22:15:39Z",
+ "source_hash": "b0d2d6c02d365f2ffbb93f29b935b7b3eecd720d248b75b5c030180e486ef240",
  "current_source_hash": null,
  "stale": null,
  "environment": {
@@ -23,11 +23,11 @@
   {
    "suite": "pytest",
    "ran": true,
-   "started_utc": "2026-11-15T18:40:09Z",
-   "duration_s": 457.60764430003474,
+   "started_utc": "2026-11-15T22:04:52Z",
+   "duration_s": 461.63859149999917,
    "counts": {
-    "total": 153,
-    "passed": 151,
+    "total": 177,
+    "passed": 175,
     "failed": 2
    },
    "command": "pytest -q",
@@ -36,11 +36,11 @@
   {
    "suite": "vitest",
    "ran": true,
-   "started_utc": "2026-11-15T18:47:47Z",
-   "duration_s": 6.505459000007249,
+   "started_utc": "2026-11-15T22:12:34Z",
+   "duration_s": 16.32118349999655,
    "counts": {
-    "total": 94,
-    "passed": 94
+    "total": 105,
+    "passed": 105
    },
    "command": "vitest run",
    "note": null
@@ -48,8 +48,8 @@
   {
    "suite": "playwright",
    "ran": true,
-   "started_utc": "2026-11-15T18:47:54Z",
-   "duration_s": 188.3258145999862,
+   "started_utc": "2026-11-15T22:12:50Z",
+   "duration_s": 167.0450642000069,
    "counts": {
     "total": 26,
     "passed": 26
@@ -65,7 +65,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0139,
+   "duration_s": 0.0191,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -76,7 +76,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 27.2021,
+   "duration_s": 25.2879,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -87,7 +87,29 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0087,
+   "duration_s": 0.011,
+   "message": null,
+   "file": "test_alignment.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_alignment.py::test_shared_error_does_not_average_down_with_the_number_of_references",
+   "name": "[registration] A 0.15\" offset measured with 10 or 160 stars of sigma 0.1\": the random part of the offset",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 3.9722,
+   "message": null,
+   "file": "test_alignment.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_alignment.py::test_windowed_centroid_is_exact_for_a_symmetric_source_and_moves_toward_the_light_centroid",
+   "name": "[registration] The XWIN-type iteration converges to the centre of a well-sampled symmetric (Gaussian) stamp,",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.031,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -98,7 +120,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0053,
+   "duration_s": 0.0156,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -109,7 +131,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0521,
+   "duration_s": 0.0481,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -120,7 +142,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0084,
+   "duration_s": 0.0149,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -131,7 +153,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 1.0383,
+   "duration_s": 1.0873,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -142,7 +164,18 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.1378,
+   "duration_s": 0.2465,
+   "message": null,
+   "file": "test_alignment.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_alignment.py::test_report_budget_separates_random_and_shared_errors_and_records_its_cache_provenance",
+   "name": "[registration] Every ok frame carries a shared term that enters its translation sigma without 1/sqrt(N); the",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.053,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -153,18 +186,40 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 10.0722,
+   "duration_s": 9.4101,
+   "message": null,
+   "file": "test_alignment.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_alignment.py::test_cached_alignment_report_is_served_only_under_its_own_key_and_keeps_its_provenance",
+   "name": "[api] Disk cache: absent -> nothing (and the convention says 'not computed yet', not 'no frames'); garbage ->",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.3846,
+   "message": null,
+   "file": "test_alignment.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_alignment.py::test_gaia_failures_answer_503_or_409_and_never_substitute",
+   "name": "[api] A recorded Gaia response that fails its checks -> 503 provider_unavailable on overlay, detail and alignment",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0885,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
   },
   {
    "id": "tests/test_alignment.py::test_translation_decisions_are_consistent_with_chi2",
-   "name": "[registration] Where a translation is justified, its chi2 p-value is < 0.0027 and the per-frame offset agrees with the weighted mean of the residuals.",
+   "name": "[registration] For every evaluated frame: chi2 = (offset / total sigma)^2 summed over both axes, the decision",
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0027,
+   "duration_s": 0.0016,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -175,7 +230,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.2715,
+   "duration_s": 0.2399,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -186,7 +241,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.1103,
+   "duration_s": 0.0721,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -197,7 +252,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0904,
+   "duration_s": 0.0462,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -208,7 +263,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.2861,
+   "duration_s": 0.1843,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -219,7 +274,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0348,
+   "duration_s": 0.0255,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -230,7 +285,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.3481,
+   "duration_s": 0.3364,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -241,7 +296,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0164,
+   "duration_s": 0.0099,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -252,7 +307,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.1667,
+   "duration_s": 0.1371,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -263,7 +318,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0681,
+   "duration_s": 0.0472,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -274,7 +329,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.067,
+   "duration_s": 0.0692,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -296,7 +351,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0069,
+   "duration_s": 0.0066,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -307,7 +362,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0006,
+   "duration_s": 0.0004,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -318,7 +373,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.3719,
+   "duration_s": 0.3182,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -340,7 +395,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0443,
+   "duration_s": 0.0328,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -351,7 +406,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0327,
+   "duration_s": 0.0342,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -362,7 +417,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0378,
+   "duration_s": 0.0412,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -373,7 +428,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0183,
+   "duration_s": 0.0204,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -384,7 +439,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0929,
+   "duration_s": 0.0618,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -395,7 +450,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.2,
+   "duration_s": 0.1606,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -406,7 +461,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 7.8539,
+   "duration_s": 6.4891,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -417,7 +472,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.2055,
+   "duration_s": 0.157,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -428,7 +483,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.3401,
+   "duration_s": 0.3252,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -439,7 +494,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.4352,
+   "duration_s": 0.4076,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -450,7 +505,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1619,
+   "duration_s": 0.1131,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -461,7 +516,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1865,
+   "duration_s": 0.1161,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -472,7 +527,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0189,
+   "duration_s": 0.0141,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -483,7 +538,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0057,
+   "duration_s": 0.0034,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -494,7 +549,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0181,
+   "duration_s": 0.0115,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -505,7 +560,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0015,
+   "duration_s": 0.0012,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -516,7 +571,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0183,
+   "duration_s": 0.0148,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -527,7 +582,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0074,
+   "duration_s": 0.0059,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -538,7 +593,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0004,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -549,7 +604,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0009,
+   "duration_s": 0.0008,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -560,7 +615,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0017,
+   "duration_s": 0.0013,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -571,7 +626,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0007,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -582,7 +637,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0013,
+   "duration_s": 0.0009,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -604,7 +659,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0029,
+   "duration_s": 0.0025,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -615,7 +670,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0035,
+   "duration_s": 0.0024,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -626,7 +681,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0024,
+   "duration_s": 0.0021,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -637,7 +692,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0023,
+   "duration_s": 0.0016,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -648,7 +703,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0031,
+   "duration_s": 0.0015,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -659,7 +714,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0064,
+   "duration_s": 0.0032,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -670,7 +725,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0248,
+   "duration_s": 0.0189,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -681,7 +736,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0031,
+   "duration_s": 0.0019,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -692,7 +747,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.1623,
+   "duration_s": 0.1465,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -703,7 +758,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.1837,
+   "duration_s": 0.1865,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -714,7 +769,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0527,
+   "duration_s": 0.0461,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -725,7 +780,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.1251,
+   "duration_s": 0.113,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -736,7 +791,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0184,
+   "duration_s": 0.0229,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -747,7 +802,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0042,
+   "duration_s": 0.0043,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -758,7 +813,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0909,
+   "duration_s": 0.0907,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -769,7 +824,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0265,
+   "duration_s": 0.0272,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -780,7 +835,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0038,
+   "duration_s": 0.0019,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -791,7 +846,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0037,
+   "duration_s": 0.0021,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -802,7 +857,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.23,
+   "duration_s": 0.2995,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -813,7 +868,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0106,
+   "duration_s": 0.0066,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -824,7 +879,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.7087,
+   "duration_s": 0.6686,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -835,9 +890,108 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0089,
+   "duration_s": 0.0084,
    "message": null,
    "file": "test_epsf.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_independent_renderer_conserves_flux_and_centroid_and_is_translation_covariant",
+   "name": "[measurement] Well sampled (FWHM 4 px, Gaussian-like wings): flux conserved, light centroid at the source,",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.3919,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_epsf_built_from_the_psf_reproduces_the_independent_rendering",
+   "name": "[measurement] A&K ePSF within its +-3.2 px support (33 samples / 5): on the 5x lattice the stored samples equal",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0392,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_matched_fit_is_unbiased_and_its_errors_match_an_independent_cramer_rao_bound",
+   "name": "[measurement] 400 noise realisations at a fixed sub-pixel phase (S/N ~ 50): mean error consistent with 0,",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 2.2836,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_symmetric_psf_mismatch_gives_an_odd_phase_error_without_mean_bias",
+   "name": "[measurement] Fitting a 10 % broader (or narrower) symmetric PSF: the error is an odd function of the",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.2716,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_asymmetric_psf_shift_follows_first_order_theory",
+   "name": "[measurement] A satellite of flux fraction f at distance d shifts a symmetric-model fit by f*d to first",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.4204,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_plane_background_absorbs_a_linear_gradient_exactly",
+   "name": "[measurement] The fit model includes a plane, so adding an exact plane to the data changes no position",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.1857,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_masking_pixels_never_reduces_the_formal_error_and_does_not_bias_a_matched_fit",
+   "name": "[measurement] Removing pixels removes information: the formal sigma can only grow; with the right PSF and",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.0215,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_neighbour_bias_is_linear_for_faint_neighbours_and_large_just_outside_the_isolation_radius",
+   "name": "[measurement] A faint neighbour perturbs the fit linearly in its flux (5 % vs 10 % at 2 px: ratio 2), and an",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.2556,
+   "message": null,
+   "file": "test_estimator_stress.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_estimator_stress.py::test_real_spherex_epsf_rendered_by_photutils_is_recovered_exactly",
+   "name": "[measurement] A real SPHEREx zone ePSF (committed fixture) rendered with photutils ImagePSF (an independent",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 1.3509,
+   "message": null,
+   "file": "test_estimator_stress.py",
    "notes": []
   },
   {
@@ -857,7 +1011,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0292,
+   "duration_s": 0.0234,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -868,7 +1022,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0127,
+   "duration_s": 0.0107,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -879,7 +1033,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0947,
+   "duration_s": 0.0782,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -890,7 +1044,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0108,
+   "duration_s": 0.0123,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -901,7 +1055,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0014,
+   "duration_s": 0.0017,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -912,7 +1066,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.006,
+   "duration_s": 0.0056,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -923,7 +1077,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0339,
+   "duration_s": 0.0273,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -934,7 +1088,18 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0009,
+   "duration_s": 0.0008,
+   "message": null,
+   "file": "test_gaia_dr3.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_gaia_dr3.py::test_unreachable_live_checks_keep_their_status_and_state_the_last_successful_retrieval",
+   "name": "[contracts] With the ESA archive unreachable in the latest run, both live Gaia capabilities read 'unavailable'",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0039,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -945,7 +1110,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "failed",
-   "duration_s": 149.9304,
+   "duration_s": 149.6791,
    "message": "t urllib.error.HTTPError as exc:\n                status = exc.code\n                last_error = f\"HTTP {exc.code} {exc.reason}\"\n                if exc.code not in TRANSIENT_HTTP:\n                    break\n            except (urllib.error.URLError, TimeoutError, socket.timeout, http.client.IncompleteRead, http.client.RemoteDisconnected, ConnectionError) as exc:\n                status = None\n                last_error = f\"{type(exc).__name__}: {exc}\"\n            if attempt < self.max_attempts:\n                time.sleep(min(self.max_backoff_s, self.backoff_s * attempt))\n        rec = HttpRecord(url, started, status, 0, None, round(time.perf_counter() - t0, 3), attempt, byte_range, None, last_error, method)\n        self._record(rec)\n>       raise ArchiveRequestFailed(rec, last_error)\nE       skyshift.providers.spherex.http.ArchiveRequestFailed: URLError: <urlopen error [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond> (https://gea.esac.esa.int/tap-server/tap/sync, attempts=6)\n\nskyshift\\providers\\spherex\\http.py:135: ArchiveRequestFailed",
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -956,7 +1121,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "failed",
-   "duration_s": 149.1456,
+   "duration_s": 150.3153,
    "message": "t urllib.error.HTTPError as exc:\n                status = exc.code\n                last_error = f\"HTTP {exc.code} {exc.reason}\"\n                if exc.code not in TRANSIENT_HTTP:\n                    break\n            except (urllib.error.URLError, TimeoutError, socket.timeout, http.client.IncompleteRead, http.client.RemoteDisconnected, ConnectionError) as exc:\n                status = None\n                last_error = f\"{type(exc).__name__}: {exc}\"\n            if attempt < self.max_attempts:\n                time.sleep(min(self.max_backoff_s, self.backoff_s * attempt))\n        rec = HttpRecord(url, started, status, 0, None, round(time.perf_counter() - t0, 3), attempt, byte_range, None, last_error, method)\n        self._record(rec)\n>       raise ArchiveRequestFailed(rec, last_error)\nE       skyshift.providers.spherex.http.ArchiveRequestFailed: URLError: <urlopen error [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond> (https://gea.esac.esa.int/tap-server/tap/sync, attempts=6)\n\nskyshift\\providers\\spherex\\http.py:135: ArchiveRequestFailed",
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -967,7 +1132,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0478,
+   "duration_s": 0.0433,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -978,7 +1143,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0061,
+   "duration_s": 0.006,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -989,7 +1154,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0038,
+   "duration_s": 0.0036,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1000,7 +1165,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0059,
+   "duration_s": 0.0051,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1011,7 +1176,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0053,
+   "duration_s": 0.005,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1022,7 +1187,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.005,
+   "duration_s": 0.0044,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1033,7 +1198,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 1.7719,
+   "duration_s": 1.9514,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1044,7 +1209,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0104,
+   "duration_s": 0.0106,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1055,7 +1220,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0159,
+   "duration_s": 0.0149,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1066,7 +1231,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0068,
+   "duration_s": 0.0065,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1077,7 +1242,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.1818,
+   "duration_s": 0.177,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1088,7 +1253,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0115,
+   "duration_s": 0.0108,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1099,7 +1264,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0083,
+   "duration_s": 0.0137,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1110,7 +1275,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.8092,
+   "duration_s": 0.8656,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1121,7 +1286,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0051,
+   "duration_s": 0.0086,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1132,7 +1297,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0027,
+   "duration_s": 0.005,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1143,7 +1308,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.2556,
+   "duration_s": 0.2814,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1154,7 +1319,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0164,
+   "duration_s": 0.0129,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1165,7 +1330,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0013,
+   "duration_s": 0.001,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1176,7 +1341,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.5845,
+   "duration_s": 0.6193,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1187,7 +1352,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.2777,
+   "duration_s": 0.2865,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1209,7 +1374,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.1237,
+   "duration_s": 0.1204,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1220,7 +1385,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.2607,
+   "duration_s": 0.2706,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1231,7 +1396,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.4025,
+   "duration_s": 0.404,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1242,7 +1407,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.5544,
+   "duration_s": 0.5333,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1253,7 +1418,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.3276,
+   "duration_s": 0.345,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1264,7 +1429,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0013,
+   "duration_s": 0.0012,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1275,7 +1440,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 2.5845,
+   "duration_s": 2.6345,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1297,7 +1462,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0007,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1308,7 +1473,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0006,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1319,7 +1484,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0123,
+   "duration_s": 0.0134,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1330,7 +1495,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 6.964,
+   "duration_s": 6.9337,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1341,7 +1506,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.4162,
+   "duration_s": 0.4119,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1352,7 +1517,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.001,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1363,7 +1528,18 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 8.7615,
+   "duration_s": 8.307,
+   "message": null,
+   "file": "test_spherex.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_spherex.py::test_gaia_capabilities_require_a_verified_response_and_cached_cutouts",
+   "name": "[archive] catalog_overlay / alignment_diagnostics are 'available' only if the recorded Gaia response passes the",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.069,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1374,7 +1550,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.3463,
+   "duration_s": 0.2715,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1396,7 +1572,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0514,
+   "duration_s": 0.0407,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1407,7 +1583,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "passed",
-   "duration_s": 23.7264,
+   "duration_s": 27.676,
    "message": null,
    "file": "test_spherex.py",
    "notes": [
@@ -1420,7 +1596,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "passed",
-   "duration_s": 0.9037,
+   "duration_s": 0.947,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1431,7 +1607,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "passed",
-   "duration_s": 4.5096,
+   "duration_s": 2.722,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1442,7 +1618,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 2.0548,
+   "duration_s": 1.9694,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1453,7 +1629,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0015,
+   "duration_s": 0.0013,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1464,7 +1640,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0034,
+   "duration_s": 0.0042,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1475,7 +1651,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0231,
+   "duration_s": 0.0199,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1497,7 +1673,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0025,
+   "duration_s": 0.0027,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1508,7 +1684,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.6897,
+   "duration_s": 0.6052,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1519,7 +1695,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.004,
+   "duration_s": 0.0028,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1530,7 +1706,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0619,
+   "duration_s": 0.052,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1541,7 +1717,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0703,
+   "duration_s": 0.0789,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1552,7 +1728,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0006,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1563,7 +1739,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 2.8577,
+   "duration_s": 2.2197,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1574,7 +1750,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 2.3852,
+   "duration_s": 2.1715,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1585,7 +1761,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 16.3545,
+   "duration_s": 14.381,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1607,7 +1783,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0024,
+   "duration_s": 0.0023,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1618,7 +1794,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0088,
+   "duration_s": 0.0102,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1629,7 +1805,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0029,
+   "duration_s": 0.0022,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1640,7 +1816,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0063,
+   "duration_s": 0.0045,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1651,7 +1827,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0331,
+   "duration_s": 0.0295,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1662,7 +1838,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0606,
+   "duration_s": 0.059,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1673,7 +1849,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0006,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1684,7 +1860,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0005,
+   "duration_s": 0.0004,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1695,7 +1871,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1706,7 +1882,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1717,7 +1893,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0006,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1728,7 +1904,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0011,
+   "duration_s": 0.0008,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1739,592 +1915,97 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0452,
+   "duration_s": 0.0498,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
   },
   {
-   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a circular, 1 AU, 1 Msun: states over 2.8 orbits agree within the integrator error budget",
-   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a circular, 1 AU, 1 Msun: states over 2.8 orbits agree within the integrator error budget",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.009475400000000037,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.3, a = 2.5 AU, 0.5 Msun: states over 2.9 orbits agree within the integrator error budget",
-   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.3, a = 2.5 AU, 0.5 Msun: states over 2.9 orbits agree within the integrator error budget",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.002436300000000074,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.7, a = 5.2 AU, 1 Msun: states over 3.4 orbits agree within the integrator error budget",
-   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.7, a = 5.2 AU, 1 Msun: states over 3.4 orbits agree within the integrator error budget",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0014699999999999137,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 17.8 AU, 2 Msun: states over 2.8 orbits agree within the integrator error budget",
-   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 17.8 AU, 2 Msun: states over 2.8 orbits agree within the integrator error budget",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0017807000000000244,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 0.8 AU, 0.3 Msun: states over 3.7 orbits agree within the integrator error budget",
-   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 0.8 AU, 0.3 Msun: states over 3.7 orbits agree within the integrator error budget",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0014116999999999962,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a the comparison is sensitive: a 1e-6 rad error in omega would exceed the budget",
-   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a the comparison is sensitive: a 1e-6 rad error in omega would exceed the budget",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.000977700000000027,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a residual |E - e sin E - M| < 1e-13 over a grid of M in [-4 pi, 4 pi] and e up to 0.999",
-   "name": "[math] Kepler's equation solver \u203a residual |E - e sin E - M| < 1e-13 over a grid of M in [-4 pi, 4 pi] and e up to 0.999",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.062138000000000033,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a handles the hard corners: tiny M at e -> 1, M near pi, exact multiples of pi",
-   "name": "[math] Kepler's equation solver \u203a handles the hard corners: tiny M at e -> 1, M near pi, exact multiples of pi",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0016295999999999821,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a E(M) is continuous and increasing across revolutions (E(M + 2 pi) = E(M) + 2 pi)",
-   "name": "[math] Kepler's equation solver \u203a E(M) is continuous and increasing across revolutions (E(M + 2 pi) = E(M) + 2 pi)",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.31586890000000006,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a true anomaly matches the direction of the position vector",
-   "name": "[math] Kepler's equation solver \u203a true anomaly matches the direction of the position vector",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.007402000000000044,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] conservation laws and periods \u203a vis-viva energy v^2/2 - mu/r = -mu/(2a) and angular momentum x vy - y vx = sqrt(mu a (1 - e^2)) are constant",
-   "name": "[math] conservation laws and periods \u203a vis-viva energy v^2/2 - mu/r = -mu/(2a) and angular momentum x vy - y vx = sqrt(mu a (1 - e^2)) are constant",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.12289319999999998,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] conservation laws and periods \u203a period follows Kepler III: one Gaussian year (365.2568983 d) for a = 1 AU around 1 Msun, scaling as a^1.5 / sqrt(M)",
-   "name": "[math] conservation laws and periods \u203a period follows Kepler III: one Gaussian year (365.2568983 d) for a = 1 AU around 1 Msun, scaling as a^1.5 / sqrt(M)",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0008028000000001611,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] conservation laws and periods \u203a the dynamical period does not depend on e: successive perihelion passages are one period(a, mu) apart for every e",
-   "name": "[math] conservation laws and periods \u203a the dynamical period does not depend on e: successive perihelion passages are one period(a, mu) apart for every e",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.03513650000000007,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] conservation laws and periods \u203a the state is periodic: orbitState(t + P) = orbitState(t) for every e",
-   "name": "[math] conservation laws and periods \u203a the state is periodic: orbitState(t + P) = orbitState(t) for every e",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.001593099999999822,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] conservation laws and periods \u203a e = 0 moves with uniform angular speed n at constant radius a",
-   "name": "[math] conservation laws and periods \u203a e = 0 moves with uniform angular speed n at constant radius a",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0035748000000000958,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] equal areas in equal times (Kepler's second law) \u203a equal dt near perihelion and near aphelion sweep equal areas = (h/2) dt, though the arcs differ greatly",
-   "name": "[math] equal areas in equal times (Kepler's second law) \u203a equal dt near perihelion and near aphelion sweep equal areas = (h/2) dt, though the arcs differ greatly",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.02552410000000009,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] equal areas in equal times (Kepler's second law) \u203a the 12 equal-time marker intervals each sweep pi a b / 12 (total = ellipse area)",
-   "name": "[math] equal areas in equal times (Kepler's second law) \u203a the 12 equal-time marker intervals each sweep pi a b / 12 (total = ellipse area)",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.06128420000000005,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":0}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":0}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0007264999999999872,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":-2}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":-2}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0004257999999999811,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"NaN\"}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"NaN\"}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00017200000000002546,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"Infinity\"}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"Infinity\"}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00011770000000001346,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":-0.01}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":-0.01}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.000116800000000012,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 9.190000000012333e-05,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1.4}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1.4}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00023939999999993234,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":\"NaN\"}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":\"NaN\"}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.000143100000000004,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":0}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":0}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00012389999999982138,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":-1}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":-1}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0001253999999998996,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":\"NaN\"}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":\"NaN\"}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00011619999999993524,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"omegaRad\":\"NaN\"}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"omegaRad\":\"NaN\"}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00014620000000013534,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"M0Rad\":\"Infinity\"}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"M0Rad\":\"Infinity\"}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00011549999999988359,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"t0Days\":\"NaN\"}",
-   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"t0Days\":\"NaN\"}",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.00014180000000010295,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a rejects non-finite times, unbound e in the solver, bad observers and marker counts",
-   "name": "[math] invalid orbits are rejected \u203a rejects non-finite times, unbound e in the solver, bad observers and marker counts",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.004282699999999977,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a points from the observer to the target in the common frame",
-   "name": "[coords] line of sight = target - observer \u203a points from the observer to the target in the common frame",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0017243000000000848,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a is reported as undefined (never NaN) when target and observer coincide",
-   "name": "[coords] line of sight = target - observer \u203a is reported as undefined (never NaN) when target and observer coincide",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.00259270000000015,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a the series skips (and counts) undefined samples when the target shares the observer orbit and phase",
-   "name": "[coords] line of sight = target - observer \u203a the series skips (and counts) undefined samples when the target shares the observer orbit and phase",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.002129000000000133,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] apparent retrograde motion seen by a moving observer \u203a retrograde intervals are centred on oppositions, last the closed-form duration and recur at the synodic period",
-   "name": "[math] apparent retrograde motion seen by a moving observer \u203a retrograde intervals are centred on oppositions, last the closed-form duration and recur at the synodic period",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0187496000000001,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "kepler.test.ts::[math] apparent retrograde motion seen by a moving observer \u203a unwrapped longitude is continuous and its numerical derivative matches the reported rate sign",
-   "name": "[math] apparent retrograde motion seen by a moving observer \u203a unwrapped longitude is continuous and its numerical derivative matches the reported rate sign",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.03987630000000013,
-   "message": null,
-   "file": "kepler.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a zero-motion limit: with proper motion and parallax both off the source stays at the reference direction",
-   "name": "[math] nearby source: limits and geometry \u203a zero-motion limit: with proper motion and parallax both off the source stays at the reference direction",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.010755800000000022,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a an ecliptic-pole source traces a circle of radius = parallax, once per Julian year, displaced away from the observer",
-   "name": "[math] nearby source: limits and geometry \u203a an ecliptic-pole source traces a circle of radius = parallax, once per Julian year, displaced away from the observer",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.08596600000000001,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a an ecliptic-plane source moves only east-west under parallax (no north excursion)",
-   "name": "[math] nearby source: limits and geometry \u203a an ecliptic-plane source moves only east-west under parallax (no north excursion)",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.22048950000000003,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a parallax amplitude scales as 1/d (semi-major axis x d = 1000 mas pc)",
-   "name": "[math] nearby source: limits and geometry \u203a parallax amplitude scales as 1/d (semi-major axis x d = 1000 mas pc)",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.11454970000000003,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a the parallax ellipse has semi-minor axis = parallax * |sin beta| along north",
-   "name": "[math] nearby source: limits and geometry \u203a the parallax ellipse has semi-minor axis = parallax * |sin beta| along north",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.05980770000000007,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a proper motion alone is a straight line through the origin with slope mu (east = mu_E t, north = mu_N t)",
-   "name": "[math] nearby source: limits and geometry \u203a proper motion alone is a straight line through the origin with slope mu (east = mu_E t, north = mu_N t)",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.005143500000000131,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a the parallax-only path repeats after one Julian year",
-   "name": "[math] nearby source: limits and geometry \u203a the parallax-only path repeats after one Julian year",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0015588000000000192,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a total motion = proper motion + parallax up to the second-order perspective term |pm offset| * parallax(rad)",
-   "name": "[math] nearby source: limits and geometry \u203a total motion = proper motion + parallax up to the second-order perspective term |pm offset| * parallax(rad)",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0020449000000000977,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a transverse speed: 1 arcsec/yr at 1 pc is 1 AU/yr = 4.74047 km/s",
-   "name": "[math] nearby source: limits and geometry \u203a transverse speed: 1 arcsec/yr at 1 pc is 1 AU/yr = 4.74047 km/s",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0012327999999999974,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a rejects invalid declared geometry",
-   "name": "[math] nearby source: limits and geometry \u203a rejects invalid declared geometry",
-   "suite": "vitest",
-   "category": "math",
-   "status": "passed",
-   "duration_s": 0.0012528999999999542,
-   "message": null,
-   "file": "nearbySource.test.ts",
-   "notes": []
-  },
-  {
-   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 10 pc, beta = 30 deg, pm = (120, -80) mas/yr: all four toggle combinations within 1e-6 mas",
-   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 10 pc, beta = 30 deg, pm = (120, -80) mas/yr: all four toggle combinations within 1e-6 mas",
-   "suite": "vitest",
+   "id": "tests/test_validation_report.py::test_staleness_includes_dependencies_runner_config_and_recorded_data[backend/uv.lock]",
+   "name": "Changing test inputs or their execution configuration invalidates an otherwise unchanged source tree.",
+   "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.001317299999999932,
+   "duration_s": 0.0214,
    "message": null,
-   "file": "nearbySource.test.ts",
+   "file": "test_validation_report.py",
    "notes": []
   },
   {
-   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 1.3 pc, beta = 0 deg, pm = (-3000, 1500) mas/yr: all four toggle combinations within 1e-6 mas",
-   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 1.3 pc, beta = 0 deg, pm = (-3000, 1500) mas/yr: all four toggle combinations within 1e-6 mas",
-   "suite": "vitest",
+   "id": "tests/test_validation_report.py::test_staleness_includes_dependencies_runner_config_and_recorded_data[frontend/package-lock.json]",
+   "name": "Changing test inputs or their execution configuration invalidates an otherwise unchanged source tree.",
+   "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0008048000000001139,
+   "duration_s": 0.0196,
    "message": null,
-   "file": "nearbySource.test.ts",
+   "file": "test_validation_report.py",
    "notes": []
   },
   {
-   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 50 pc, beta = 90 deg, pm = (10, 25) mas/yr: all four toggle combinations within 1e-6 mas",
-   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 50 pc, beta = 90 deg, pm = (10, 25) mas/yr: all four toggle combinations within 1e-6 mas",
-   "suite": "vitest",
+   "id": "tests/test_validation_report.py::test_staleness_includes_dependencies_runner_config_and_recorded_data[frontend/playwright.config.ts]",
+   "name": "Changing test inputs or their execution configuration invalidates an otherwise unchanged source tree.",
+   "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.001682299999999941,
+   "duration_s": 0.019,
    "message": null,
-   "file": "nearbySource.test.ts",
+   "file": "test_validation_report.py",
    "notes": []
   },
   {
-   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 4 pc, beta = -62 deg, pm = (500, 700) mas/yr: all four toggle combinations within 1e-6 mas",
-   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 4 pc, beta = -62 deg, pm = (500, 700) mas/yr: all four toggle combinations within 1e-6 mas",
-   "suite": "vitest",
+   "id": "tests/test_validation_report.py::test_staleness_includes_dependencies_runner_config_and_recorded_data[fixtures/gaia_dr3/field/response.xml.gz]",
+   "name": "Changing test inputs or their execution configuration invalidates an otherwise unchanged source tree.",
+   "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0008087000000000444,
+   "duration_s": 0.0282,
    "message": null,
-   "file": "nearbySource.test.ts",
+   "file": "test_validation_report.py",
    "notes": []
   },
   {
-   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 250 pc, beta = -90 deg, pm = (0, 0) mas/yr: all four toggle combinations within 1e-6 mas",
-   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 250 pc, beta = -90 deg, pm = (0, 0) mas/yr: all four toggle combinations within 1e-6 mas",
-   "suite": "vitest",
+   "id": "tests/test_validation_report.py::test_partial_passing_json_cannot_hide_a_failed_runner[pytest]",
+   "name": "A crash or collection/global error after some passing tests is still a failed validation run.",
+   "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0007675999999999021,
+   "duration_s": 0.0109,
    "message": null,
-   "file": "nearbySource.test.ts",
+   "file": "test_validation_report.py",
    "notes": []
   },
   {
-   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 2.5 pc, beta = 12 deg, pm = (-800, -1200) mas/yr: all four toggle combinations within 1e-6 mas",
-   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 2.5 pc, beta = 12 deg, pm = (-800, -1200) mas/yr: all four toggle combinations within 1e-6 mas",
-   "suite": "vitest",
+   "id": "tests/test_validation_report.py::test_partial_passing_json_cannot_hide_a_failed_runner[vitest]",
+   "name": "A crash or collection/global error after some passing tests is still a failed validation run.",
+   "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0006558999999999741,
+   "duration_s": 0.0005,
    "message": null,
-   "file": "nearbySource.test.ts",
+   "file": "test_validation_report.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_validation_report.py::test_partial_passing_json_cannot_hide_a_failed_runner[playwright]",
+   "name": "A crash or collection/global error after some passing tests is still a failed validation run.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0005,
+   "message": null,
+   "file": "test_validation_report.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_validation_report.py::test_missing_runner_is_recorded_instead_of_aborting_report_generation",
+   "name": "An unavailable executable yields a failed start; the other suites and final report can still run.",
+   "suite": "pytest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0033,
+   "message": null,
+   "file": "test_validation_report.py",
    "notes": []
   },
   {
@@ -2333,7 +2014,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.008947200000000067,
+   "duration_s": 0.008937599999999974,
    "message": null,
    "file": "spherexFlags.test.ts",
    "notes": []
@@ -2344,7 +2025,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0019220000000000255,
+   "duration_s": 0.002562599999999975,
    "message": null,
    "file": "spherexFlags.test.ts",
    "notes": []
@@ -2355,7 +2036,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.001838899999999967,
+   "duration_s": 0.0014518000000000484,
    "message": null,
    "file": "spherexFlags.test.ts",
    "notes": []
@@ -2366,7 +2047,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0079144,
+   "duration_s": 0.007572499999999991,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2377,7 +2058,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0016040000000000418,
+   "duration_s": 0.0016003000000000612,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2388,7 +2069,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0014090999999999668,
+   "duration_s": 0.0013629999999999426,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2399,7 +2080,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0016651000000000521,
+   "duration_s": 0.0016707000000000106,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2410,7 +2091,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.002116899999999987,
+   "duration_s": 0.0021267000000000282,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2421,7 +2102,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.001913599999999974,
+   "duration_s": 0.0019124000000000478,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2432,7 +2113,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0033975999999998974,
+   "duration_s": 0.0033980999999999994,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2443,7 +2124,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0012506000000000767,
+   "duration_s": 0.0012241000000000214,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2454,7 +2135,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.01285889999999995,
+   "duration_s": 0.0018928999999999405,
    "message": null,
    "file": "tanwcs.test.ts",
    "notes": []
@@ -2465,9 +2146,592 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.02600529999999992,
+   "duration_s": 0.011715200000000096,
    "message": null,
    "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a circular, 1 AU, 1 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a circular, 1 AU, 1 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.009827899999999999,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.3, a = 2.5 AU, 0.5 Msun: states over 2.9 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.3, a = 2.5 AU, 0.5 Msun: states over 2.9 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0018057999999999766,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.7, a = 5.2 AU, 1 Msun: states over 3.4 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.7, a = 5.2 AU, 1 Msun: states over 3.4 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0012568999999999734,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 17.8 AU, 2 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 17.8 AU, 2 Msun: states over 2.8 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0015127999999999702,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 0.8 AU, 0.3 Msun: states over 3.7 orbits agree within the integrator error budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a e = 0.95, a = 0.8 AU, 0.3 Msun: states over 3.7 orbits agree within the integrator error budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0013255000000000337,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler orbit parity with an independent scipy two-body integration \u203a the comparison is sensitive: a 1e-6 rad error in omega would exceed the budget",
+   "name": "[math] Kepler orbit parity with an independent scipy two-body integration \u203a the comparison is sensitive: a 1e-6 rad error in omega would exceed the budget",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00510329999999999,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a residual |E - e sin E - M| < 1e-13 over a grid of M in [-4 pi, 4 pi] and e up to 0.999",
+   "name": "[math] Kepler's equation solver \u203a residual |E - e sin E - M| < 1e-13 over a grid of M in [-4 pi, 4 pi] and e up to 0.999",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.030261099999999944,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a handles the hard corners: tiny M at e -> 1, M near pi, exact multiples of pi",
+   "name": "[math] Kepler's equation solver \u203a handles the hard corners: tiny M at e -> 1, M near pi, exact multiples of pi",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.001449700000000007,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a E(M) is continuous and increasing across revolutions (E(M + 2 pi) = E(M) + 2 pi)",
+   "name": "[math] Kepler's equation solver \u203a E(M) is continuous and increasing across revolutions (E(M + 2 pi) = E(M) + 2 pi)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.28483630000000004,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] Kepler's equation solver \u203a true anomaly matches the direction of the position vector",
+   "name": "[math] Kepler's equation solver \u203a true anomaly matches the direction of the position vector",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.004043099999999867,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a vis-viva energy v^2/2 - mu/r = -mu/(2a) and angular momentum x vy - y vx = sqrt(mu a (1 - e^2)) are constant",
+   "name": "[math] conservation laws and periods \u203a vis-viva energy v^2/2 - mu/r = -mu/(2a) and angular momentum x vy - y vx = sqrt(mu a (1 - e^2)) are constant",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.06508069999999998,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a period follows Kepler III: one Gaussian year (365.2568983 d) for a = 1 AU around 1 Msun, scaling as a^1.5 / sqrt(M)",
+   "name": "[math] conservation laws and periods \u203a period follows Kepler III: one Gaussian year (365.2568983 d) for a = 1 AU around 1 Msun, scaling as a^1.5 / sqrt(M)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0005380999999999858,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a the dynamical period does not depend on e: successive perihelion passages are one period(a, mu) apart for every e",
+   "name": "[math] conservation laws and periods \u203a the dynamical period does not depend on e: successive perihelion passages are one period(a, mu) apart for every e",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.027269200000000184,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a the state is periodic: orbitState(t + P) = orbitState(t) for every e",
+   "name": "[math] conservation laws and periods \u203a the state is periodic: orbitState(t + P) = orbitState(t) for every e",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.001438699999999926,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] conservation laws and periods \u203a e = 0 moves with uniform angular speed n at constant radius a",
+   "name": "[math] conservation laws and periods \u203a e = 0 moves with uniform angular speed n at constant radius a",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0021538000000000464,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] equal areas in equal times (Kepler's second law) \u203a equal dt near perihelion and near aphelion sweep equal areas = (h/2) dt, though the arcs differ greatly",
+   "name": "[math] equal areas in equal times (Kepler's second law) \u203a equal dt near perihelion and near aphelion sweep equal areas = (h/2) dt, though the arcs differ greatly",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.021264599999999974,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] equal areas in equal times (Kepler's second law) \u203a the 12 equal-time marker intervals each sweep pi a b / 12 (total = ellipse area)",
+   "name": "[math] equal areas in equal times (Kepler's second law) \u203a the 12 equal-time marker intervals each sweep pi a b / 12 (total = ellipse area)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.05811820000000011,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":0}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":0}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0007280999999998131,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":-2}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":-2}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00016280000000006112,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00011019999999984975,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"Infinity\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"a\":\"Infinity\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 9.559999999987668e-05,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":-0.01}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":-0.01}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 9.570000000007894e-05,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 8.439999999995962e-05,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1.4}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":1.4}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0002498000000000502,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"e\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0001412000000000262,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":0}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":0}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00010149999999998726,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":-1}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":-1}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.000106899999999996,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"mu\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 9.90999999999076e-05,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"omegaRad\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"omegaRad\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0001168999999999869,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"M0Rad\":\"Infinity\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"M0Rad\":\"Infinity\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.00010649999999986903,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a throws RangeError for {\"t0Days\":\"NaN\"}",
+   "name": "[math] invalid orbits are rejected \u203a throws RangeError for {\"t0Days\":\"NaN\"}",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0001609000000000833,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] invalid orbits are rejected \u203a rejects non-finite times, unbound e in the solver, bad observers and marker counts",
+   "name": "[math] invalid orbits are rejected \u203a rejects non-finite times, unbound e in the solver, bad observers and marker counts",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.001018000000000029,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a points from the observer to the target in the common frame",
+   "name": "[coords] line of sight = target - observer \u203a points from the observer to the target in the common frame",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.00045730000000003204,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a is reported as undefined (never NaN) when target and observer coincide",
+   "name": "[coords] line of sight = target - observer \u203a is reported as undefined (never NaN) when target and observer coincide",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0006784999999999854,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[coords] line of sight = target - observer \u203a the series skips (and counts) undefined samples when the target shares the observer orbit and phase",
+   "name": "[coords] line of sight = target - observer \u203a the series skips (and counts) undefined samples when the target shares the observer orbit and phase",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0008977999999999611,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] apparent retrograde motion seen by a moving observer \u203a retrograde intervals are centred on oppositions, last the closed-form duration and recur at the synodic period",
+   "name": "[math] apparent retrograde motion seen by a moving observer \u203a retrograde intervals are centred on oppositions, last the closed-form duration and recur at the synodic period",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.012684999999999945,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "kepler.test.ts::[math] apparent retrograde motion seen by a moving observer \u203a unwrapped longitude is continuous and its numerical derivative matches the reported rate sign",
+   "name": "[math] apparent retrograde motion seen by a moving observer \u203a unwrapped longitude is continuous and its numerical derivative matches the reported rate sign",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.06215100000000007,
+   "message": null,
+   "file": "kepler.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a zero-motion limit: with proper motion and parallax both off the source stays at the reference direction",
+   "name": "[math] nearby source: limits and geometry \u203a zero-motion limit: with proper motion and parallax both off the source stays at the reference direction",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.010128400000000056,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a an ecliptic-pole source traces a circle of radius = parallax, once per Julian year, displaced away from the observer",
+   "name": "[math] nearby source: limits and geometry \u203a an ecliptic-pole source traces a circle of radius = parallax, once per Julian year, displaced away from the observer",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.05095219999999995,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a an ecliptic-plane source moves only east-west under parallax (no north excursion)",
+   "name": "[math] nearby source: limits and geometry \u203a an ecliptic-plane source moves only east-west under parallax (no north excursion)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.08689659999999992,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a parallax amplitude scales as 1/d (semi-major axis x d = 1000 mas pc)",
+   "name": "[math] nearby source: limits and geometry \u203a parallax amplitude scales as 1/d (semi-major axis x d = 1000 mas pc)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.06331920000000002,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a the parallax ellipse has semi-minor axis = parallax * |sin beta| along north",
+   "name": "[math] nearby source: limits and geometry \u203a the parallax ellipse has semi-minor axis = parallax * |sin beta| along north",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.041526299999999995,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a proper motion alone is a straight line through the origin with slope mu (east = mu_E t, north = mu_N t)",
+   "name": "[math] nearby source: limits and geometry \u203a proper motion alone is a straight line through the origin with slope mu (east = mu_E t, north = mu_N t)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.004227399999999989,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a the parallax-only path repeats after one Julian year",
+   "name": "[math] nearby source: limits and geometry \u203a the parallax-only path repeats after one Julian year",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0015840999999999212,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a total motion = proper motion + parallax up to the second-order perspective term |pm offset| * parallax(rad)",
+   "name": "[math] nearby source: limits and geometry \u203a total motion = proper motion + parallax up to the second-order perspective term |pm offset| * parallax(rad)",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0020942999999999756,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a transverse speed: 1 arcsec/yr at 1 pc is 1 AU/yr = 4.74047 km/s",
+   "name": "[math] nearby source: limits and geometry \u203a transverse speed: 1 arcsec/yr at 1 pc is 1 AU/yr = 4.74047 km/s",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.001082400000000007,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[math] nearby source: limits and geometry \u203a rejects invalid declared geometry",
+   "name": "[math] nearby source: limits and geometry \u203a rejects invalid declared geometry",
+   "suite": "vitest",
+   "category": "math",
+   "status": "passed",
+   "duration_s": 0.0012105999999999994,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 10 pc, beta = 30 deg, pm = (120, -80) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 10 pc, beta = 30 deg, pm = (120, -80) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0011740999999999531,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 1.3 pc, beta = 0 deg, pm = (-3000, 1500) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 1.3 pc, beta = 0 deg, pm = (-3000, 1500) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0007502000000000634,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 50 pc, beta = 90 deg, pm = (10, 25) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 50 pc, beta = 90 deg, pm = (10, 25) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.000715599999999995,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 4 pc, beta = -62 deg, pm = (500, 700) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 4 pc, beta = -62 deg, pm = (500, 700) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0007916999999999917,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 250 pc, beta = -90 deg, pm = (0, 0) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 250 pc, beta = -90 deg, pm = (0, 0) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0006763999999999441,
+   "message": null,
+   "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "nearbySource.test.ts::[contracts] nearby source parity with the independent numpy model \u203a d = 2.5 pc, beta = 12 deg, pm = (-800, -1200) mas/yr: all four toggle combinations within 1e-6 mas",
+   "name": "[contracts] nearby source parity with the independent numpy model \u203a d = 2.5 pc, beta = 12 deg, pm = (-800, -1200) mas/yr: all four toggle combinations within 1e-6 mas",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.000862700000000018,
+   "message": null,
+   "file": "nearbySource.test.ts",
    "notes": []
   },
   {
@@ -2476,7 +2740,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.007501899999999978,
+   "duration_s": 0.014400699999999916,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2487,7 +2751,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.004284099999999967,
+   "duration_s": 0.0031730000000000018,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2498,7 +2762,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.07650029999999992,
+   "duration_s": 0.06033780000000002,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2509,7 +2773,117 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.004086399999999912,
+   "duration_s": 0.0033958999999999834,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] failed Gaia/alignment requests leave no data behind \u203a [api] 409 not_available -> \"unavailable\" with the stated reason; 503 -> \"error\"; never a report",
+   "name": "[api] failed Gaia/alignment requests leave no data behind \u203a [api] 409 not_available -> \"unavailable\" with the stated reason; 503 -> \"error\"; never a report",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.007307500000000005,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] failed Gaia/alignment requests leave no data behind \u203a [api] a failure that arrives after switching datasets is not shown for the new dataset",
+   "name": "[api] failed Gaia/alignment requests leave no data behind \u203a [api] a failure that arrives after switching datasets is not shown for the new dataset",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0025983999999999695,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia success after returning to a selection \u203a [api] an old overlay cannot overwrite a newer overlay after A \u2192 B \u2192 A",
+   "name": "[api] obsolete Gaia success after returning to a selection \u203a [api] an old overlay cannot overwrite a newer overlay after A \u2192 B \u2192 A",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0025639999999999647,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia success after returning to a selection \u203a [api] an old alignment cannot overwrite a newer report after A \u2192 B \u2192 A",
+   "name": "[api] obsolete Gaia success after returning to a selection \u203a [api] an old alignment cannot overwrite a newer report after A \u2192 B \u2192 A",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0020529000000000224,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia success after returning to a selection \u203a [api] old source details are ignored after a dataset round trip",
+   "name": "[api] obsolete Gaia success after returning to a selection \u203a [api] old source details are ignored after a dataset round trip",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.003279899999999998,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia success after returning to a selection \u203a [api] old source details are ignored after a source round trip",
+   "name": "[api] obsolete Gaia success after returning to a selection \u203a [api] old source details are ignored after a source round trip",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0014848999999999251,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia failure after returning to a selection \u203a [api] an old overlay cannot overwrite a newer overlay after A \u2192 B \u2192 A",
+   "name": "[api] obsolete Gaia failure after returning to a selection \u203a [api] an old overlay cannot overwrite a newer overlay after A \u2192 B \u2192 A",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0010780999999999495,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia failure after returning to a selection \u203a [api] an old alignment cannot overwrite a newer report after A \u2192 B \u2192 A",
+   "name": "[api] obsolete Gaia failure after returning to a selection \u203a [api] an old alignment cannot overwrite a newer report after A \u2192 B \u2192 A",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0006729000000000269,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia failure after returning to a selection \u203a [api] old source details are ignored after a dataset round trip",
+   "name": "[api] obsolete Gaia failure after returning to a selection \u203a [api] old source details are ignored after a dataset round trip",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0005792000000000144,
+   "message": null,
+   "file": "gaia.test.ts",
+   "notes": []
+  },
+  {
+   "id": "gaia.test.ts::[api] obsolete Gaia failure after returning to a selection \u203a [api] old source details are ignored after a source round trip",
+   "name": "[api] obsolete Gaia failure after returning to a selection \u203a [api] old source details are ignored after a source round trip",
+   "suite": "vitest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 0.0007714000000000851,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2520,7 +2894,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.0010860999999999876,
+   "duration_s": 0.0008140000000000782,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2531,7 +2905,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.002634999999999991,
+   "duration_s": 0.0020743000000001074,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2542,7 +2916,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.001657699999999977,
+   "duration_s": 0.0009773000000000138,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2553,7 +2927,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.005586500000000001,
+   "duration_s": 0.004820299999999974,
    "message": null,
    "file": "motion.handoff.test.ts",
    "notes": []
@@ -2564,7 +2938,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0013067999999999528,
+   "duration_s": 0.0011912999999999557,
    "message": null,
    "file": "motion.handoff.test.ts",
    "notes": []
@@ -2575,7 +2949,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0018360999999999877,
+   "duration_s": 0.0016444000000000187,
    "message": null,
    "file": "motion.handoff.test.ts",
    "notes": []
@@ -2586,7 +2960,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.01813930000000005,
+   "duration_s": 0.01779520000000002,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2597,7 +2971,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.003942999999999984,
+   "duration_s": 0.004686100000000011,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2608,7 +2982,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0017772999999999684,
+   "duration_s": 0.0018813999999999851,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2619,7 +2993,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.003158300000000054,
+   "duration_s": 0.0027552999999999202,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2630,7 +3004,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.002464399999999955,
+   "duration_s": 0.0034685000000000627,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2641,7 +3015,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0009624000000000024,
+   "duration_s": 0.001810100000000034,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2652,7 +3026,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.002364599999999996,
+   "duration_s": 0.002076000000000022,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2663,7 +3037,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0640616,
+   "duration_s": 0.03223569999999995,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2674,7 +3048,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.003994400000000041,
+   "duration_s": 0.0033394000000000687,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2685,7 +3059,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.007301299999999969,
+   "duration_s": 0.0032112000000000763,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2696,7 +3070,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0434085,
+   "duration_s": 0.005081500000000005,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2707,7 +3081,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.011612999999999943,
+   "duration_s": 0.010460799999999949,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2718,7 +3092,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0028452000000000906,
+   "duration_s": 0.0022511999999999264,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2729,7 +3103,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.005454099999999926,
+   "duration_s": 0.009076399999999922,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -2740,7 +3114,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.0037262000000000627,
+   "duration_s": 0.002987700000000018,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -2751,7 +3125,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.001534400000000005,
+   "duration_s": 0.000965599999999995,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -2762,7 +3136,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0825109,
+   "duration_s": 0.07325529999999993,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -2773,9 +3147,20 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.00695799999999997,
+   "duration_s": 0.005957099999999969,
    "message": null,
    "file": "observatory.observed.test.ts",
+   "notes": []
+  },
+  {
+   "id": "ObservedGaia.test.tsx::[ui] loads the overlay when the parent selects its dataset after the child mounts",
+   "name": "[ui] loads the overlay when the parent selects its dataset after the child mounts",
+   "suite": "vitest",
+   "category": "ui",
+   "status": "passed",
+   "duration_s": 0.14496439999999894,
+   "message": null,
+   "file": "ObservedGaia.test.tsx",
    "notes": []
   },
   {
@@ -2784,7 +3169,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 31.281,
+   "duration_s": 29.407,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -2795,7 +3180,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.56,
+   "duration_s": 3.407,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -2806,7 +3191,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.172,
+   "duration_s": 5.554,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -2817,7 +3202,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.728,
+   "duration_s": 3.179,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -2828,7 +3213,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.258,
+   "duration_s": 5.173,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -2839,7 +3224,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 15.262,
+   "duration_s": 14.825,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -2850,7 +3235,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.972,
+   "duration_s": 2.948,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -2861,7 +3246,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.975,
+   "duration_s": 2.652,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -2872,7 +3257,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.76,
+   "duration_s": 2.234,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2883,7 +3268,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.298,
+   "duration_s": 3.056,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2894,7 +3279,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 6.887,
+   "duration_s": 6.269,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2905,7 +3290,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.762,
+   "duration_s": 4.597,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2916,7 +3301,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 9.857,
+   "duration_s": 8.593,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2927,7 +3312,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.777,
+   "duration_s": 3.369,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2938,7 +3323,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.75,
+   "duration_s": 2.119,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2949,7 +3334,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.295,
+   "duration_s": 2.541,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2960,7 +3345,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 6.076,
+   "duration_s": 5.863,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2971,7 +3356,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.012,
+   "duration_s": 3.385,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2982,7 +3367,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.617,
+   "duration_s": 3.323,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -2993,7 +3378,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.25,
+   "duration_s": 3.387,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3004,7 +3389,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.12,
+   "duration_s": 3.307,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3015,7 +3400,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.989,
+   "duration_s": 5.248,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3026,7 +3411,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 6.229,
+   "duration_s": 4.079,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3037,7 +3422,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.001,
+   "duration_s": 3.637,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3048,7 +3433,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.438,
+   "duration_s": 3.018,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3059,7 +3444,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.093,
+   "duration_s": 2.36,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []

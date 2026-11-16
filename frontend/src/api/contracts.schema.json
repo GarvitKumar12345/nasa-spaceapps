@@ -3,6 +3,17 @@
     "AlignmentReport": {
       "additionalProperties": false,
       "properties": {
+        "cache": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReportCache"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "catalog": {
           "type": "string"
         },
@@ -14,6 +25,17 @@
         },
         "dataset_id": {
           "type": "string"
+        },
+        "detector_frame_offsets": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DetectorFrameOffsets"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "field_assessment": {
           "type": "string"
@@ -69,6 +91,18 @@
           },
           "type": "object"
         },
+        "reassessment": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "How the offset classifications changed once shared errors were included"
+        },
         "release": {
           "type": "string"
         },
@@ -87,6 +121,12 @@
         },
         "status_reason": {
           "type": "string"
+        },
+        "uncertainty_budget": {
+          "items": {
+            "$ref": "#/$defs/UncertaintyTerm"
+          },
+          "type": "array"
         }
       },
       "required": [
@@ -107,6 +147,10 @@
         "n_frames_insufficient",
         "n_frames_not_validated",
         "pooled_over",
+        "uncertainty_budget",
+        "detector_frame_offsets",
+        "reassessment",
+        "cache",
         "field_assessment",
         "limitations",
         "provenance"
@@ -1314,6 +1358,48 @@
       "title": "CompatibilityGroup",
       "type": "object"
     },
+    "ConventionAspect": {
+      "additionalProperties": false,
+      "description": "One part of the archive-WCS coordinate convention and how far it is established.",
+      "properties": {
+        "aspect": {
+          "type": "string"
+        },
+        "bound_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Largest positional effect if this aspect were handled differently"
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "documented",
+            "tested",
+            "documented_and_tested",
+            "undocumented_bounded",
+            "untested_bounded"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "aspect",
+        "status",
+        "evidence",
+        "bound_arcsec"
+      ],
+      "title": "ConventionAspect",
+      "type": "object"
+    },
     "ConventionTest": {
       "additionalProperties": false,
       "properties": {
@@ -2044,6 +2130,52 @@
         "quality"
       ],
       "title": "DetectedSource",
+      "type": "object"
+    },
+    "DetectorFrameOffsets": {
+      "additionalProperties": false,
+      "description": "Per-frame offsets in detector pixels: a detector-fixed estimator offset would appear in every frame.",
+      "properties": {
+        "interpretation": {
+          "type": "string"
+        },
+        "mean_x_px": {
+          "type": "number"
+        },
+        "mean_y_px": {
+          "type": "number"
+        },
+        "n_frames": {
+          "type": "integer"
+        },
+        "n_positive_x": {
+          "type": "integer"
+        },
+        "se_x_px": {
+          "type": "number"
+        },
+        "se_y_px": {
+          "type": "number"
+        },
+        "std_x_px": {
+          "type": "number"
+        },
+        "std_y_px": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "n_frames",
+        "mean_x_px",
+        "mean_y_px",
+        "se_x_px",
+        "se_y_px",
+        "std_x_px",
+        "std_y_px",
+        "n_positive_x",
+        "interpretation"
+      ],
+      "title": "DetectorFrameOffsets",
       "type": "object"
     },
     "DifferenceInfo": {
@@ -2848,6 +2980,49 @@
         "observation_id": {
           "type": "string"
         },
+        "offset_detector_px": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Weighted mean residual mapped to detector (x, y) pixels"
+        },
+        "offset_detector_sigma_px": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "rejected_by_reason": {
           "additionalProperties": {
             "type": "integer"
@@ -2865,6 +3040,17 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "shared": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SharedSystematics"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "statistics": {
           "anyOf": [
@@ -2911,6 +3097,9 @@
         "translation",
         "estimator",
         "aberration_if_apparent_arcsec",
+        "shared",
+        "offset_detector_px",
+        "offset_detector_sigma_px",
         "saturated_source_ids",
         "residuals"
       ],
@@ -4420,6 +4609,12 @@
       "additionalProperties": false,
       "description": "What a catalogue prediction on an archive frame represents, and how that was established.",
       "properties": {
+        "aspects": {
+          "items": {
+            "$ref": "#/$defs/ConventionAspect"
+          },
+          "type": "array"
+        },
         "error_budget": {
           "items": {
             "$ref": "#/$defs/ErrorBudgetTerm"
@@ -4448,8 +4643,10 @@
           "type": "array"
         },
         "status": {
+          "description": "resolved = every aspect documented or tested; partially_resolved = the decisive aspects tested, the rest undocumented but bounded",
           "enum": [
             "resolved",
+            "partially_resolved",
             "approximate"
           ],
           "type": "string"
@@ -4465,6 +4662,7 @@
         "wcs_convention",
         "status",
         "evidence",
+        "aspects",
         "error_budget"
       ],
       "title": "PredictionConvention",
@@ -5524,6 +5722,35 @@
       "title": "RegistrationSummary",
       "type": "object"
     },
+    "ReportCache": {
+      "additionalProperties": false,
+      "properties": {
+        "computed_utc": {
+          "type": "string"
+        },
+        "inputs": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Input identities hashed into the key",
+          "type": "object"
+        },
+        "key": {
+          "type": "string"
+        },
+        "served_from_cache": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "key",
+        "computed_utc",
+        "served_from_cache",
+        "inputs"
+      ],
+      "title": "ReportCache",
+      "type": "object"
+    },
     "ReproductionCheck": {
       "additionalProperties": false,
       "properties": {
@@ -5968,6 +6195,109 @@
         "message"
       ],
       "title": "ResolveResult",
+      "type": "object"
+    },
+    "SharedSystematics": {
+      "additionalProperties": false,
+      "description": "Errors common to all references of one frame: they do not average down with the number of stars.",
+      "properties": {
+        "convention_arcsec": {
+          "description": "RMS of the two convention offsets, per sky axis",
+          "type": "number"
+        },
+        "convention_barycentre_px": {
+          "description": "5x5 barycentre minus ePSF reference point (detector x, y)",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "convention_windowed_px": {
+          "description": "Windowed centroid minus ePSF reference point (detector x, y)",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "gaia_frame_arcsec": {
+          "type": "number"
+        },
+        "missing_terms": {
+          "description": "Shared terms that could not be estimated for this frame (the total omits them)",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "n_zone_swaps": {
+          "type": "integer"
+        },
+        "psf_mismatch_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Half the RMS zone-swap shift, per sky axis; null when no adjacent-zone ePSF exists (see missing_terms)"
+        },
+        "total_arcsec": {
+          "description": "Quadrature sum of the terms that could be estimated",
+          "type": "number"
+        },
+        "zone_swap_rms_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "zone_swap_rms_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "n_zone_swaps",
+        "zone_swap_rms_x_px",
+        "zone_swap_rms_y_px",
+        "psf_mismatch_arcsec",
+        "convention_windowed_px",
+        "convention_barycentre_px",
+        "convention_arcsec",
+        "gaia_frame_arcsec",
+        "total_arcsec",
+        "missing_terms"
+      ],
+      "title": "SharedSystematics",
       "type": "object"
     },
     "SimulationSection": {
@@ -6728,6 +7058,17 @@
           ],
           "default": null
         },
+        "chi2_random_only": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "decision": {
           "type": "string"
         },
@@ -6754,7 +7095,8 @@
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "description": "2-D RMS after the leave-one-out offset"
         },
         "heldout_rms_uncorrected_arcsec": {
           "anyOf": [
@@ -6765,7 +7107,8 @@
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "description": "2-D RMS sqrt(<dE^2 + dN^2>) of the references, uncorrected"
         },
         "justified": {
           "type": "boolean"
@@ -6804,7 +7147,20 @@
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "description": "With the total uncertainty (decision basis)"
+        },
+        "p_value_random_only": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Random errors only (previous criterion; shown for comparison)"
         },
         "sigma_east_arcsec": {
           "anyOf": [
@@ -6815,7 +7171,8 @@
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "description": "Total: random (shrinks as 1/sqrt(N)) and shared (does not) in quadrature"
         },
         "sigma_north_arcsec": {
           "anyOf": [
@@ -6827,6 +7184,40 @@
             }
           ],
           "default": null
+        },
+        "sigma_random_east_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_random_north_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_shared_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Shared per-frame error per axis (PSF mismatch, centroid convention, Gaia frame)"
         }
       },
       "required": [
@@ -6838,9 +7229,14 @@
         "offset_north_arcsec",
         "sigma_east_arcsec",
         "sigma_north_arcsec",
+        "sigma_random_east_arcsec",
+        "sigma_random_north_arcsec",
+        "sigma_shared_arcsec",
         "extra_scatter_arcsec",
         "chi2",
         "p_value",
+        "chi2_random_only",
+        "p_value_random_only",
         "heldout_rms_uncorrected_arcsec",
         "heldout_rms_corrected_arcsec"
       ],
@@ -6982,6 +7378,70 @@
         "matched_detected_source_id"
       ],
       "title": "TruthSource",
+      "type": "object"
+    },
+    "UncertaintyTerm": {
+      "additionalProperties": false,
+      "properties": {
+        "enters_as": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "random_per_star",
+            "unexplained_per_star",
+            "shared_per_frame",
+            "shared_all_frames"
+          ],
+          "type": "string"
+        },
+        "range_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        },
+        "typical_arcsec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "term",
+        "kind",
+        "typical_arcsec",
+        "range_arcsec",
+        "enters_as",
+        "source"
+      ],
+      "title": "UncertaintyTerm",
       "type": "object"
     },
     "ValidationReport": {
@@ -7362,6 +7822,9 @@
     "ChangeIndicator": {
       "$ref": "#/$defs/ChangeIndicator"
     },
+    "ConventionAspect": {
+      "$ref": "#/$defs/ConventionAspect"
+    },
     "ConventionTest": {
       "$ref": "#/$defs/ConventionTest"
     },
@@ -7385,6 +7848,9 @@
     },
     "DetectedSource": {
       "$ref": "#/$defs/DetectedSource"
+    },
+    "DetectorFrameOffsets": {
+      "$ref": "#/$defs/DetectorFrameOffsets"
     },
     "DifferenceInfo": {
       "$ref": "#/$defs/DifferenceInfo"
@@ -7509,6 +7975,9 @@
     "RegistrationSummary": {
       "$ref": "#/$defs/RegistrationSummary"
     },
+    "ReportCache": {
+      "$ref": "#/$defs/ReportCache"
+    },
     "ReproductionCheck": {
       "$ref": "#/$defs/ReproductionCheck"
     },
@@ -7520,6 +7989,9 @@
     },
     "ResolveResult": {
       "$ref": "#/$defs/ResolveResult"
+    },
+    "SharedSystematics": {
+      "$ref": "#/$defs/SharedSystematics"
     },
     "SimulationSection": {
       "$ref": "#/$defs/SimulationSection"
@@ -7553,6 +8025,9 @@
     },
     "TruthSource": {
       "$ref": "#/$defs/TruthSource"
+    },
+    "UncertaintyTerm": {
+      "$ref": "#/$defs/UncertaintyTerm"
     },
     "ValidationReport": {
       "$ref": "#/$defs/ValidationReport"

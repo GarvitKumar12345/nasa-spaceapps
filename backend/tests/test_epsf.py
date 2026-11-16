@@ -94,7 +94,11 @@ def _fit_bad(img) -> np.ndarray:
 
 @pytest.mark.measurement
 def test_injection_into_real_pixels_is_unbiased_with_calibrated_errors(img, lib):
-    """[measurement] 60 ePSF stars (S/N ~ 40) injected into the real cutout are recovered with |bias| < 3 SE + 0.005 px and robust pulls <= 1.5."""
+    """[measurement] 60 ePSF stars (S/N ~ 40) injected into the real cutout are recovered with |bias| < 3 SE + 0.005 px and robust pulls <= 1.5.
+
+    Internal consistency only: the same ePSF renders and fits, so this checks the fitter in real noise, masks
+    and backgrounds, not accuracy under PSF mismatch. Independent rendering (analytic pixel-integrated PSFs,
+    photutils) and controlled PSF / scene variations are in test_estimator_stress.py."""
     rng = np.random.default_rng(2026)
     image0, var = img.image.astype(float), img.variance.astype(float)
     bad = _fit_bad(img)
