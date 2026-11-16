@@ -24,6 +24,8 @@ from skyshift.providers.gaia_dr3 import reference as ref
 
 SOURCE_ID_RE = re.compile(r"^[1-9][0-9]{0,18}$")
 INT64_MAX = 2**63 - 1
+BOOLEAN_COLUMNS = frozenset(c.name for c in ref.FIELD_COLUMNS if c.datatypes == ("boolean",))
+INTEGER_DATATYPES = ("unsignedByte", "short", "int", "long")
 
 
 class GaiaResponseError(ValueError):
@@ -132,6 +134,8 @@ def parse_gaia_votable(body: bytes) -> GaiaCatalog:
         col = arr[f.name]
         mask = np.ma.getmaskarray(col).copy()
         data = np.asarray(col.data)
+        if f.name in BOOLEAN_COLUMNS and data.dtype.kind in "iu" and set(np.unique(data[~mask]).tolist()) <= {0, 1}:
+            data = data.astype(bool)  # a documented boolean delivered as 0/1 integers by a partner service (datatype checked separately)
         if data.dtype.kind in "fiu":
             vals = data.astype(float)
             mask |= ~np.isfinite(vals)
@@ -156,8 +160,20 @@ def _unit_equal(found: str | None, expected: str | None) -> bool:
         return False
 
 
-def schema_checks(cat: GaiaCatalog, *, expected_columns: tuple[ref.ColumnSpec, ...] = ref.FIELD_COLUMNS, expected_rows: int | None = None) -> list[FileCheck]:
-    """Checks of the response against the documented data model and provenance (each pass/fail with detail)."""
+def _epoch_label(e: object) -> str:
+    s = str(e).strip().upper()
+    s = s[1:] if s.startswith("J") else s
+    return f"J{float(s):.1f}" if re.fullmatch(r"[0-9]+(\.[0-9]*)?", s) else str(e)
+
+
+def schema_checks(cat: GaiaCatalog, *, expected_columns: tuple[ref.ColumnSpec, ...] = ref.FIELD_COLUMNS, expected_rows: int | None = None,
+                  service: str = "esa") -> list[FileCheck]:
+    """Checks of the response against the documented data model and provenance (each pass/fail with detail).
+
+    For the ESA archive (the archive of record) the RELEASE parameter and COOSYS J2016.0 are required. A partner data
+    centre does not declare RELEASE and may write the COOSYS epoch as '2016' or omit it: these become 'warn', and the
+    release identity rests instead on the explicit table name plus the recorded row-for-row verification of that
+    service against the ESA response (checked by load_recorded_field), never on the service's word alone."""
     out: list[FileCheck] = []
     by_name = {f.name: f for f in cat.fields}
     missing = [c.name for c in expected_columns if c.name not in by_name]
@@ -170,18 +186,37 @@ def schema_checks(cat: GaiaCatalog, *, expected_columns: tuple[ref.ColumnSpec, .
                          detail="all column units equal the documented units (astropy unit comparison)" if not bad_units else "; ".join(bad_units),
                          reference="Gaia DR3 data model: gaiadr3.gaia_source"))
     bad_types = [f"{c.name}: {by_name[c.name].datatype}" for c in expected_columns if c.name in by_name and by_name[c.name].datatype not in c.datatypes]
-    out.append(FileCheck(id="datatypes", status="pass" if not bad_types else "fail",
-                         detail="VOTable datatypes as documented (source_id is 'long')" if not bad_types else "; ".join(bad_types)))
+    # A partner service may deliver a documented boolean as 0/1 integers; the parser reads it as boolean only if every value is 0 or 1.
+    as_int_bool = [b for b in bad_types if service != "esa" and b.split(":")[0] in BOOLEAN_COLUMNS and b.split(": ")[1] in INTEGER_DATATYPES
+                   and cat.columns[b.split(":")[0]].dtype.kind == "b"]
+    hard = [b for b in bad_types if b not in as_int_bool]
+    out.append(FileCheck(id="datatypes", status="fail" if hard else ("warn" if as_int_bool else "pass"),
+                         detail=("VOTable datatypes as documented (source_id is 'long')" if not bad_types else "; ".join(hard) if hard else
+                                 f"documented booleans delivered as 0/1 integers by {service!r}, read as boolean: {', '.join(as_int_bool)}")))
     release = cat.params.get("RELEASE")
-    out.append(FileCheck(id="release", status="pass" if release == ref.GAIA_RELEASE else "fail",
-                         detail=f"VOTable PARAM RELEASE = {release!r} (expected {ref.GAIA_RELEASE!r})", reference="ESA Gaia archive TAP response metadata"))
+    if service == "esa" or release is not None:
+        out.append(FileCheck(id="release", status="pass" if release == ref.GAIA_RELEASE else "fail",
+                             detail=f"VOTable PARAM RELEASE = {release!r} (expected {ref.GAIA_RELEASE!r})", reference="ESA Gaia archive TAP response metadata"))
+    else:
+        out.append(FileCheck(id="release", status="warn",
+                             detail=f"service {service!r} declares no RELEASE parameter; Gaia DR3 identity rests on the table name {ref.GAIA_TABLE} and the "
+                                    "row-for-row verification of this service against the ESA-recorded reference response"))
     query = cat.infos.get("QUERY", "")
     out.append(FileCheck(id="table", status="pass" if f"FROM {ref.GAIA_TABLE} " in query else "fail",
                          detail=f"query recorded by the service names {ref.GAIA_TABLE}" if f"FROM {ref.GAIA_TABLE} " in query else f"query text: {query[:120]!r}"))
     epochs = {c.get("epoch") for c in cat.coosys}
     systems = {c.get("system") for c in cat.coosys}
-    out.append(FileCheck(id="coosys", status="pass" if epochs == {ref.COOSYS_EPOCH} and systems == {"ICRS"} else "fail",
-                         detail=f"COOSYS system {sorted(map(str, systems))}, epoch {sorted(map(str, epochs))} (expected ICRS, {ref.COOSYS_EPOCH})"))
+    if service == "esa":
+        out.append(FileCheck(id="coosys", status="pass" if epochs == {ref.COOSYS_EPOCH} and systems == {"ICRS"} else "fail",
+                             detail=f"COOSYS system {sorted(map(str, systems))}, epoch {sorted(map(str, epochs))} (expected ICRS, {ref.COOSYS_EPOCH})"))
+    elif not cat.coosys:
+        out.append(FileCheck(id="coosys", status="warn",
+                             detail=f"service {service!r} declares no COOSYS; positions are ICRS at the reference epoch per the Gaia DR3 data model "
+                                    "and ref_epoch = 2016.0 is checked on every row"))
+    else:
+        labels = {_epoch_label(e) for e in epochs}
+        out.append(FileCheck(id="coosys", status="pass" if labels == {ref.COOSYS_EPOCH} and systems == {"ICRS"} else "fail",
+                             detail=f"COOSYS system {sorted(map(str, systems))}, epoch {sorted(map(str, epochs))} read as {sorted(labels)} (expected ICRS, {ref.COOSYS_EPOCH})"))
     status = cat.infos.get("QUERY_STATUS")
     out.append(FileCheck(id="query_status", status="pass" if status == "OK" else "fail",
                          detail=f"QUERY_STATUS = {status!r} (OVERFLOW would mean a truncated result)"))

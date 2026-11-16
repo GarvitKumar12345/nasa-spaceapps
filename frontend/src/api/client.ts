@@ -2,6 +2,7 @@
  * All JSON shapes come from contracts.gen.ts (generated from the Python contracts). */
 import type {
   AlignmentReport,
+  TargetMotionStudy,
   CatalogAssociation,
   CatalogOverlay,
   Dataset,
@@ -202,6 +203,11 @@ export const api = {
   gaiaSource: async (datasetId: string, sourceId: string, frameId: string) =>
     checkDetail(await json<GaiaSourceDetail>(`/datasets/${enc(datasetId)}/gaia/sources/${enc(assertGaiaSourceId(sourceId, 'request'))}?frame_id=${enc(frameId)}`, {}, 180_000)),
   alignment: async (datasetId: string) => checkAlignment(await json<AlignmentReport>(`/datasets/${enc(datasetId)}/alignment`, {}, 300_000)),
+  targetMotion: async (datasetId: string) => {
+    const s = await json<TargetMotionStudy>(`/datasets/${enc(datasetId)}/target-motion`, {}, 60_000)
+    assertGaiaSourceId(s.gaia_source_id, 'target-motion study')
+    return s
+  },
 }
 
 export function describeError(error: unknown): string {

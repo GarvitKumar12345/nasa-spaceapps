@@ -1,7 +1,7 @@
 {
  "schema_version": "skyshift.validation/1",
- "generated_utc": "2026-11-15T22:15:39Z",
- "source_hash": "b0d2d6c02d365f2ffbb93f29b935b7b3eecd720d248b75b5c030180e486ef240",
+ "generated_utc": "2026-11-16T02:01:33Z",
+ "source_hash": "7ba9bc808f92d1e5aac8344a9ad3fe8f17318e531ccb99094552e4adc6598348",
  "current_source_hash": null,
  "stale": null,
  "environment": {
@@ -23,11 +23,11 @@
   {
    "suite": "pytest",
    "ran": true,
-   "started_utc": "2026-11-15T22:04:52Z",
-   "duration_s": 461.63859149999917,
+   "started_utc": "2026-11-16T01:49:41Z",
+   "duration_s": 497.5605599999544,
    "counts": {
-    "total": 177,
-    "passed": 175,
+    "total": 189,
+    "passed": 187,
     "failed": 2
    },
    "command": "pytest -q",
@@ -36,11 +36,11 @@
   {
    "suite": "vitest",
    "ran": true,
-   "started_utc": "2026-11-15T22:12:34Z",
-   "duration_s": 16.32118349999655,
+   "started_utc": "2026-11-16T01:57:58Z",
+   "duration_s": 16.82117740000831,
    "counts": {
-    "total": 105,
-    "passed": 105
+    "total": 107,
+    "passed": 107
    },
    "command": "vitest run",
    "note": null
@@ -48,11 +48,11 @@
   {
    "suite": "playwright",
    "ran": true,
-   "started_utc": "2026-11-15T22:12:50Z",
-   "duration_s": 167.0450642000069,
+   "started_utc": "2026-11-16T01:58:15Z",
+   "duration_s": 196.25941130000865,
    "counts": {
-    "total": 26,
-    "passed": 26
+    "total": 28,
+    "passed": 28
    },
    "command": "playwright test",
    "note": null
@@ -65,7 +65,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0191,
+   "duration_s": 0.0174,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -76,7 +76,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 25.2879,
+   "duration_s": 27.3591,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -87,7 +87,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.011,
+   "duration_s": 0.0082,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -98,7 +98,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 3.9722,
+   "duration_s": 4.2843,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -109,7 +109,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.031,
+   "duration_s": 0.0233,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -120,7 +120,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0156,
+   "duration_s": 0.0061,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -131,7 +131,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0481,
+   "duration_s": 0.044,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -142,7 +142,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0149,
+   "duration_s": 0.0105,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -153,7 +153,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 1.0873,
+   "duration_s": 1.2694,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -164,7 +164,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.2465,
+   "duration_s": 0.1357,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -175,7 +175,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.053,
+   "duration_s": 0.0249,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -186,7 +186,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 9.4101,
+   "duration_s": 11.9946,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -197,7 +197,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.3846,
+   "duration_s": 0.4675,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -208,7 +208,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0885,
+   "duration_s": 0.1313,
    "message": null,
    "file": "test_alignment.py",
    "notes": []
@@ -230,7 +230,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.2399,
+   "duration_s": 0.2988,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -241,7 +241,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0721,
+   "duration_s": 0.0767,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -252,7 +252,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0462,
+   "duration_s": 0.1059,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -263,7 +263,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.1843,
+   "duration_s": 0.2148,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -274,7 +274,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0255,
+   "duration_s": 0.0253,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -285,7 +285,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.3364,
+   "duration_s": 0.3368,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -296,7 +296,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0099,
+   "duration_s": 0.0159,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -307,7 +307,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.1371,
+   "duration_s": 0.1388,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -318,7 +318,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0472,
+   "duration_s": 0.044,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -329,7 +329,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0692,
+   "duration_s": 0.0987,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -340,7 +340,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0005,
+   "duration_s": 0.0006,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -351,7 +351,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0066,
+   "duration_s": 0.0085,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -362,7 +362,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0004,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -373,7 +373,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.3182,
+   "duration_s": 0.4339,
    "message": null,
    "file": "test_api_evidence.py",
    "notes": []
@@ -384,7 +384,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0358,
+   "duration_s": 0.0337,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -395,7 +395,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0328,
+   "duration_s": 0.0284,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -406,7 +406,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0342,
+   "duration_s": 0.0261,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -417,7 +417,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0412,
+   "duration_s": 0.0423,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -428,7 +428,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0204,
+   "duration_s": 0.0273,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -439,7 +439,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0618,
+   "duration_s": 0.0572,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -450,7 +450,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1606,
+   "duration_s": 0.1259,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -461,7 +461,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 6.4891,
+   "duration_s": 6.1741,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -472,7 +472,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.157,
+   "duration_s": 0.175,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -483,7 +483,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.3252,
+   "duration_s": 0.3632,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -494,7 +494,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.4076,
+   "duration_s": 0.4192,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -505,7 +505,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1131,
+   "duration_s": 0.1208,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -516,7 +516,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.1161,
+   "duration_s": 0.1137,
    "message": null,
    "file": "test_astrometry.py",
    "notes": []
@@ -538,7 +538,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0034,
+   "duration_s": 0.004,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -549,7 +549,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0115,
+   "duration_s": 0.033,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -560,7 +560,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0012,
+   "duration_s": 0.0011,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -571,7 +571,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0148,
+   "duration_s": 0.0134,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -582,7 +582,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0059,
+   "duration_s": 0.0062,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -593,7 +593,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0004,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_catalog.py",
    "notes": []
@@ -604,7 +604,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0011,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -615,7 +615,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0013,
+   "duration_s": 0.0015,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -626,7 +626,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0007,
+   "duration_s": 0.0009,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -648,7 +648,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0019,
+   "duration_s": 0.006,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -659,7 +659,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0025,
+   "duration_s": 0.004,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -670,7 +670,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0024,
+   "duration_s": 0.005,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -681,7 +681,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0021,
+   "duration_s": 0.0032,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -692,7 +692,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0016,
+   "duration_s": 0.0028,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -703,7 +703,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0015,
+   "duration_s": 0.0018,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -714,7 +714,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0032,
+   "duration_s": 0.0038,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -725,7 +725,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0189,
+   "duration_s": 0.0229,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -736,7 +736,7 @@
    "suite": "pytest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0019,
+   "duration_s": 0.0026,
    "message": null,
    "file": "test_coords.py",
    "notes": []
@@ -747,7 +747,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.1465,
+   "duration_s": 0.1569,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -758,7 +758,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.1865,
+   "duration_s": 0.1932,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -769,7 +769,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0461,
+   "duration_s": 0.0694,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -780,7 +780,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.113,
+   "duration_s": 0.1161,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -791,7 +791,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0229,
+   "duration_s": 0.0159,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -802,7 +802,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0043,
+   "duration_s": 0.0047,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -813,7 +813,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0907,
+   "duration_s": 0.1476,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -824,7 +824,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0272,
+   "duration_s": 0.0512,
    "message": null,
    "file": "test_epoch_propagation.py",
    "notes": []
@@ -835,7 +835,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0019,
+   "duration_s": 0.0022,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -857,7 +857,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.2995,
+   "duration_s": 0.188,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -868,7 +868,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0066,
+   "duration_s": 0.0056,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -879,7 +879,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.6686,
+   "duration_s": 0.5609,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -890,7 +890,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0084,
+   "duration_s": 0.0094,
    "message": null,
    "file": "test_epsf.py",
    "notes": []
@@ -901,7 +901,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.3919,
+   "duration_s": 0.3976,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -912,7 +912,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0392,
+   "duration_s": 0.0483,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -923,7 +923,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 2.2836,
+   "duration_s": 2.2582,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -934,7 +934,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.2716,
+   "duration_s": 0.2861,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -945,7 +945,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.4204,
+   "duration_s": 0.4525,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -956,7 +956,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.1857,
+   "duration_s": 0.177,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -967,7 +967,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0215,
+   "duration_s": 0.0208,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -978,7 +978,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.2556,
+   "duration_s": 0.3125,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -989,7 +989,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 1.3509,
+   "duration_s": 1.5293,
    "message": null,
    "file": "test_estimator_stress.py",
    "notes": []
@@ -1000,7 +1000,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0005,
+   "duration_s": 0.0006,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1011,7 +1011,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0234,
+   "duration_s": 0.0327,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1022,7 +1022,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0107,
+   "duration_s": 0.0116,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1033,7 +1033,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0782,
+   "duration_s": 0.115,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1044,7 +1044,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0123,
+   "duration_s": 0.0131,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1055,7 +1055,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0017,
+   "duration_s": 0.0019,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1066,7 +1066,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0056,
+   "duration_s": 0.0073,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1077,7 +1077,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.0273,
+   "duration_s": 0.0416,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1088,7 +1088,29 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0009,
+   "message": null,
+   "file": "test_gaia_dr3.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_gaia_dr3.py::test_partner_service_records_need_an_exact_verification_against_the_esa_record",
+   "name": "[archive] The identity comparison catches one changed value, a changed NULL pattern and a missing row; the schema",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.1508,
+   "message": null,
+   "file": "test_gaia_dr3.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_gaia_dr3.py::test_vanmaanen2_record_came_from_a_verified_partner_service_with_an_identical_crosscheck",
+   "name": "[archive] The committed van Maanen 2 record: ARI reproduced the ESA-recorded reference response exactly, AIP returned an",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.0809,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1099,7 +1121,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0039,
+   "duration_s": 0.008,
    "message": null,
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1110,7 +1132,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "failed",
-   "duration_s": 149.6791,
+   "duration_s": 149.6547,
    "message": "t urllib.error.HTTPError as exc:\n                status = exc.code\n                last_error = f\"HTTP {exc.code} {exc.reason}\"\n                if exc.code not in TRANSIENT_HTTP:\n                    break\n            except (urllib.error.URLError, TimeoutError, socket.timeout, http.client.IncompleteRead, http.client.RemoteDisconnected, ConnectionError) as exc:\n                status = None\n                last_error = f\"{type(exc).__name__}: {exc}\"\n            if attempt < self.max_attempts:\n                time.sleep(min(self.max_backoff_s, self.backoff_s * attempt))\n        rec = HttpRecord(url, started, status, 0, None, round(time.perf_counter() - t0, 3), attempt, byte_range, None, last_error, method)\n        self._record(rec)\n>       raise ArchiveRequestFailed(rec, last_error)\nE       skyshift.providers.spherex.http.ArchiveRequestFailed: URLError: <urlopen error [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond> (https://gea.esac.esa.int/tap-server/tap/sync, attempts=6)\n\nskyshift\\providers\\spherex\\http.py:135: ArchiveRequestFailed",
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1121,7 +1143,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "failed",
-   "duration_s": 150.3153,
+   "duration_s": 149.8781,
    "message": "t urllib.error.HTTPError as exc:\n                status = exc.code\n                last_error = f\"HTTP {exc.code} {exc.reason}\"\n                if exc.code not in TRANSIENT_HTTP:\n                    break\n            except (urllib.error.URLError, TimeoutError, socket.timeout, http.client.IncompleteRead, http.client.RemoteDisconnected, ConnectionError) as exc:\n                status = None\n                last_error = f\"{type(exc).__name__}: {exc}\"\n            if attempt < self.max_attempts:\n                time.sleep(min(self.max_backoff_s, self.backoff_s * attempt))\n        rec = HttpRecord(url, started, status, 0, None, round(time.perf_counter() - t0, 3), attempt, byte_range, None, last_error, method)\n        self._record(rec)\n>       raise ArchiveRequestFailed(rec, last_error)\nE       skyshift.providers.spherex.http.ArchiveRequestFailed: URLError: <urlopen error [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond> (https://gea.esac.esa.int/tap-server/tap/sync, attempts=6)\n\nskyshift\\providers\\spherex\\http.py:135: ArchiveRequestFailed",
    "file": "test_gaia_dr3.py",
    "notes": []
@@ -1132,7 +1154,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0433,
+   "duration_s": 0.0454,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1143,7 +1165,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.006,
+   "duration_s": 0.0091,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1154,7 +1176,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0036,
+   "duration_s": 0.0056,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1165,7 +1187,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0051,
+   "duration_s": 0.0078,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1176,7 +1198,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.005,
+   "duration_s": 0.0063,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1187,7 +1209,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0044,
+   "duration_s": 0.0053,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1198,7 +1220,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 1.9514,
+   "duration_s": 2.1994,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1209,7 +1231,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0106,
+   "duration_s": 0.008,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1220,7 +1242,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0149,
+   "duration_s": 0.0143,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1231,7 +1253,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0065,
+   "duration_s": 0.0061,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1242,7 +1264,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.177,
+   "duration_s": 0.1943,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1253,7 +1275,7 @@
    "suite": "pytest",
    "category": "measurement",
    "status": "passed",
-   "duration_s": 0.0108,
+   "duration_s": 0.0115,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1264,7 +1286,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0137,
+   "duration_s": 0.0082,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1275,7 +1297,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.8656,
+   "duration_s": 0.8955,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1286,7 +1308,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0086,
+   "duration_s": 0.0058,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1297,7 +1319,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.005,
+   "duration_s": 0.0027,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1308,7 +1330,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.2814,
+   "duration_s": 0.2551,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1319,7 +1341,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.0129,
+   "duration_s": 0.0132,
    "message": null,
    "file": "test_imaging.py",
    "notes": []
@@ -1341,7 +1363,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.6193,
+   "duration_s": 0.632,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1352,7 +1374,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.2865,
+   "duration_s": 0.3153,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1374,7 +1396,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.1204,
+   "duration_s": 0.1226,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1385,7 +1407,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.2706,
+   "duration_s": 0.2582,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1396,7 +1418,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.404,
+   "duration_s": 0.3738,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1407,7 +1429,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.5333,
+   "duration_s": 0.5343,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1418,7 +1440,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.345,
+   "duration_s": 0.3353,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1440,7 +1462,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 2.6345,
+   "duration_s": 2.8004,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1484,7 +1506,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0134,
+   "duration_s": 0.0101,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1495,7 +1517,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 6.9337,
+   "duration_s": 7.756,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1506,7 +1528,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.4119,
+   "duration_s": 0.4517,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1517,7 +1539,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.001,
+   "duration_s": 0.0008,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1528,7 +1550,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 8.307,
+   "duration_s": 9.8317,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1539,7 +1561,7 @@
    "suite": "pytest",
    "category": "archive",
    "status": "passed",
-   "duration_s": 0.069,
+   "duration_s": 0.0759,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1550,7 +1572,7 @@
    "suite": "pytest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.2715,
+   "duration_s": 0.3398,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1561,7 +1583,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0009,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1572,7 +1594,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0407,
+   "duration_s": 0.0742,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1583,7 +1605,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "passed",
-   "duration_s": 27.676,
+   "duration_s": 21.5408,
    "message": null,
    "file": "test_spherex.py",
    "notes": [
@@ -1596,7 +1618,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "passed",
-   "duration_s": 0.947,
+   "duration_s": 0.9024,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1607,7 +1629,7 @@
    "suite": "pytest",
    "category": "live",
    "status": "passed",
-   "duration_s": 2.722,
+   "duration_s": 3.763,
    "message": null,
    "file": "test_spherex.py",
    "notes": []
@@ -1618,7 +1640,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 1.9694,
+   "duration_s": 2.1544,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1629,7 +1651,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0013,
+   "duration_s": 0.0014,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1640,7 +1662,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0042,
+   "duration_s": 0.0045,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1651,7 +1673,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0199,
+   "duration_s": 0.0209,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1662,7 +1684,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 0.0004,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1673,7 +1695,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0027,
+   "duration_s": 0.0028,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1684,7 +1706,7 @@
    "suite": "pytest",
    "category": "registration",
    "status": "passed",
-   "duration_s": 0.6052,
+   "duration_s": 0.7588,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1695,7 +1717,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0028,
+   "duration_s": 0.0038,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1706,7 +1728,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.052,
+   "duration_s": 0.0605,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1717,7 +1739,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0789,
+   "duration_s": 0.0887,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1728,7 +1750,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0006,
+   "duration_s": 0.0008,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1739,7 +1761,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 2.2197,
+   "duration_s": 2.6113,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1750,7 +1772,7 @@
    "suite": "pytest",
    "category": "catalog",
    "status": "passed",
-   "duration_s": 2.1715,
+   "duration_s": 2.5644,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1761,7 +1783,7 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 14.381,
+   "duration_s": 14.5267,
    "message": null,
    "file": "test_synthetic_pipeline.py",
    "notes": []
@@ -1772,9 +1794,119 @@
    "suite": "pytest",
    "category": "pipeline",
    "status": "passed",
-   "duration_s": 0.0021,
+   "duration_s": 0.0015,
    "message": null,
    "file": "test_synthetic_pipeline.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_measured_position_is_not_pulled_by_a_wrong_prediction",
+   "name": "[measurement] A star at a known position is recovered within its errors whether the prediction is right or off by",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 3.2971,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_neighbour_shift_simulation_predicts_the_shift_of_an_injected_neighbour[2.5-0.0-0.2]",
+   "name": "[measurement] The shift simulated for a catalogued neighbour (pipeline ePSF rendering) equals the shift measured when",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.1893,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_neighbour_shift_simulation_predicts_the_shift_of_an_injected_neighbour[0.0--3.0-0.5]",
+   "name": "[measurement] The shift simulated for a catalogued neighbour (pipeline ePSF rendering) equals the shift measured when",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.2193,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_neighbour_shift_simulation_predicts_the_shift_of_an_injected_neighbour[1.8-1.8-0.1]",
+   "name": "[measurement] The shift simulated for a catalogued neighbour (pipeline ePSF rendering) equals the shift measured when",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.2367,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_epoch_budget_maps_pixel_terms_to_the_sky_in_quadrature",
+   "name": "[registration] With a 90-degree-rotated detector (x -> north, y -> east) the per-axis terms swap axes; independent",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.0015,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_displacement_projection_against_direct_geometry",
+   "name": "[registration] A displacement 1.2 x the prediction plus a perpendicular 0.1\" gives along-ratio 1.2 and",
+   "suite": "pytest",
+   "category": "registration",
+   "status": "passed",
+   "duration_s": 0.0022,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_recorded_van_maanen_2_results_keep_measurements_apart_from_predictions",
+   "name": "[archive] validation/vanmaanen2_motion.json (if produced): measured positions are fits, never the predictions; D6 is",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.0079,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_astrometry.py::test_target_motion_endpoint_serves_the_recorded_study_with_origins_and_staleness",
+   "name": "[api] /target-motion serves the recorded stage-2 study as recorded: fixed origins, measured never equal to predicted,",
+   "suite": "pytest",
+   "category": "api",
+   "status": "passed",
+   "duration_s": 24.8248,
+   "message": null,
+   "file": "test_target_astrometry.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_stage1.py::test_diagnostic_snr_matches_its_analytic_expectation_and_flags_make_frames_unusable",
+   "name": "[measurement] A Moffat star of known flux in white noise: the 3x3 diagnostic S/N agrees with",
+   "suite": "pytest",
+   "category": "measurement",
+   "status": "passed",
+   "duration_s": 0.1229,
+   "message": null,
+   "file": "test_target_stage1.py",
+   "notes": []
+  },
+  {
+   "id": "tests/test_target_stage1.py::test_vanmaanen2_field_uses_its_verified_gaia_record_and_keeps_target_measurement_unavailable",
+   "name": "[archive] The van Maanen 2 field: every selected cutout available; every compatibility group spans both seasons;",
+   "suite": "pytest",
+   "category": "archive",
+   "status": "passed",
+   "duration_s": 0.1877,
+   "message": null,
+   "file": "test_target_stage1.py",
    "notes": []
   },
   {
@@ -1783,7 +1915,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0023,
+   "duration_s": 0.0022,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1794,7 +1926,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0102,
+   "duration_s": 0.0114,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1827,7 +1959,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0295,
+   "duration_s": 0.0301,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1838,7 +1970,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.059,
+   "duration_s": 0.0564,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1860,7 +1992,7 @@
    "suite": "pytest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0004,
+   "duration_s": 0.0005,
    "message": null,
    "file": "test_time_observer.py",
    "notes": []
@@ -1904,7 +2036,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0008,
+   "duration_s": 0.0009,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1915,7 +2047,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0498,
+   "duration_s": 0.0418,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1926,7 +2058,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0214,
+   "duration_s": 0.0175,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1937,7 +2069,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0196,
+   "duration_s": 0.0178,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1948,7 +2080,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.019,
+   "duration_s": 0.0179,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1959,7 +2091,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0282,
+   "duration_s": 0.0271,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -1970,7 +2102,7 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0109,
+   "duration_s": 0.0034,
    "message": null,
    "file": "test_validation_report.py",
    "notes": []
@@ -2003,152 +2135,9 @@
    "suite": "pytest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0033,
+   "duration_s": 0.0034,
    "message": null,
    "file": "test_validation_report.py",
-   "notes": []
-  },
-  {
-   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] match the backend reference lists (ES v2.1 Sect. 3.3) exactly",
-   "name": "[contracts] SPHEREx flag classes \u203a [contracts] match the backend reference lists (ES v2.1 Sect. 3.3) exactly",
-   "suite": "vitest",
-   "category": "contracts",
-   "status": "passed",
-   "duration_s": 0.008937599999999974,
-   "message": null,
-   "file": "spherexFlags.test.ts",
-   "notes": []
-  },
-  {
-   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] classify by name from the file, never by bit number",
-   "name": "[contracts] SPHEREx flag classes \u203a [contracts] classify by name from the file, never by bit number",
-   "suite": "vitest",
-   "category": "contracts",
-   "status": "passed",
-   "duration_s": 0.002562599999999975,
-   "message": null,
-   "file": "spherexFlags.test.ts",
-   "notes": []
-  },
-  {
-   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] overlay colours: SOURCE-only and coverage-only words stay transparent; bit 31 does not break masking",
-   "name": "[contracts] SPHEREx flag classes \u203a [contracts] overlay colours: SOURCE-only and coverage-only words stay transparent; bit 31 does not break masking",
-   "suite": "vitest",
-   "category": "contracts",
-   "status": "passed",
-   "duration_s": 0.0014518000000000484,
-   "message": null,
-   "file": "spherexFlags.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a generic field: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "name": "[coords] browser TAN WCS parity with astropy \u203a generic field: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.007572499999999991,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a RA wrap near 0: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "name": "[coords] browser TAN WCS parity with astropy \u203a RA wrap near 0: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0016003000000000612,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a near north pole: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "name": "[coords] browser TAN WCS parity with astropy \u203a near north pole: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0013629999999999426,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a south, rotated: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "name": "[coords] browser TAN WCS parity with astropy \u203a south, rotated: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0016707000000000106,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a refuses distorted or non-TAN headers instead of approximating them",
-   "name": "[coords] browser TAN WCS parity with astropy \u203a refuses distorted or non-TAN headers instead of approximating them",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0021267000000000282,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (180, 35): offsets within 1e-4 mas and round trip exact",
-   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (180, 35): offsets within 1e-4 mas and round trip exact",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0019124000000000478,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (0.0005, -10): offsets within 1e-4 mas and round trip exact",
-   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (0.0005, -10): offsets within 1e-4 mas and round trip exact",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0033980999999999994,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (250, 89.95): offsets within 1e-4 mas and round trip exact",
-   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (250, 89.95): offsets within 1e-4 mas and round trip exact",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0012241000000000214,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (90, -89.9): offsets within 1e-4 mas and round trip exact",
-   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (90, -89.9): offsets within 1e-4 mas and round trip exact",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.0018928999999999405,
-   "message": null,
-   "file": "tanwcs.test.ts",
-   "notes": []
-  },
-  {
-   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a wraps RA into [0, 360)",
-   "name": "[coords] gnomonic projection parity with Python \u203a wraps RA into [0, 360)",
-   "suite": "vitest",
-   "category": "coords",
-   "status": "passed",
-   "duration_s": 0.011715200000000096,
-   "message": null,
-   "file": "tanwcs.test.ts",
    "notes": []
   },
   {
@@ -2157,7 +2146,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.009827899999999999,
+   "duration_s": 0.00870429999999999,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2168,7 +2157,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0018057999999999766,
+   "duration_s": 0.0016825999999999794,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2179,7 +2168,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0012568999999999734,
+   "duration_s": 0.001169399999999996,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2190,7 +2179,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0015127999999999702,
+   "duration_s": 0.00140949999999998,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2201,7 +2190,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0013255000000000337,
+   "duration_s": 0.0012042999999999893,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2212,7 +2201,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00510329999999999,
+   "duration_s": 0.003614300000000071,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2223,7 +2212,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.030261099999999944,
+   "duration_s": 0.03198250000000007,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2234,7 +2223,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.001449700000000007,
+   "duration_s": 0.0014651999999999816,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2245,7 +2234,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.28483630000000004,
+   "duration_s": 0.3456907,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2256,7 +2245,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.004043099999999867,
+   "duration_s": 0.004295799999999872,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2267,7 +2256,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.06508069999999998,
+   "duration_s": 0.11426980000000003,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2278,7 +2267,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0005380999999999858,
+   "duration_s": 0.001186100000000124,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2289,7 +2278,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.027269200000000184,
+   "duration_s": 0.03366319999999996,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2300,7 +2289,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.001438699999999926,
+   "duration_s": 0.0013970999999999094,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2311,7 +2300,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0021538000000000464,
+   "duration_s": 0.003341199999999844,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2322,7 +2311,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.021264599999999974,
+   "duration_s": 0.0203442,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2333,7 +2322,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.05811820000000011,
+   "duration_s": 0.06196590000000015,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2344,7 +2333,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0007280999999998131,
+   "duration_s": 0.0007153000000000702,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2355,7 +2344,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00016280000000006112,
+   "duration_s": 0.00016180000000008476,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2366,7 +2355,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00011019999999984975,
+   "duration_s": 0.00016079999999988104,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2377,7 +2366,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 9.559999999987668e-05,
+   "duration_s": 9.510000000000218e-05,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2388,7 +2377,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 9.570000000007894e-05,
+   "duration_s": 0.00010030000000006112,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2399,7 +2388,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 8.439999999995962e-05,
+   "duration_s": 0.0007059999999999036,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2410,7 +2399,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0002498000000000502,
+   "duration_s": 0.0007777999999998428,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2421,7 +2410,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0001412000000000262,
+   "duration_s": 0.0005514000000000579,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2432,7 +2421,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00010149999999998726,
+   "duration_s": 0.00042229999999995015,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2443,7 +2432,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.000106899999999996,
+   "duration_s": 0.0004179999999998927,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2454,7 +2443,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 9.90999999999076e-05,
+   "duration_s": 0.00038400000000001454,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2465,7 +2454,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0001168999999999869,
+   "duration_s": 0.0006597000000001571,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2476,7 +2465,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.00010649999999986903,
+   "duration_s": 0.0004979000000000724,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2487,7 +2476,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0001609000000000833,
+   "duration_s": 0.0005640000000000782,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2498,7 +2487,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.001018000000000029,
+   "duration_s": 0.0033539000000000667,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2509,7 +2498,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.00045730000000003204,
+   "duration_s": 0.0014185999999999695,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2520,7 +2509,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0006784999999999854,
+   "duration_s": 0.0018837000000000899,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2531,7 +2520,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0008977999999999611,
+   "duration_s": 0.0021195999999999915,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2542,7 +2531,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.012684999999999945,
+   "duration_s": 0.0151400000000001,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2553,7 +2542,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.06215100000000007,
+   "duration_s": 0.07592579999999999,
    "message": null,
    "file": "kepler.test.ts",
    "notes": []
@@ -2564,7 +2553,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.010128400000000056,
+   "duration_s": 0.011227499999999963,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2575,7 +2564,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.05095219999999995,
+   "duration_s": 0.060007299999999986,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2586,7 +2575,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.08689659999999992,
+   "duration_s": 0.10639909999999998,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2597,7 +2586,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.06331920000000002,
+   "duration_s": 0.07157439999999997,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2608,7 +2597,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.041526299999999995,
+   "duration_s": 0.04186180000000002,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2619,7 +2608,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.004227399999999989,
+   "duration_s": 0.01297950000000003,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2630,7 +2619,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0015840999999999212,
+   "duration_s": 0.00167999999999995,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2641,7 +2630,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0020942999999999756,
+   "duration_s": 0.009845800000000054,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2652,7 +2641,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.001082400000000007,
+   "duration_s": 0.0015242999999999255,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2663,7 +2652,7 @@
    "suite": "vitest",
    "category": "math",
    "status": "passed",
-   "duration_s": 0.0012105999999999994,
+   "duration_s": 0.001830600000000004,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2674,7 +2663,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0011740999999999531,
+   "duration_s": 0.0019370000000000118,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2685,7 +2674,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0007502000000000634,
+   "duration_s": 0.001806100000000015,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2696,7 +2685,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.000715599999999995,
+   "duration_s": 0.0014832999999999856,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2707,7 +2696,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0007916999999999917,
+   "duration_s": 0.0018120999999999866,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2718,7 +2707,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0006763999999999441,
+   "duration_s": 0.0014435999999999466,
    "message": null,
    "file": "nearbySource.test.ts",
    "notes": []
@@ -2729,9 +2718,152 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.000862700000000018,
+   "duration_s": 0.0017877000000000862,
    "message": null,
    "file": "nearbySource.test.ts",
+   "notes": []
+  },
+  {
+   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] match the backend reference lists (ES v2.1 Sect. 3.3) exactly",
+   "name": "[contracts] SPHEREx flag classes \u203a [contracts] match the backend reference lists (ES v2.1 Sect. 3.3) exactly",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.009883199999999988,
+   "message": null,
+   "file": "spherexFlags.test.ts",
+   "notes": []
+  },
+  {
+   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] classify by name from the file, never by bit number",
+   "name": "[contracts] SPHEREx flag classes \u203a [contracts] classify by name from the file, never by bit number",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.0025867000000000646,
+   "message": null,
+   "file": "spherexFlags.test.ts",
+   "notes": []
+  },
+  {
+   "id": "spherexFlags.test.ts::[contracts] SPHEREx flag classes \u203a [contracts] overlay colours: SOURCE-only and coverage-only words stay transparent; bit 31 does not break masking",
+   "name": "[contracts] SPHEREx flag classes \u203a [contracts] overlay colours: SOURCE-only and coverage-only words stay transparent; bit 31 does not break masking",
+   "suite": "vitest",
+   "category": "contracts",
+   "status": "passed",
+   "duration_s": 0.001588700000000017,
+   "message": null,
+   "file": "spherexFlags.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a generic field: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a generic field: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.007879500000000008,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a RA wrap near 0: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a RA wrap near 0: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0014763000000000376,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a near north pole: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a near north pole: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0012583999999999378,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a south, rotated: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a south, rotated: pixel -> sky within 1e-4 mas and sky -> pixel within 1e-6 px",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.001574000000000069,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] browser TAN WCS parity with astropy \u203a refuses distorted or non-TAN headers instead of approximating them",
+   "name": "[coords] browser TAN WCS parity with astropy \u203a refuses distorted or non-TAN headers instead of approximating them",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0029014000000000804,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (180, 35): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (180, 35): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.002114400000000046,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (0.0005, -10): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (0.0005, -10): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.008232999999999947,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (250, 89.95): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (250, 89.95): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0015658999999999424,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a tangent point (90, -89.9): offsets within 1e-4 mas and round trip exact",
+   "name": "[coords] gnomonic projection parity with Python \u203a tangent point (90, -89.9): offsets within 1e-4 mas and round trip exact",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0020889999999999416,
+   "message": null,
+   "file": "tanwcs.test.ts",
+   "notes": []
+  },
+  {
+   "id": "tanwcs.test.ts::[coords] gnomonic projection parity with Python \u203a wraps RA into [0, 360)",
+   "name": "[coords] gnomonic projection parity with Python \u203a wraps RA into [0, 360)",
+   "suite": "vitest",
+   "category": "coords",
+   "status": "passed",
+   "duration_s": 0.0012473999999999706,
+   "message": null,
+   "file": "tanwcs.test.ts",
    "notes": []
   },
   {
@@ -2740,7 +2872,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.014400699999999916,
+   "duration_s": 0.007554700000000025,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2751,7 +2883,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0031730000000000018,
+   "duration_s": 0.0035131999999999833,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2762,7 +2894,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.06033780000000002,
+   "duration_s": 0.08114829999999995,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2773,7 +2905,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0033958999999999834,
+   "duration_s": 0.005456800000000044,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2784,7 +2916,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.007307500000000005,
+   "duration_s": 0.0044909999999999855,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2795,7 +2927,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0025983999999999695,
+   "duration_s": 0.002450900000000047,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2806,7 +2938,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0025639999999999647,
+   "duration_s": 0.003136200000000031,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2817,7 +2949,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0020529000000000224,
+   "duration_s": 0.0015136999999999716,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2828,7 +2960,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.003279899999999998,
+   "duration_s": 0.0021025999999999385,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2839,7 +2971,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0014848999999999251,
+   "duration_s": 0.002363900000000058,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2850,7 +2982,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0010780999999999495,
+   "duration_s": 0.0013582999999999857,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2861,7 +2993,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0006729000000000269,
+   "duration_s": 0.0007197999999999638,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2872,7 +3004,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0005792000000000144,
+   "duration_s": 0.0007007000000000971,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2883,7 +3015,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.0007714000000000851,
+   "duration_s": 0.0007198999999999387,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2894,7 +3026,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.0008140000000000782,
+   "duration_s": 0.0007729999999999109,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2905,7 +3037,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.0020743000000001074,
+   "duration_s": 0.0025750999999999066,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2916,7 +3048,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.0009773000000000138,
+   "duration_s": 0.0009544000000000778,
    "message": null,
    "file": "gaia.test.ts",
    "notes": []
@@ -2927,7 +3059,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.004820299999999974,
+   "duration_s": 0.004915399999999977,
    "message": null,
    "file": "motion.handoff.test.ts",
    "notes": []
@@ -2938,7 +3070,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0011912999999999557,
+   "duration_s": 0.001256800000000112,
    "message": null,
    "file": "motion.handoff.test.ts",
    "notes": []
@@ -2949,7 +3081,7 @@
    "suite": "vitest",
    "category": "coords",
    "status": "passed",
-   "duration_s": 0.0016444000000000187,
+   "duration_s": 0.001458499999999958,
    "message": null,
    "file": "motion.handoff.test.ts",
    "notes": []
@@ -2960,7 +3092,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.01779520000000002,
+   "duration_s": 0.013287199999999985,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2971,7 +3103,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.004686100000000011,
+   "duration_s": 0.0031417999999999893,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2982,7 +3114,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0018813999999999851,
+   "duration_s": 0.0015850000000000365,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -2993,7 +3125,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0027552999999999202,
+   "duration_s": 0.002662300000000073,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3004,7 +3136,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0034685000000000627,
+   "duration_s": 0.0018807000000000472,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3015,7 +3147,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.001810100000000034,
+   "duration_s": 0.0007442999999999529,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3026,7 +3158,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.002076000000000022,
+   "duration_s": 0.0015795000000000527,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3037,7 +3169,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.03223569999999995,
+   "duration_s": 0.017392200000000003,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3048,7 +3180,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0033394000000000687,
+   "duration_s": 0.0035076000000000248,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3059,7 +3191,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0032112000000000763,
+   "duration_s": 0.003922000000000025,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3070,7 +3202,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.005081500000000005,
+   "duration_s": 0.0051644999999999755,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3081,7 +3213,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.010460799999999949,
+   "duration_s": 0.012239500000000021,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3092,7 +3224,7 @@
    "suite": "vitest",
    "category": "contracts",
    "status": "passed",
-   "duration_s": 0.0022511999999999264,
+   "duration_s": 0.003588100000000054,
    "message": null,
    "file": "notebook.test.ts",
    "notes": []
@@ -3103,7 +3235,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.009076399999999922,
+   "duration_s": 0.006334500000000048,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -3114,7 +3246,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.002987700000000018,
+   "duration_s": 0.0035195999999999687,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -3125,7 +3257,7 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.000965599999999995,
+   "duration_s": 0.0014200000000000727,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -3136,7 +3268,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.07325529999999993,
+   "duration_s": 0.07117149999999993,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -3147,7 +3279,7 @@
    "suite": "vitest",
    "category": "api",
    "status": "passed",
-   "duration_s": 0.005957099999999969,
+   "duration_s": 0.005053400000000011,
    "message": null,
    "file": "observatory.observed.test.ts",
    "notes": []
@@ -3158,9 +3290,31 @@
    "suite": "vitest",
    "category": "ui",
    "status": "passed",
-   "duration_s": 0.14496439999999894,
+   "duration_s": 0.14190419999999904,
    "message": null,
    "file": "ObservedGaia.test.tsx",
+   "notes": []
+  },
+  {
+   "id": "TargetMotion.test.ts::[ui] target-motion view helpers \u203a [ui] sky offsets map east to the left and north up, centred, with the stated limit at the edges",
+   "name": "[ui] target-motion view helpers \u203a [ui] sky offsets map east to the left and north up, centred, with the stated limit at the edges",
+   "suite": "vitest",
+   "category": "ui",
+   "status": "passed",
+   "duration_s": 0.004985899999999902,
+   "message": null,
+   "file": "TargetMotion.test.ts",
+   "notes": []
+  },
+  {
+   "id": "TargetMotion.test.ts::[ui] target-motion view helpers \u203a [ui] the stamp stretch keeps missing pixels missing, never darkens below background and is monotonic",
+   "name": "[ui] target-motion view helpers \u203a [ui] the stamp stretch keeps missing pixels missing, never darkens below background and is monotonic",
+   "suite": "vitest",
+   "category": "ui",
+   "status": "passed",
+   "duration_s": 0.0010777999999997973,
+   "message": null,
+   "file": "TargetMotion.test.ts",
    "notes": []
   },
   {
@@ -3169,7 +3323,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 29.407,
+   "duration_s": 30.766,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -3180,7 +3334,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.407,
+   "duration_s": 3.324,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -3191,7 +3345,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.554,
+   "duration_s": 5.046,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -3202,7 +3356,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.179,
+   "duration_s": 3.258,
    "message": null,
    "file": "gaia.spec.ts",
    "notes": []
@@ -3213,7 +3367,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.173,
+   "duration_s": 4.977,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -3224,7 +3378,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 14.825,
+   "duration_s": 15.121,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -3235,7 +3389,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.948,
+   "duration_s": 3.591,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -3246,7 +3400,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.652,
+   "duration_s": 2.672,
    "message": null,
    "file": "investigation.spec.ts",
    "notes": []
@@ -3257,7 +3411,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.234,
+   "duration_s": 2.587,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3268,7 +3422,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.056,
+   "duration_s": 3.073,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3279,7 +3433,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 6.269,
+   "duration_s": 5.948,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3290,7 +3444,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.597,
+   "duration_s": 4.338,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3301,7 +3455,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 8.593,
+   "duration_s": 8.676,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3312,7 +3466,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.369,
+   "duration_s": 4.026,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3323,7 +3477,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.119,
+   "duration_s": 2.163,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3334,7 +3488,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.541,
+   "duration_s": 2.878,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3345,7 +3499,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.863,
+   "duration_s": 5.739,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3356,7 +3510,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.385,
+   "duration_s": 3.576,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3367,7 +3521,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.323,
+   "duration_s": 3.215,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3378,7 +3532,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.387,
+   "duration_s": 3.344,
    "message": null,
    "file": "observatory.spec.ts",
    "notes": []
@@ -3389,7 +3543,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.307,
+   "duration_s": 3.377,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3400,7 +3554,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 5.248,
+   "duration_s": 5.131,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3411,7 +3565,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 4.079,
+   "duration_s": 4.601,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3422,7 +3576,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.637,
+   "duration_s": 4.471,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3433,7 +3587,7 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 3.018,
+   "duration_s": 3.2,
    "message": null,
    "file": "spherex.spec.ts",
    "notes": []
@@ -3444,9 +3598,31 @@
    "suite": "playwright",
    "category": "browser",
    "status": "passed",
-   "duration_s": 2.36,
+   "duration_s": 2.821,
    "message": null,
    "file": "spherex.spec.ts",
+   "notes": []
+  },
+  {
+   "id": "target-motion.spec.ts::[browser] Target motion study (van Maanen 2, recorded) \u203a shows both seasons, measured vs predicted positions with uncertainties, statuses and the observation/model distinction",
+   "name": "[browser] Target motion study (van Maanen 2, recorded) \u203a shows both seasons, measured vs predicted positions with uncertainties, statuses and the observation/model distinction",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 14.284,
+   "message": null,
+   "file": "target-motion.spec.ts",
+   "notes": []
+  },
+  {
+   "id": "target-motion.spec.ts::[browser] Target motion study (van Maanen 2, recorded) \u203a fields without a recorded study offer no target-motion tab",
+   "name": "[browser] Target motion study (van Maanen 2, recorded) \u203a fields without a recorded study offer no target-motion tab",
+   "suite": "playwright",
+   "category": "browser",
+   "status": "passed",
+   "duration_s": 10.113,
+   "message": null,
+   "file": "target-motion.spec.ts",
    "notes": []
   }
  ],

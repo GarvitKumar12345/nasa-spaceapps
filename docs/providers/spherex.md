@@ -121,6 +121,22 @@ The archive WCS is fitted to Gaia DR3 positions propagated with proper motion (E
 
 Details, per-frame table and uncertainty budget: [gaia_dr3.md](gaia_dr3.md).
 
+## Second field: van Maanen 2 (stage-1 verification, 2026-11-16)
+`spherex-dr1-vanmaanen2`: field around the white dwarf van Maanen 2 (proper motion ~3″/yr). It is a candidate known moving source for a later demonstration.
+- **Retrieval:** DR1 discovery found 216 images, all v27; 203 are eligible.
+- **Selection:** one compatible pair per detector, each spanning both seasons (2025-06/07 and 2025-12/2026-01, baselines 178–191 d), plus a contrast frame: 13 validated cutouts.
+- **Target checks:** no saturation-type flag at the target in any frame. Diagnostic pixel S/N is 25–183, and D1–D5 pass S/N ≥ 30.
+- **Gaia DR3:** recorded via Gaia@ARI Heidelberg, verified against the ESA-recorded Barnard response (identical) and cross-checked with AIP (identical): 130 sources.
+- **Alignment:** 6 of 13 frames have ≥ 5 references (sparse field). The target is excluded from its own frames' references.
+- **Motion study** (offline validation, `scripts/target_astrometry.py`; not an app capability):
+  - Tied positions on D2 and D3 give measured/predicted displacement 0.94 ± 0.14.
+  - No significance is claimed under the predefined rules, because no zero-displacement test could be formed.
+  - Post hoc, untied D1–D3 give 0.91 ± 0.14. Against zero, χ² 44.6 for 6 dof; the budget passed its zero-displacement tests (χ² 2.2 for 10 dof).
+
+Notes:
+- [../reviews/2026-11-16-van-maanen-2-stage1.md](../reviews/2026-11-16-van-maanen-2-stage1.md)
+- [../reviews/2026-11-16-van-maanen-2-motion.md](../reviews/2026-11-16-van-maanen-2-motion.md)
+
 ## Not done (scientific limitations)
 - No SPHEREx photometry: flux calibration from MJy/sr (pixel solid angles) and the documented systematic floor are not
   implemented; pixel values are surface brightness including zodiacal light. The ePSF is evaluated only to fit positions

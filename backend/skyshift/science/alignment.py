@@ -51,6 +51,7 @@ C_KM_S = 299_792.458
 ARCSEC_PER_RAD = 180.0 * 3600.0 / math.pi
 
 REASONS: dict[str, str] = {
+    "study_target": "target of a motion study in this field: excluded from the reference stars that tie its own frame",
     "outside_frame": "fit window not entirely inside the cutout",
     "no_proper_motion": "2-parameter Gaia solution (no proper motion: position at the exposure epoch not predictable)",
     "ruwe_high": "RUWE > 1.4 (poor single-star astrometric fit; possible binary)",
@@ -86,6 +87,7 @@ class AlignmentConfig:
     ipd_multi_peak_max: float = 2.0
     min_references: int = 5
     n_injections: int = 40
+    excluded_source_ids: tuple[str, ...] = ()  # study targets: never references of their own frames
 
     def criteria(self) -> list[str]:
         return [
@@ -261,6 +263,9 @@ def diagnose_frame(frame: FrameInputs, cat: CatalogInputs, cfg: AlignmentConfig 
         if len(sat_xy):
             d_sat = np.hypot(sat_xy[:, 0] - px[i], sat_xy[:, 1] - py[i])
             r.dist_saturated_px = float(d_sat.min())
+        if cat.source_id[i] in cfg.excluded_source_ids:
+            r.reason = "study_target"
+            continue
         if i in saturated:
             r.reason = "saturated"
             continue

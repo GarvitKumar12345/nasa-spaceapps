@@ -106,7 +106,8 @@ def capabilities_for(field_id: str, n_frames_available: int | None = None) -> li
     try:
         load_recorded_field(field_id)
     except ProviderUnavailable as exc:
-        reason, requirement = f"Gaia DR3 response not usable ({exc.reason}); run: {fetch}", "Recorded Gaia DR3 query for the field that passes its checks (fixtures/gaia_dr3/<field>/)"
+        detail = exc.reason if "run:" in exc.reason else f"{exc.reason}; run: {fetch}"
+        reason, requirement = f"Gaia DR3 response not usable: {detail}", "Recorded Gaia DR3 query for the field that passes its checks (fixtures/gaia_dr3/<field>/)"
     if reason is None and n_frames_available == 0:
         reason = f"No SPHEREx cutout of this field is in the local cache; run: {FETCH_COMMAND.format(field=field_id)}"
         requirement = "Cached SPHEREx cutouts (backend/cache/spherex/<field>/)"
@@ -121,6 +122,16 @@ def capabilities_for(field_id: str, n_frames_available: int | None = None) -> li
     else:
         for cid in ("alignment_diagnostics", "catalog_overlay"):
             caps.insert(0, AnalysisCapability(id=cid, status="unavailable", reason=reason, requirements=[requirement]))  # type: ignore[arg-type]
+    from skyshift.pipeline.target_motion import study_available
+
+    if reason is None and study_available(field_id):
+        caps.append(AnalysisCapability(id="target_motion_study", status="available",
+                                       reason="Recorded validation study of this field's named moving target (scripts/target_motion_stage2.py): measured vs predicted "
+                                              "seasonal displacement with its error budget. Not a general target-measurement capability."))
+    else:
+        caps.append(AnalysisCapability(id="target_motion_study", status="unavailable",
+                                       reason="No recorded target-motion study for this field" + ("" if reason is None else f" ({reason})") + ".",
+                                       requirements=["A named, unsaturated moving target with verified Gaia DR3 astrometry", "A recorded stage-2 study (scripts/target_motion_stage2.py)"]))
     return caps
 
 
@@ -391,11 +402,15 @@ def build_bundle(preset: FieldPreset, manifest: dict | None = None) -> DatasetBu
         notes=[preset.purpose, preset.centre_note],
     )
     available = [o for o in observations if o.status == "available"]
+    caps = capabilities_for(ds_id, n_frames_available=len(available))
+    gaia_ok = all(c.status == "available" for c in caps if c.id in ("catalog_overlay", "alignment_diagnostics"))
     dataset = Dataset(
         id=ds_id, title=preset.title, provider="spherex", origin="observed", release=preset.collection,
         description=(f"Real SPHEREx {ref.COLLECTIONS[preset.collection].release} Spectral Image cutouts ({preset.cutout_size_deg:g} deg) containing the field centre, "
-                     f"grouped by local wavelength at that position. Read-only: display alignment uses the archive WCS; Gaia DR3 predictions and "
-                     f"reference-star alignment diagnostics are available, target measurements are not."),
+                     f"grouped by local wavelength at that position. Read-only: display alignment uses the archive WCS; "
+                     + ("Gaia DR3 predictions and reference-star alignment diagnostics are available, target measurements are not."
+                        if gaia_ok else "Gaia DR3 predictions and alignment diagnostics are unavailable for this field (see the capabilities); "
+                                        "target measurements are not available.")),
         field=FieldDescription(center=centre, fov_arcsec=preset.cutout_size_deg * 3600.0, ecliptic_lat_deg=float(ecl.lat.deg)),
         instrument=InstrumentDescription(name="SPHEREx", kind="spherex", pixel_scale_arcsec=scale, detector_shape=ref.DETECTOR_SHAPE, psf_by_band=psf_by_band,
                                          notes=["Six 2040x2040 H2RG detectors behind linear variable filters: wavelength varies across each detector.",
@@ -411,7 +426,7 @@ def build_bundle(preset: FieldPreset, manifest: dict | None = None) -> DatasetBu
             "Wavelength compatibility is evaluated only at the field centre; other positions in the cutout see different wavelengths.",
             "The ePSF of the zone containing a star is used without interpolation between zones (zone width ~97 px; ~50 px along the spectral direction on D3).",
         ],
-        capabilities=capabilities_for(ds_id, n_frames_available=len(available)), archive_query=summary,
+        capabilities=caps, archive_query=summary,
         provenance=Provenance(origin="observed", provider="spherex", dataset_id=ds_id, release=preset.collection, source_url=disc["url"], retrieved_utc=disc["retrieved_utc"],
                               method="IRSA SIA2 discovery + byte-range screening + IBE cutouts (skyshift.providers.spherex.fetch)", notes=[preset.centre_note]),
         quality=Quality(status="warning" if available else "unavailable",

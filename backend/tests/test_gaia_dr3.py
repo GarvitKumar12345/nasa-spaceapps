@@ -199,6 +199,66 @@ def test_live_status_separates_unreachable_services_from_failed_checks(monkeypat
     assert status == "tested" and "row count changed" in detail
 
 
+@pytest.mark.archive
+def test_partner_service_records_need_an_exact_verification_against_the_esa_record(recorded, tmp_path, monkeypatch):
+    """[archive] The identity comparison catches one changed value, a changed NULL pattern and a missing row; the schema
+    checks stay strict for ESA (no RELEASE -> fail) while a partner service's missing RELEASE/COOSYS are stated warnings;
+    a partner-service record loads only with a passing verification against the ESA reference committed now."""
+    import copy
+    import shutil
+
+    import skyshift.providers.gaia_dr3 as gaia
+    from skyshift.providers.gaia_dr3.catalog import GaiaCatalog, schema_checks
+    from skyshift.providers.gaia_dr3.fetch import compare_catalogs
+    from skyshift.providers.base import ProviderUnavailable
+
+    cat = recorded.catalog
+    assert compare_catalogs(cat, cat)["identical"]
+    cols = {k: v.copy() for k, v in cat.columns.items()}
+    null = {k: v.copy() for k, v in cat.null.items()}
+    cols["pmra"][5] += 1e-9
+    assert not compare_catalogs(cat, GaiaCatalog(list(cat.source_id), cols, null, cat.fields, cat.infos, cat.params, cat.coosys))["columns"]["pmra"]["identical"]
+    null2 = {k: v.copy() for k, v in cat.null.items()}
+    null2["radial_velocity"][0] = not null2["radial_velocity"][0]
+    assert not compare_catalogs(cat, GaiaCatalog(list(cat.source_id), {k: v.copy() for k, v in cat.columns.items()}, null2, cat.fields, cat.infos, cat.params, cat.coosys))["identical"]
+    short = GaiaCatalog(cat.source_id[1:], {k: v[1:] for k, v in cat.columns.items()}, {k: v[1:] for k, v in cat.null.items()}, cat.fields, cat.infos, cat.params, cat.coosys)
+    assert not compare_catalogs(cat, short)["identical"]
+    bare = GaiaCatalog(list(cat.source_id), cat.columns, cat.null, cat.fields, cat.infos, {}, [])
+    by = lambda checks: {c.id: c.status for c in checks}  # noqa: E731
+    assert by(schema_checks(bare, service="esa"))["release"] == "fail" and by(schema_checks(bare, service="esa"))["coosys"] == "fail"
+    assert by(schema_checks(bare, service="ari"))["release"] == "warn" and by(schema_checks(bare, service="ari"))["coosys"] == "warn"
+    # a partner record: refused without a passing verification, or when verified against another ESA reference
+    field = tmp_path / "f"
+    field.mkdir()
+    shutil.copy(gaia.response_path("spherex-dr1-barnard"), field / "r.vot.gz")
+    m = copy.deepcopy(recorded.manifest)
+    m["service"] = {"id": "ari", "verification": {"status": "fail", "reference_field": "spherex-dr1-barnard"}}
+    (field / "m.json").write_text(json.dumps(m), encoding="utf-8")
+    monkeypatch.setattr(gaia, "manifest_path", lambda f: field / "m.json" if f == "x-field" else gaia.paths.manifest_path(f))
+    monkeypatch.setattr(gaia, "response_path", lambda f: field / "r.vot.gz" if f == "x-field" else gaia.paths.response_path(f))
+    with pytest.raises(ProviderUnavailable, match="without a passing verification"):
+        gaia.load_recorded_field("x-field")
+    m["service"]["verification"] = {"status": "pass", "reference_field": "spherex-dr1-barnard", "reference_response_sha256_gz": "0" * 64}
+    (field / "m.json").write_text(json.dumps(m), encoding="utf-8")
+    with pytest.raises(ProviderUnavailable, match="different ESA reference"):
+        gaia.load_recorded_field("x-field")
+
+
+@pytest.mark.archive
+def test_vanmaanen2_record_came_from_a_verified_partner_service_with_an_identical_crosscheck():
+    """[archive] The committed van Maanen 2 record: ARI reproduced the ESA-recorded reference response exactly, AIP returned an
+    identical field response, the row count equals the independent COUNT, and the loader accepts it as Gaia DR3."""
+    from skyshift.providers.gaia_dr3 import load_recorded_field
+
+    rec = load_recorded_field("spherex-dr1-vanmaanen2")
+    s = rec.manifest["service"]
+    assert s["id"] == "ari" and not s["archive_of_record"] and s["verification"]["status"] == "pass"
+    assert s["verification"]["comparison"]["identical"] and s["verification"]["comparison"]["n_rows_other"] == 3180
+    assert s["crosscheck"]["status"] == "pass" and s["crosscheck"]["comparison"]["identical"]
+    assert rec.manifest["field_query"]["n_rows"] == rec.manifest["count_query"]["n_rows"] == len(rec.catalog)
+    assert "2552928187080872832" in rec.catalog.index  # van Maanen 2 (identified by propagation in scripts/target_astrometry.py)
+
+
 @pytest.mark.contracts
 def test_unreachable_live_checks_keep_their_status_and_state_the_last_successful_retrieval(monkeypatch, manifest):
     """[contracts] With the ESA archive unreachable in the latest run, both live Gaia capabilities read 'unavailable'

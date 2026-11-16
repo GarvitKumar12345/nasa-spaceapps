@@ -19,6 +19,7 @@ dev = [
   "pytest==9.2.0",
   "httpx2==2.16.0",
   "photutils>=3.1.1",
+  "matplotlib>=3.11.2",
 ]
 # Archive clients are installed only when live integrations are implemented
 # (next session). They are NOT used by the synthetic investigation.

@@ -11,6 +11,12 @@ Design background: `planning/SkyShift_Project_Blueprint.md`, `planning/skyshift-
 - Backend only: `cd backend && uv run uvicorn skyshift.api.app:app --host 127.0.0.1 --port 8000`
 - SPHEREx DR1 cutouts (real data; local cache `backend/cache/spherex/`, not committed): `cd backend && uv run python -m skyshift.providers.spherex.fetch --field spherex-dr1-barnard --from-manifest`. The API never downloads; the manifest `fixtures/spherex/<field>/manifest.json` is the committed retrieval record (details: `docs/providers/spherex.md`).
 - Gaia DR3 for a field (committed: `fixtures/gaia_dr3/<field>/`): `cd backend && uv run python -m skyshift.providers.gaia_dr3.fetch --field spherex-dr1-barnard [--dry-run]` (needs the SPHEREx cache for the footprints). Alignment reports are disk-cached in `backend/cache/alignment/` (key = inputs + code hash).
+- Second field `spherex-dr1-vanmaanen2` (known moving target van Maanen 2):
+  - fetch with `--field spherex-dr1-vanmaanen2 [--from-manifest]`;
+  - stage-1 checks: `cd backend && uv run python scripts/target_stage1.py --field spherex-dr1-vanmaanen2`;
+  - Gaia DR3 was recorded via a verified partner service, because ESA was unreachable: `uv run python -m skyshift.providers.gaia_dr3.fetch --field spherex-dr1-vanmaanen2 --service ari --crosscheck aip`. A partner is used only after it reproduces the ESA-recorded Barnard response exactly;
+  - motion study (offline validation, not an app capability): `uv run python scripts/target_astrometry.py --field spherex-dr1-vanmaanen2` → `validation/vanmaanen2_motion.json`, `_motion_table.csv`, `validation/plots/`;
+  - notes in `docs/reviews/2026-11-16-van-maanen-2-*.md`.
 
 ## Test
 - Python: `cd backend && uv run pytest` (markers: math, coords, measurement, registration, catalog, pipeline, contracts, api, archive, slow; `-m live` for IRSA/ESA tests, skipped by default; SPHEREx dataset tests skip if the cutout cache is absent). Live tests record count changes with `record_property("note", …)` and fail only on schema/provenance/pinned-product differences.

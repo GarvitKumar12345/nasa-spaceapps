@@ -265,6 +265,7 @@ def fit_position(
     max_shift_px: float = 2.0,
     min_good_fraction: float = 0.75,
     background: str = "plane",
+    window_center: tuple[int, int] | None = None,
 ) -> PositionFit:
     """Fit x, y, flux and a local background (constant or plane) in a (2h+1)^2 window.
 
@@ -276,7 +277,8 @@ def fit_position(
     sqrt(chi2_red) when chi2_red > 1.
     """
     ny, nx = image.shape
-    ix0, iy0 = int(round(x_init)), int(round(y_init))
+    # the window is centred on the nearest pixel to the start unless a centre is given (to vary the start inside one window)
+    ix0, iy0 = (int(round(x_init)), int(round(y_init))) if window_center is None else (int(window_center[0]), int(window_center[1]))
     h = int(half_window)
     if ix0 - h < 0 or iy0 - h < 0 or ix0 + h >= nx or iy0 + h >= ny:
         return PositionFit(status="edge", message="fit window extends beyond the image")

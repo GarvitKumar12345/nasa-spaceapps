@@ -75,8 +75,23 @@ def load_recorded_field(field_id: str) -> RecordedField:
             manifest = json.loads(mpath.read_text(encoding="utf-8"))
             expected_gz, expected_raw = manifest["field_query"]["response_sha256_gz"], manifest["field_query"]["response_sha256"]
             expected_rows = manifest["count_query"]["n_rows"]
+            service = (manifest.get("service") or {}).get("id", "esa")
         except (OSError, ValueError, KeyError, TypeError) as exc:  # a broken manifest is not a recorded response
             raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"manifest for {field_id} unreadable ({type(exc).__name__}: {exc})") from None
+        if service not in ref.SERVICES:
+            raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"recorded response for {field_id} names an unknown service {service!r}")
+        if not ref.SERVICES[service].archive_of_record:
+            ver = (manifest.get("service") or {}).get("verification") or {}
+            if ver.get("status") != "pass":
+                raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"recorded response for {field_id} comes from {service!r} without a passing verification")
+            if ver.get("reference_field") != field_id:  # the reference record itself is ESA's; check its identity against what is committed now
+                try:
+                    ref_m = json.loads(manifest_path(ver["reference_field"]).read_text(encoding="utf-8"))
+                except (OSError, ValueError, KeyError) as exc:
+                    raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"verification reference for {field_id} unreadable ({exc})") from None
+                if ref_m["field_query"]["response_sha256_gz"] != ver.get("reference_response_sha256_gz"):
+                    raise ProviderUnavailable("gaia_dr3", "load_recorded_field",
+                                              f"{field_id} was verified against a different ESA reference response than the one committed now")
         gz = rpath.read_bytes()
         if hashlib.sha256(gz).hexdigest() != expected_gz:
             raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"recorded response for {field_id} does not match its manifest sha256")
@@ -85,7 +100,7 @@ def load_recorded_field(field_id: str) -> RecordedField:
         except Exception as exc:  # noqa: BLE001 - hash matched but the bytes do not parse: never serve partial data
             raise ProviderUnavailable("gaia_dr3", "load_recorded_field", f"recorded response for {field_id} does not parse ({type(exc).__name__})") from None
         cat.sha256 = expected_raw
-        failed = [c for c in schema_checks(cat, expected_rows=expected_rows) if c.status == "fail"]
+        failed = [c for c in schema_checks(cat, expected_rows=expected_rows, service=service) if c.status == "fail"]
         if failed:
             raise ProviderUnavailable("gaia_dr3", "load_recorded_field", "recorded response fails checks: " + "; ".join(c.id for c in failed))
         rec = RecordedField(field_id, manifest, cat)
@@ -103,14 +118,18 @@ class GaiaDR3Provider:
         for f in recorded_fields():
             try:
                 m = json.loads(manifest_path(f).read_text(encoding="utf-8"))
-                fields.append(f"{f}: {m['field_query']['n_rows']} sources recorded {m['retrieved_utc']} (radius {m['geometry']['radius_deg']:.4f} deg)")
+                svc = m.get("service") or {"id": "esa", "name": ref.SERVICES["esa"].name}
+                via = "" if svc["id"] == "esa" else (f" via {svc['name']} (partner data centre; verification {(svc.get('verification') or {}).get('status')}, "
+                                                    f"cross-check {(svc.get('crosscheck') or {}).get('status')})")
+                fields.append(f"{f}: {m['field_query']['n_rows']} sources recorded {m['retrieved_utc']}{via} (radius {m['geometry']['radius_deg']:.4f} deg)")
                 rec = m["field_query"].get("record") or {}
-                last_ok.append(f"{f} {m['retrieved_utc']} (HTTP {rec.get('status', '?')}, job {m['field_query'].get('job_id', '?')}, {m['field_query']['n_rows']} rows)")
+                if svc["id"] == "esa":  # the live checks test the ESA archive: only its own retrievals are its last success
+                    last_ok.append(f"{f} {m['retrieved_utc']} (HTTP {rec.get('status', '?')}, job {m['field_query'].get('job_id', '?')}, {m['field_query']['n_rows']} rows)")
             except (OSError, KeyError, ValueError) as exc:  # a broken manifest must not look recorded
                 fields.append(f"{f}: manifest unreadable ({exc})")
         if last_ok:
             # An unreachable archive leaves the live checks without a result; the last successful retrieval is stated, never relabelled as a pass.
-            suffix = " Last successful retrieval from the archive (recorded, not a live check): " + "; ".join(last_ok) + "."
+            suffix = " Last successful retrieval from the ESA archive (recorded, not a live check): " + "; ".join(last_ok) + "."
             live = {k: (s, t, d.rstrip(".") + "." + suffix) if s in ("unavailable", "failed", "not_run") else (s, t, d) for k, (s, t, d) in live.items()}
         return ProviderStatus(
             id="gaia_dr3",
@@ -119,8 +138,10 @@ class GaiaDR3Provider:
             status="implemented",
             release_policy=f"Pinned: {GAIA_RELEASE}, table {GAIA_TABLE} named explicitly in every ADQL query (never a changing default; not EDR3). "
                            "The archive's RELEASE parameter is checked in every response.",
-            access_route=f"ESA Gaia archive TAP sync ({ref.TAP_SYNC_URL}) with explicit ADQL, only through "
-                         "`python -m skyshift.providers.gaia_dr3.fetch`; the API reads the committed response + manifest.",
+            access_route=f"ESA Gaia archive TAP sync ({ref.TAP_SYNC_URL}, archive of record) with explicit ADQL, only through "
+                         "`python -m skyshift.providers.gaia_dr3.fetch`; the API reads the committed response + manifest. When ESA is unreachable, a Gaia "
+                         "partner data centre (ARI Heidelberg, AIP Potsdam; `--service`) is used only after it reproduces an ESA-recorded response exactly "
+                         "(every row, value and NULL), optionally cross-checked against the other partner (`--crosscheck`).",
             capabilities=[
                 _cap("Field query (ADQL on gaiadr3.gaia_source; footprint + proper-motion + neighbour margin)", live["query"][0], live["query"][2], live["query"][1]),
                 _cap("Archive-side propagation cross-check (EPOCH_PROP)", live["epoch_prop"][0], live["epoch_prop"][2], live["epoch_prop"][1]),

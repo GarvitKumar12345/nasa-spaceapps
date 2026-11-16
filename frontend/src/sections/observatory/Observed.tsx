@@ -18,6 +18,7 @@ import { renderMaskOverlay, usePlane, type StretchLimits } from '../../component
 import type { TanWcs } from '../../lib/tanwcs'
 import { useGaiaStore } from '../../state/gaia'
 import { AlignmentTab, GaiaCatalogTab, GaiaControls, GaiaSourcePanel, useGaiaCanvas, useGaiaOverlay } from './ObservedGaia'
+import { TargetMotionTab } from './TargetMotion'
 
 const CHECK_STATUS: Record<FileCheck['status'], string> = { pass: 'passed', warn: 'warning', fail: 'failed' }
 
@@ -437,7 +438,7 @@ function ObservedInspector({ dataset, obs, role, band }: { dataset: Dataset; obs
   )
 }
 
-type ObsTab = 'observations' | 'compatibility' | 'flags' | 'gaia' | 'alignment' | 'archive' | 'unavailable'
+type ObsTab = 'observations' | 'compatibility' | 'flags' | 'gaia' | 'alignment' | 'motion' | 'archive' | 'unavailable'
 
 function ObservedAnalyze({ dataset, obs }: { dataset: Dataset; obs: Observation | null }) {
   const [tab, setTab] = useState<ObsTab>('observations')
@@ -457,6 +458,7 @@ function ObservedAnalyze({ dataset, obs }: { dataset: Dataset; obs: Observation 
           { id: 'flags', label: 'Flags & quality' },
           { id: 'gaia', label: 'Gaia DR3' },
           { id: 'alignment', label: 'Alignment' },
+          ...(dataset.capabilities.some((c) => c.id === 'target_motion_study' && c.status === 'available') ? [{ id: 'motion' as const, label: 'Target motion' }] : []),
           { id: 'archive', label: 'Archive & provenance' },
           { id: 'unavailable', label: 'Unavailable analyses' },
         ]}
@@ -473,6 +475,8 @@ function ObservedAnalyze({ dataset, obs }: { dataset: Dataset; obs: Observation 
             <GaiaCatalogTab dataset={dataset} overlay={gaiaLoad} />
           ) : tab === 'alignment' ? (
             <AlignmentTab datasetId={dataset.id} nativeFrameId={nativeFrameId} />
+          ) : tab === 'motion' ? (
+            <TargetMotionTab dataset={dataset} />
           ) : tab === 'archive' ? (
             <ArchiveTab dataset={dataset} />
           ) : (

@@ -39,8 +39,58 @@ MAX_RESPONSE_BYTES = 30_000_000
 N_PINNED_REFERENCE_LIKE = 6
 
 
-def gaia_client() -> ArchiveClient:
-    return ArchiveClient(allowed_prefixes=ref.ALLOWED_PREFIXES, user_agent=ref.USER_AGENT, max_concurrency=1, max_attempts=6, timeout_s=180.0)
+def gaia_client(service: str = "esa") -> ArchiveClient:
+    svc = ref.SERVICES[service]
+    return ArchiveClient(allowed_prefixes=svc.allowed_prefixes, user_agent=ref.USER_AGENT, max_concurrency=1, max_attempts=6, timeout_s=180.0)
+
+
+def compare_catalogs(reference, other) -> dict:  # noqa: ANN001 - GaiaCatalog
+    """Row-for-row, column-by-column identity of two parsed gaiadr3.gaia_source responses (exact, NULL patterns included)."""
+    out: dict = {"n_rows_reference": len(reference), "n_rows_other": len(other), "source_ids_identical": reference.source_id == other.source_id, "columns": {}}
+    for name, col in reference.columns.items():
+        if name not in other.columns:
+            out["columns"][name] = {"identical": False, "detail": "column missing"}
+            continue
+        x, y = np.asarray(col), np.asarray(other.columns[name])
+        if x.shape != y.shape:
+            out["columns"][name] = {"identical": False, "detail": f"shape {x.shape} vs {y.shape}"}
+            continue
+        nx, ny = reference.null[name], other.null[name]
+        null_same = bool(np.array_equal(nx, ny))
+        valid = ~nx & ~ny
+        if x.dtype.kind == "f":
+            diff = np.abs(x[valid] - y[valid].astype(float))
+            n_diff, max_abs = int(np.count_nonzero(diff)), float(diff.max()) if diff.size else 0.0
+        else:
+            n_diff, max_abs = int(np.count_nonzero(x[valid] != y[valid])), None
+        out["columns"][name] = {"identical": null_same and n_diff == 0, "null_pattern_identical": null_same, "n_values_differing": n_diff, "max_abs_diff": max_abs}
+    out["n_columns_compared"] = len(out["columns"])
+    out["identical"] = bool(out["source_ids_identical"] and all(c["identical"] for c in out["columns"].values()))
+    return out
+
+
+def verify_service(service: str, client: ArchiveClient) -> dict:
+    """Run the ESA-recorded reference field query on a partner service and require an identical result.
+
+    The reference is the committed ESA response of ref.VERIFICATION_REFERENCE_FIELD (sha256-checked on load). Exact
+    identity of every row, column and NULL is required; anything else fails and nothing is recorded from that service."""
+    from skyshift.providers.gaia_dr3 import load_recorded_field
+
+    svc = ref.SERVICES[service]
+    reference = load_recorded_field(ref.VERIFICATION_REFERENCE_FIELD)
+    adql = reference.manifest["field_query"]["form"]["QUERY"]
+    body, rec = client.post_form(svc.tap_sync_url, tap_sync_fields(adql), max_bytes=MAX_RESPONSE_BYTES)
+    cat = parse_gaia_votable(body)
+    cmp = compare_catalogs(reference.catalog, cat)
+    return {
+        "service": service, "reference_field": ref.VERIFICATION_REFERENCE_FIELD,
+        "reference_endpoint": reference.manifest["endpoint"], "reference_retrieved_utc": reference.manifest["retrieved_utc"],
+        "reference_response_sha256_gz": reference.manifest["field_query"]["response_sha256_gz"],
+        "adql_sha256": hashlib.sha256(adql.encode()).hexdigest(), "record": rec.as_dict(), "provider_info": cat.infos.get("PROVIDER"),
+        "query_status": cat.infos.get("QUERY_STATUS"), "comparison": cmp,
+        "status": "pass" if cmp["identical"] and cat.infos.get("QUERY_STATUS") == "OK" else "fail",
+        "rule": "every row, column value and NULL of the service's response equals the ESA-recorded response of the same ADQL",
+    }
 
 
 def _sep_deg(ra1: np.ndarray, d1: np.ndarray, ra2: float, d2: float) -> np.ndarray:
@@ -152,40 +202,64 @@ def _write_gz(path, body: bytes) -> str:
     return hashlib.sha256(gz).hexdigest()
 
 
-def run(field_id: str, *, dry_run: bool = False, client: ArchiveClient | None = None, epoch_prop: bool = True) -> dict:
+def run(field_id: str, *, dry_run: bool = False, client: ArchiveClient | None = None, epoch_prop: bool = True,
+        service: str = "esa", crosscheck: str | None = None) -> dict:
+    svc = ref.SERVICES[service]
     geom, fps = geometry_for(field_id)
     field_adql = build_field_query(geom)
     count_adql = build_count_query(geom)
     print(geom.derivation())
     print(field_adql)
     if dry_run:
-        return {"geometry": geom.as_dict(), "field_adql": field_adql, "count_adql": count_adql}
-    client = client or gaia_client()
+        return {"geometry": geom.as_dict(), "field_adql": field_adql, "count_adql": count_adql, "service": service}
+    client = client or gaia_client(service)
     started = utc_now()
     notes: list[str] = []
+    verification: dict | None = None
+    if not svc.archive_of_record:
+        # (0) a partner data centre must first reproduce the ESA-recorded reference response exactly
+        verification = verify_service(service, client)
+        print(f"verification of {service} against the ESA-recorded {ref.VERIFICATION_REFERENCE_FIELD} response: {verification['status']} "
+              f"({verification['comparison']['n_rows_other']} rows, {verification['comparison']['n_columns_compared']} columns)")
+        if verification["status"] != "pass":
+            bad = {k: v for k, v in verification["comparison"]["columns"].items() if not v["identical"]}
+            raise RuntimeError(f"{svc.name} does not reproduce the ESA-recorded Gaia DR3 response; nothing recorded. Differences: {json.dumps(bad)[:600]}")
     # (3) independent row count
-    body, count_rec = client.post_form(ref.TAP_SYNC_URL, tap_sync_fields(count_adql, "csv"), max_bytes=10_000)
+    body, count_rec = client.post_form(svc.tap_sync_url, tap_sync_fields(count_adql, "csv"), max_bytes=10_000)
     lines = body.decode("utf-8").strip().splitlines()
-    if len(lines) != 2 or lines[0].strip() != "n_rows":
+    if len(lines) != 2 or lines[0].strip().strip('"') != "n_rows":
         raise RuntimeError(f"unexpected COUNT response: {lines[:3]}")
     n_count = int(lines[1].strip())
     # (4) field query
-    body, field_rec = client.post_form(ref.TAP_SYNC_URL, tap_sync_fields(field_adql), max_bytes=MAX_RESPONSE_BYTES)
+    body, field_rec = client.post_form(svc.tap_sync_url, tap_sync_fields(field_adql), max_bytes=MAX_RESPONSE_BYTES)
     retrieved = utc_now()
     cat = parse_gaia_votable(body)
-    checks = schema_checks(cat, expected_rows=n_count)
+    checks = schema_checks(cat, expected_rows=n_count, service=service)
     failed = [c for c in checks if c.status == "fail"]
     if failed:
         raise RuntimeError("Gaia response failed schema/provenance checks: " + "; ".join(f"{c.id}: {c.detail}" for c in failed))
+    cross: dict | None = None
+    if crosscheck:
+        # (4b) the same ADQL on a second, independent service must return an identical result
+        cclient = gaia_client(crosscheck)
+        cbody, crec = cclient.post_form(ref.SERVICES[crosscheck].tap_sync_url, tap_sync_fields(field_adql), max_bytes=MAX_RESPONSE_BYTES)
+        cmp = compare_catalogs(cat, parse_gaia_votable(cbody))
+        cross = {"service": crosscheck, "name": ref.SERVICES[crosscheck].name, "record": crec.as_dict(), "comparison": cmp,
+                 "status": "pass" if cmp["identical"] else "fail"}
+        client.log.extend(cclient.log)
+        print(f"cross-check of the field response against {crosscheck}: {cross['status']}")
     gz_sha = _write_gz(response_path(field_id), body)
     pinned = _pinned_ids(cat, fps)
-    # (5) archive-side propagation of the pinned subset (independent check only)
+    # (5) archive-side propagation of the pinned subset (independent check only; ESDC_EPOCH_PROP is an ESA archive function)
     ep: dict | None = None
-    if epoch_prop:
+    if epoch_prop and not svc.archive_of_record:
+        ep = {"status": "not_available", "note": f"ESDC_EPOCH_PROP is an ESA archive function, not offered by {svc.name}; SkyShift's propagation "
+                                                  "was checked against it on the ESA-recorded Barnard's Star field and against astropy/ERFA."}
+    elif epoch_prop:
         epochs = sorted({round(jyear_tcb(f["mid_mjd_tdb"]), 8) for f in fps})
         ep_adql = build_epoch_prop_query(pinned, epochs)
         try:
-            ep_body, ep_rec = client.post_form(ref.TAP_SYNC_URL, tap_sync_fields(ep_adql), max_bytes=5_000_000)
+            ep_body, ep_rec = client.post_form(svc.tap_sync_url, tap_sync_fields(ep_adql), max_bytes=5_000_000)
             ep_sha = _write_gz(epoch_prop_path(field_id), ep_body)
             ep = {"adql": ep_adql, "target_epochs_jyear_tcb": epochs, "record": ep_rec.as_dict(), "response_file": EPOCH_PROP_NAME,
                   "response_sha256_gz": ep_sha, "status": "recorded",
@@ -198,7 +272,7 @@ def run(field_id: str, *, dry_run: bool = False, client: ArchiveClient | None = 
     probe_fields = {**tap_sync_fields(field_adql), "MAXREC": "5"}
     probe: dict
     try:
-        pb, prec = client.post_form(ref.TAP_SYNC_URL, probe_fields, max_bytes=2_000_000)
+        pb, prec = client.post_form(svc.tap_sync_url, probe_fields, max_bytes=2_000_000)
         pcat = parse_gaia_votable(pb)
         probe_sha = _write_gz(field_dir(field_id) / OVERFLOW_PROBE_NAME, pb)
         probe = {"form": {k: v for k, v in probe_fields.items() if k != "QUERY"}, "record": prec.as_dict(), "n_rows": len(pcat),
@@ -210,8 +284,11 @@ def run(field_id: str, *, dry_run: bool = False, client: ArchiveClient | None = 
         "schema": MANIFEST_SCHEMA,
         "field": field_id,
         "catalog": ref.GAIA_TABLE,
-        "release": cat.params.get("RELEASE"),
-        "endpoint": ref.TAP_SYNC_URL,
+        "release": cat.params.get("RELEASE") if svc.archive_of_record else ref.GAIA_RELEASE,
+        "endpoint": svc.tap_sync_url,
+        "service": {"id": service, "name": svc.name, "endpoint": svc.tap_sync_url, "archive_of_record": svc.archive_of_record,
+                    "documentation": svc.documentation, "provider_info": cat.infos.get("PROVIDER"), "release_declared_by_service": cat.params.get("RELEASE"),
+                    "verification": verification, "crosscheck": cross},
         "started_utc": started,
         "retrieved_utc": retrieved,
         "software": [v.model_dump() for v in software_versions()],
@@ -260,8 +337,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--field", default="spherex-dr1-barnard")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--no-epoch-prop", action="store_true", help="skip the archive-side EPOCH_PROP check query")
+    parser.add_argument("--service", default="esa", choices=sorted(ref.SERVICES),
+                        help="TAP service: esa (archive of record) or a partner data centre, used only after it reproduces the ESA-recorded reference response")
+    parser.add_argument("--crosscheck", default=None, choices=sorted(ref.SERVICES), help="second service that must return an identical field response")
     args = parser.parse_args(argv)
-    run(args.field, dry_run=args.dry_run, epoch_prop=not args.no_epoch_prop)
+    run(args.field, dry_run=args.dry_run, epoch_prop=not args.no_epoch_prop, service=args.service, crosscheck=args.crosscheck)
     return 0
 
 

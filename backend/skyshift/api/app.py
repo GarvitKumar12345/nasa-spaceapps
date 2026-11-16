@@ -25,6 +25,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse, Response
 from skyshift import __version__
 from skyshift.contracts import (
     AlignmentReport,
+    TargetMotionStudy,
     ApiError,
     CatalogAssociation,
     CatalogOverlay,
@@ -53,6 +54,7 @@ from skyshift.notebook.evidence import record_to_csv, reproduce_record, validate
 from skyshift.pipeline.investigation import Investigation, get_investigation
 from skyshift.pipeline.observed import ObservedSession
 from skyshift.pipeline.observed_gaia import ObservedGaia, observed_gaia
+from skyshift.pipeline.target_motion import load_study
 from skyshift.providers.base import ProviderUnavailable
 from skyshift.providers.gaia_dr3 import load_recorded_field
 from skyshift.providers.gaia_dr3.catalog import SOURCE_ID_RE
@@ -220,6 +222,20 @@ def gaia_source(dataset_id: str, source_id: str, frame_id: str) -> GaiaSourceDet
 @app.get("/api/datasets/{dataset_id}/alignment", response_model=AlignmentReport)
 def alignment(dataset_id: str) -> AlignmentReport:
     return _observed_gaia(dataset_id, "alignment_diagnostics").report()
+
+
+@app.get("/api/datasets/{dataset_id}/target-motion", response_model=TargetMotionStudy)
+def target_motion(dataset_id: str) -> TargetMotionStudy:
+    """The recorded motion study of a field's named target, as recorded (stale flagged); 409 where none exists."""
+    sess = _session(dataset_id)
+    if not isinstance(sess, ObservedSession):
+        raise ApiException(409, "not_available", f"{dataset_id} is simulated: target-motion studies exist for observed fields only.",
+                           {"capability": "target_motion_study", "origin": "simulated"})
+    cap = sess.capability("target_motion_study")
+    if cap.status != "available":
+        raise ApiException(409, "not_available", cap.reason or f"No target-motion study for {dataset_id}.",
+                           {"capability": "target_motion_study", "requirements": cap.requirements, "origin": "observed"})
+    return load_study(dataset_id)
 
 
 def _difference(dataset_id: str, a: str, b: str) -> tuple[DifferenceInfo, np.ndarray | None]:

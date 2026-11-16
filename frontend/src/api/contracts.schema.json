@@ -171,7 +171,8 @@
             "evidence_record",
             "registration",
             "alignment_diagnostics",
-            "photometry"
+            "photometry",
+            "target_motion_study"
           ],
           "type": "string"
         },
@@ -4309,6 +4310,661 @@
       "title": "ModelFit",
       "type": "object"
     },
+    "MotionBudgetValidation": {
+      "additionalProperties": false,
+      "properties": {
+        "approach": {
+          "enum": [
+            "tied",
+            "untied"
+          ],
+          "type": "string"
+        },
+        "chi2": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dof": {
+          "type": "integer"
+        },
+        "p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "test": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "approach",
+        "test",
+        "chi2",
+        "dof",
+        "p",
+        "passed"
+      ],
+      "title": "MotionBudgetValidation",
+      "type": "object"
+    },
+    "MotionCombined": {
+      "additionalProperties": false,
+      "properties": {
+        "along_ratio": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "along_ratio_sigma": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "approach": {
+          "enum": [
+            "tied",
+            "untied"
+          ],
+          "type": "string"
+        },
+        "budget_validated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "p_vs_prediction": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pairs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "recovered": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "robust_across_variants": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_vs_zero": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "approach",
+        "pairs",
+        "along_ratio",
+        "along_ratio_sigma",
+        "sigma_vs_zero",
+        "p_vs_prediction",
+        "budget_validated",
+        "robust_across_variants",
+        "recovered"
+      ],
+      "title": "MotionCombined",
+      "type": "object"
+    },
+    "MotionFrame": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_choice_rms_px": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "chi2_red": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "chi2_red_neighbour_modelled": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "detector": {
+          "type": "integer"
+        },
+        "frame_id": {
+          "type": "string"
+        },
+        "lambda_um": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "measured_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "measured_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mid_utc": {
+          "type": "string"
+        },
+        "n_references": {
+          "type": "integer"
+        },
+        "observation_id": {
+          "type": "string"
+        },
+        "predicted_x_px": {
+          "type": "number"
+        },
+        "predicted_y_px": {
+          "type": "number"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "residual_tied_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "residual_untied_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "season": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_total_tied_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_total_untied_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_x_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_y_px": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "stage1_snr": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "enum": [
+            "measured",
+            "rejected",
+            "excluded"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "frame_id",
+        "observation_id",
+        "detector",
+        "season",
+        "mid_utc",
+        "lambda_um",
+        "stage1_snr",
+        "n_references",
+        "status",
+        "reason",
+        "predicted_x_px",
+        "predicted_y_px",
+        "measured_x_px",
+        "measured_y_px",
+        "sigma_x_px",
+        "sigma_y_px",
+        "chi2_red",
+        "chi2_red_neighbour_modelled",
+        "residual_untied_arcsec",
+        "residual_tied_arcsec",
+        "sigma_total_untied_arcsec",
+        "sigma_total_tied_arcsec",
+        "analysis_choice_rms_px"
+      ],
+      "title": "MotionFrame",
+      "type": "object"
+    },
+    "MotionPair": {
+      "additionalProperties": false,
+      "description": "One detector's displacement between the two seasons: measured (derived_measurement) vs predicted (model_prediction).",
+      "properties": {
+        "along_ratio": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Measured displacement along the predicted direction / predicted length"
+        },
+        "along_ratio_sigma": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "approach": {
+          "description": "tied: positions referenced to the frame's reference stars; untied: archive WCS as is",
+          "enum": [
+            "tied",
+            "untied"
+          ],
+          "type": "string"
+        },
+        "detector": {
+          "type": "integer"
+        },
+        "epochs_utc": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "label": {
+          "type": "string"
+        },
+        "measured_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "(east, north) from the two ePSF positions only"
+        },
+        "observation_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "p_vs_prediction": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "predicted_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "(east, north) model prediction: Gaia DR3 propagated, geocentric parallax"
+        },
+        "residual_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "role": {
+          "enum": [
+            "primary",
+            "secondary",
+            "excluded"
+          ],
+          "type": "string"
+        },
+        "sigma_stat_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_sys_arcsec": {
+          "anyOf": [
+            {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sigma_vs_zero": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Normal-equivalent significance of the displacement against zero (2-D chi2)"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive",
+            "not measured"
+          ],
+          "type": "string"
+        },
+        "status_reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "approach",
+        "role",
+        "detector",
+        "status",
+        "status_reason",
+        "observation_ids",
+        "epochs_utc",
+        "predicted_arcsec",
+        "measured_arcsec",
+        "residual_arcsec",
+        "sigma_stat_arcsec",
+        "sigma_sys_arcsec",
+        "along_ratio",
+        "along_ratio_sigma",
+        "sigma_vs_zero",
+        "p_vs_prediction"
+      ],
+      "title": "MotionPair",
+      "type": "object"
+    },
     "Observation": {
       "additionalProperties": false,
       "properties": {
@@ -6909,6 +7565,156 @@
       "title": "SuiteRun",
       "type": "object"
     },
+    "TargetMotionStudy": {
+      "additionalProperties": false,
+      "description": "A recorded validation study of one known moving target (scripts/target_motion_stage2.py), served as recorded.\n\nIt is not a general target-measurement capability: source_measurement and astrometric_fit stay unavailable.",
+      "properties": {
+        "budget_validation": {
+          "items": {
+            "$ref": "#/$defs/MotionBudgetValidation"
+          },
+          "type": "array"
+        },
+        "combined": {
+          "items": {
+            "$ref": "#/$defs/MotionCombined"
+          },
+          "type": "array"
+        },
+        "dataset_id": {
+          "type": "string"
+        },
+        "evidence_files": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "frames": {
+          "items": {
+            "$ref": "#/$defs/MotionFrame"
+          },
+          "type": "array"
+        },
+        "gaia_crosscheck": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "gaia_service": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "gaia_source_id": {
+          "type": "string"
+        },
+        "gaia_verification": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "generated_utc": {
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "measured_origin": {
+          "const": "derived_measurement",
+          "default": "derived_measurement",
+          "type": "string"
+        },
+        "pairs": {
+          "items": {
+            "$ref": "#/$defs/MotionPair"
+          },
+          "type": "array"
+        },
+        "plan_disclosure": {
+          "type": "string"
+        },
+        "post_hoc": {
+          "description": "Neighbour-modelled estimator, defined after the stage-2 run (information only)",
+          "items": {
+            "$ref": "#/$defs/MotionCombined"
+          },
+          "type": "array"
+        },
+        "post_hoc_note": {
+          "default": "",
+          "type": "string"
+        },
+        "predicted_origin": {
+          "const": "model_prediction",
+          "default": "model_prediction",
+          "type": "string"
+        },
+        "recovered": {
+          "type": "boolean"
+        },
+        "source_hash": {
+          "type": "string"
+        },
+        "stale": {
+          "description": "True when the code or data changed since the study was computed",
+          "type": "boolean"
+        },
+        "statement": {
+          "type": "string"
+        },
+        "target_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset_id",
+        "target_name",
+        "gaia_source_id",
+        "generated_utc",
+        "source_hash",
+        "stale",
+        "recovered",
+        "statement",
+        "plan_disclosure",
+        "combined",
+        "budget_validation",
+        "pairs",
+        "frames",
+        "post_hoc",
+        "post_hoc_note",
+        "gaia_service",
+        "gaia_verification",
+        "gaia_crosscheck",
+        "evidence_files",
+        "limitations",
+        "measured_origin",
+        "predicted_origin"
+      ],
+      "title": "TargetMotionStudy",
+      "type": "object"
+    },
     "TestResult": {
       "additionalProperties": false,
       "properties": {
@@ -7930,6 +8736,18 @@
     "ModelFit": {
       "$ref": "#/$defs/ModelFit"
     },
+    "MotionBudgetValidation": {
+      "$ref": "#/$defs/MotionBudgetValidation"
+    },
+    "MotionCombined": {
+      "$ref": "#/$defs/MotionCombined"
+    },
+    "MotionFrame": {
+      "$ref": "#/$defs/MotionFrame"
+    },
+    "MotionPair": {
+      "$ref": "#/$defs/MotionPair"
+    },
     "Observation": {
       "$ref": "#/$defs/Observation"
     },
@@ -8010,6 +8828,9 @@
     },
     "SuiteRun": {
       "$ref": "#/$defs/SuiteRun"
+    },
+    "TargetMotionStudy": {
+      "$ref": "#/$defs/TargetMotionStudy"
     },
     "TestResult": {
       "$ref": "#/$defs/TestResult"

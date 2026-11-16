@@ -50,6 +50,10 @@ export interface SkyShiftContracts {
   MeasurementSet?: MeasurementSet;
   ModelComparison?: ModelComparison;
   ModelFit?: ModelFit;
+  MotionBudgetValidation?: MotionBudgetValidation;
+  MotionCombined?: MotionCombined;
+  MotionFrame?: MotionFrame;
+  MotionPair?: MotionPair;
   Observation?: Observation;
   ObservationTiming?: ObservationTiming;
   ObserverModel?: ObserverModel;
@@ -77,6 +81,7 @@ export interface SkyShiftContracts {
   SourceIdentity?: SourceIdentity;
   SourceMeasurement?: SourceMeasurement;
   SuiteRun?: SuiteRun;
+  TargetMotionStudy?: TargetMotionStudy;
   TestResult?: TestResult;
   TrackPoint?: TrackPoint;
   TranslationEvaluation?: TranslationEvaluation;
@@ -900,7 +905,8 @@ export interface AnalysisCapability {
     | "evidence_record"
     | "registration"
     | "alignment_diagnostics"
-    | "photometry";
+    | "photometry"
+    | "target_motion_study";
   reason: string | null;
   /**
    * What must be implemented and validated first
@@ -1834,6 +1840,102 @@ export interface MeasurementSet {
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "MotionBudgetValidation".
+ */
+export interface MotionBudgetValidation {
+  approach: "tied" | "untied";
+  chi2: number | null;
+  dof: number;
+  p: number | null;
+  passed: boolean;
+  test: string;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "MotionCombined".
+ */
+export interface MotionCombined {
+  along_ratio: number | null;
+  along_ratio_sigma: number | null;
+  approach: "tied" | "untied";
+  budget_validated: boolean | null;
+  p_vs_prediction: number | null;
+  pairs: string[];
+  recovered: boolean | null;
+  robust_across_variants: boolean | null;
+  sigma_vs_zero: number | null;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "MotionFrame".
+ */
+export interface MotionFrame {
+  analysis_choice_rms_px: [number, number] | null;
+  chi2_red: number | null;
+  chi2_red_neighbour_modelled: number | null;
+  detector: number;
+  frame_id: string;
+  lambda_um: number | null;
+  measured_x_px: number | null;
+  measured_y_px: number | null;
+  mid_utc: string;
+  n_references: number;
+  observation_id: string;
+  predicted_x_px: number;
+  predicted_y_px: number;
+  reason: string;
+  residual_tied_arcsec: [number, number] | null;
+  residual_untied_arcsec: [number, number] | null;
+  season: number | null;
+  sigma_total_tied_arcsec: [number, number] | null;
+  sigma_total_untied_arcsec: [number, number] | null;
+  sigma_x_px: number | null;
+  sigma_y_px: number | null;
+  stage1_snr: number | null;
+  status: "measured" | "rejected" | "excluded";
+}
+/**
+ * One detector's displacement between the two seasons: measured (derived_measurement) vs predicted (model_prediction).
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "MotionPair".
+ */
+export interface MotionPair {
+  /**
+   * Measured displacement along the predicted direction / predicted length
+   */
+  along_ratio: number | null;
+  along_ratio_sigma: number | null;
+  /**
+   * tied: positions referenced to the frame's reference stars; untied: archive WCS as is
+   */
+  approach: "tied" | "untied";
+  detector: number;
+  epochs_utc: string[];
+  label: string;
+  /**
+   * (east, north) from the two ePSF positions only
+   */
+  measured_arcsec: [number, number] | null;
+  observation_ids: string[];
+  p_vs_prediction: number | null;
+  /**
+   * (east, north) model prediction: Gaia DR3 propagated, geocentric parallax
+   */
+  predicted_arcsec: [number, number] | null;
+  residual_arcsec: [number, number] | null;
+  role: "primary" | "secondary" | "excluded";
+  sigma_stat_arcsec: [number, number] | null;
+  sigma_sys_arcsec: [number, number] | null;
+  /**
+   * Normal-equivalent significance of the displacement against zero (2-D chi2)
+   */
+  sigma_vs_zero: number | null;
+  status: "pass" | "fail" | "inconclusive" | "not measured";
+  status_reason: string;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
  * via the `definition` "ProviderCapability".
  */
 export interface ProviderCapability {
@@ -1915,6 +2017,44 @@ export interface SuiteRun {
   ran: boolean;
   started_utc: string | null;
   suite: "pytest" | "vitest" | "playwright";
+}
+/**
+ * A recorded validation study of one known moving target (scripts/target_motion_stage2.py), served as recorded.
+ *
+ * It is not a general target-measurement capability: source_measurement and astrometric_fit stay unavailable.
+ *
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "TargetMotionStudy".
+ */
+export interface TargetMotionStudy {
+  budget_validation: MotionBudgetValidation[];
+  combined: MotionCombined[];
+  dataset_id: string;
+  evidence_files: string[];
+  frames: MotionFrame[];
+  gaia_crosscheck: string | null;
+  gaia_service: string | null;
+  gaia_source_id: string;
+  gaia_verification: string | null;
+  generated_utc: string;
+  limitations: string[];
+  measured_origin: "derived_measurement";
+  pairs: MotionPair[];
+  plan_disclosure: string;
+  /**
+   * Neighbour-modelled estimator, defined after the stage-2 run (information only)
+   */
+  post_hoc: MotionCombined[];
+  post_hoc_note: string;
+  predicted_origin: "model_prediction";
+  recovered: boolean;
+  source_hash: string;
+  /**
+   * True when the code or data changed since the study was computed
+   */
+  stale: boolean;
+  statement: string;
+  target_name: string;
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema

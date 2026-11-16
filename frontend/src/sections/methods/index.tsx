@@ -426,8 +426,18 @@ function LimitationsSection() {
           independent). These estimates are not validated target detection or completeness measurements. Target motion fitting stays unavailable.
         </li>
         <li>
-          The SPHEREx field is centred on Barnard’s Star, which saturates every selected frame (OVERFLOW, SUR_ERROR and BLOOM within 2.5 px); it is shown only as a prediction and
+          The Barnard’s Star field is centred on a star that saturates every selected frame (OVERFLOW, SUR_ERROR and BLOOM within 2.5 px); it is shown only as a prediction and
           excluded from all measurements, together with references within 8 px of saturated regions. CWAVE/CBAND spectral calibration is not used.
+        </li>
+        <li>
+          The van Maanen 2 field (known moving white dwarf): its Gaia DR3 record comes from the ARI partner data centre, used because the ESA archive was unreachable and only
+          after ARI reproduced an ESA-recorded response exactly (AIP cross-check identical). An offline validation study, not an app capability, measured the target&rsquo;s
+          displacement between the two DR1 seasons. Stage 2 used an analysis plan defined after the first pass, so it is not blind. The two pairs tied to reference stars
+          (D2, D3) give 0.94 ± 0.14 of the Gaia-predicted displacement: 5.8σ against zero, consistent with the prediction, and robust to five analysis variants.
+          Fifteen reference stars measured in both seasons validate that error budget. Under the plan’s rule the motion is recovered, but no single pair reaches 5σ.
+          The target’s high χ² comes from a catalogued neighbour about 2.9 px away that is brighter in the infrared and is not in the nominal model. Modelling it moves
+          the target by ≤ 0.008 px; a post-hoc neighbour-modelled estimate gives 9.6σ. The recorded study is shown under Observatory → Analyze → Target motion. No
+          general target measurement is enabled, no flux is measured, and no parallax or orbit is fitted from two epochs.
         </li>
         <li>The toy instrument (0.40″/px, Gaussian PSF, Poisson + read noise) is not a SPHEREx sensitivity, PSF or wavelength model.</li>
         <li>The PSF used for fitting is the exact PSF used to render the pixels; real PSFs add model error.</li>

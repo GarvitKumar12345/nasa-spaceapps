@@ -19,6 +19,30 @@ TAP_SYNC_URL = f"{TAP_BASE}/sync"
 ALLOWED_PREFIXES: tuple[str, ...] = ("https://gea.esac.esa.int/tap-server/",)
 USER_AGENT = "SkyShift/0.1 (local research build; bounded Gaia DR3 client)"
 
+
+@dataclass(frozen=True)
+class TapService:
+    """A TAP service serving gaiadr3.gaia_source. Only ESA is the archive of record; a partner data centre is
+    used only after its response for the ESA-recorded reference query is shown identical, row for row."""
+
+    id: str
+    name: str
+    tap_sync_url: str
+    allowed_prefixes: tuple[str, ...]
+    archive_of_record: bool
+    documentation: str
+
+
+SERVICES: dict[str, TapService] = {
+    "esa": TapService("esa", "ESA Gaia Archive", TAP_SYNC_URL, ALLOWED_PREFIXES, True, "https://gea.esac.esa.int/archive/"),
+    "ari": TapService("ari", "Gaia@ARI, Astronomisches Rechen-Institut Heidelberg (Gaia partner data centre)", "https://gaia.ari.uni-heidelberg.de/tap/sync",
+                      ("https://gaia.ari.uni-heidelberg.de/tap/",), False, "https://gaia.ari.uni-heidelberg.de/"),
+    "aip": TapService("aip", "Gaia@AIP, Leibniz-Institut fuer Astrophysik Potsdam (Gaia partner data centre)", "https://gaia.aip.de/tap/sync",
+                      ("https://gaia.aip.de/tap/",), False, "https://gaia.aip.de/"),
+}
+# The ESA-recorded response a partner service must reproduce exactly before it is used.
+VERIFICATION_REFERENCE_FIELD = "spherex-dr1-barnard"
+
 GAIA_TABLE = "gaiadr3.gaia_source"
 GAIA_RELEASE = "Gaia DR3"
 # gaia_source data model: ref_epoch is the reference epoch in Julian years; for DR3 it is 2016.0 for every

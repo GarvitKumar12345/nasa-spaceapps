@@ -195,6 +195,20 @@ class ObservedGaia:
                 self._diag[native_id] = (diag, inj)
             return self._diag[native_id]
 
+    def _service_notes(self) -> list[str]:
+        """Which TAP service served the recorded response, and how a partner service was verified (never silent)."""
+        s = self.recorded.manifest.get("service") or {}
+        if not s or s.get("archive_of_record", True):
+            return []
+        v = s.get("verification") or {}
+        c = s.get("crosscheck") or {}
+        note = (f"Recorded from {s.get('name')} ({s.get('endpoint')}), a Gaia partner data centre, because the ESA archive was unreachable. "
+                f"Verification {v.get('status')}: the ESA-recorded {v.get('reference_field')} query returned identical rows, values and NULLs "
+                f"({(v.get('comparison') or {}).get('n_rows_other')} rows x {(v.get('comparison') or {}).get('n_columns_compared')} columns).")
+        if c:
+            note += f" Cross-check {c.get('status')}: {c.get('name')} returned an identical field response."
+        return [note]
+
     def _source_flags(self, i: int, pred: ObservedPrediction) -> list[str]:
         c = self.catalog.columns
         flags: list[str] = []
@@ -254,9 +268,9 @@ class ObservedGaia:
                 "Markers are placed through the archive WCS; its documented accuracy (RMS < 0.3\") dominates the placement uncertainty.",
                 "A prediction without a visible counterpart is not evidence of a new or vanished object (depth, blending, flags).",
                 gref.ACKNOWLEDGEMENT,
-            ],
+            ] + self._service_notes(),
             provenance=Provenance(origin="model_prediction", provider="skyshift", dataset_id=self.dataset.id, release=gref.GAIA_RELEASE,
-                                  source_url=gref.TAP_SYNC_URL, retrieved_utc=m["retrieved_utc"],
+                                  source_url=m.get("endpoint", gref.TAP_SYNC_URL), retrieved_utc=m["retrieved_utc"],
                                   method="skyshift.science.epoch_propagation.predict_observed", method_version=EPOCH_PROPAGATION_VERSION,
                                   parents=[f"{gref.GAIA_TABLE} (fixtures/gaia_dr3/{self.recorded.field_id})", native_id]),
         )
@@ -269,7 +283,7 @@ class ObservedGaia:
             raise KeyError(f"Gaia source {source_id} is not in the recorded field response")
         i = self.catalog.index[source_id]
         m = self.recorded.manifest
-        src = gaia_row_to_catalog_source(self.catalog.row(i), retrieved_utc=m["retrieved_utc"], source_url=gref.TAP_SYNC_URL)
+        src = gaia_row_to_catalog_source(self.catalog.row(i), retrieved_utc=m["retrieved_utc"], source_url=m.get("endpoint", gref.TAP_SYNC_URL))
         ov = self.overlay(frame_id)
         prediction = next((p for p in ov.predictions if p.source_id == source_id), None)
         pred = self.prediction(native_id)
@@ -615,15 +629,15 @@ class ObservedGaia:
         budget = [
             ErrorBudgetTerm(term="Gaia DR3 catalogue astrometry propagated to the exposure (6x6 covariance)", treatment="included",
                             typical_arcsec=float(np.nanmedian(c["pmra_error"][calib_like])) * dt / 1000.0 if np.any(calib_like) else None,
-                            note="Typical value: median proper-motion error x 10.3 yr for G < 17 stars; per source in the inspector.", source="Gaia DR3 data model"),
+                            note=f"Typical value: median proper-motion error x {dt:.1f} yr for G < 17 stars; per source in the inspector.", source="Gaia DR3 data model"),
             ErrorBudgetTerm(term="Unknown radial velocity (perspective acceleration neglected)", treatment="neglected", bound_arcsec=float(persp.max()) / 1000.0,
-                            note=f"Largest bound in the field for |v_r| <= {RV_BOUND_KM_S:g} km/s; sources with a Gaia RV (incl. Barnard's Star) use it.",
+                            note=f"Largest bound in the field for |v_r| <= {RV_BOUND_KM_S:g} km/s; sources with a catalogued Gaia RV use it.",
                             source="Gaia DR3 doc. Sect. 4.1.7"),
             ErrorBudgetTerm(term="Light-time effects in the propagation", treatment="neglected", bound_arcsec=1e-4,
-                            note="Gaia DR3 doc. Sect. 4.1.4: <= ~10 micro-arcsec after 10 yr for normal stars; for Barnard's Star ERFA (with light time) "
-                                 "and this model differ by 0.011 mas at 2025.65.", source="Gaia DR3 doc. Sect. 4.1.4"),
+                            note="Gaia DR3 doc. Sect. 4.1.4: <= ~10 micro-arcsec after 10 yr for normal stars; checked on Barnard's Star (10.4\"/yr): "
+                                 "ERFA (with light time) and this model differ by 0.011 mas at 2025.65.", source="Gaia DR3 doc. Sect. 4.1.4"),
             ErrorBudgetTerm(term="Observer at the geocentre instead of SPHEREx (<= 7100 km)", treatment="neglected",
-                            bound_arcsec=plx_max * 7100.0 / AU_KM / 1000.0, note="parallax x r/1 au for the largest parallax in the field (Barnard's Star)."),
+                            bound_arcsec=plx_max * 7100.0 / AU_KM / 1000.0, note="parallax x r/1 au for the largest parallax in the field."),
             ErrorBudgetTerm(term="Stellar aberration (annual + orbital, up to ~26\")", treatment="absorbed_by_wcs",
                             bound_arcsec=0.033,
                             note="Not applied: the archive WCS is fitted to catalogue-frame Gaia positions. Bound = differential aberration across the "
@@ -703,12 +717,21 @@ _sessions: dict[tuple[str, int, str], ObservedGaia] = {}
 _sessions_lock = threading.Lock()
 
 
+def field_config(dataset_id: str) -> AlignmentConfig:
+    """Alignment configuration of a field: a study target (field preset) is never a reference star of its own frames."""
+    from skyshift.providers.spherex.fields import PRESETS
+
+    p = PRESETS.get(dataset_id)
+    sid = p.study_target.gaia_dr3_source_id if p is not None and p.study_target is not None else None
+    return AlignmentConfig(excluded_source_ids=(sid,)) if sid else AlignmentConfig()
+
+
 def observed_gaia(bundle: DatasetBundle, recorded: RecordedField) -> ObservedGaia:
     key = (bundle.dataset.id, id(bundle), recorded.manifest["field_query"]["response_sha256_gz"])
     with _sessions_lock:
         if key not in _sessions:
             _sessions.clear()
-            _sessions[key] = ObservedGaia(bundle, recorded)
+            _sessions[key] = ObservedGaia(bundle, recorded, cfg=field_config(bundle.dataset.id))
         return _sessions[key]
 
 

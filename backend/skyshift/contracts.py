@@ -391,7 +391,7 @@ class FieldDescription(Contract):
 
 AnalysisCapabilityId = Literal[
     "source_detection", "source_measurement", "astrometric_fit", "difference_imaging", "catalog_overlay", "evidence_record", "registration",
-    "alignment_diagnostics", "photometry",
+    "alignment_diagnostics", "photometry", "target_motion_study",
 ]
 
 
@@ -866,6 +866,104 @@ class AlignmentReport(Contract):
     field_assessment: str
     limitations: list[str] = Field(default_factory=list)
     provenance: Provenance
+
+
+class MotionPair(Contract):
+    """One detector's displacement between the two seasons: measured (derived_measurement) vs predicted (model_prediction)."""
+
+    label: str
+    approach: Literal["tied", "untied"] = Field(description="tied: positions referenced to the frame's reference stars; untied: archive WCS as is")
+    role: Literal["primary", "secondary", "excluded"]
+    detector: int
+    status: Literal["pass", "fail", "inconclusive", "not measured"]
+    status_reason: str
+    observation_ids: list[str] = Field(default_factory=list)
+    epochs_utc: list[str] = Field(default_factory=list)
+    predicted_arcsec: tuple[float, float] | None = Field(None, description="(east, north) model prediction: Gaia DR3 propagated, geocentric parallax")
+    measured_arcsec: tuple[float, float] | None = Field(None, description="(east, north) from the two ePSF positions only")
+    residual_arcsec: tuple[float, float] | None = None
+    sigma_stat_arcsec: tuple[float, float] | None = None
+    sigma_sys_arcsec: tuple[float, float] | None = None
+    along_ratio: float | None = Field(None, description="Measured displacement along the predicted direction / predicted length")
+    along_ratio_sigma: float | None = None
+    sigma_vs_zero: float | None = Field(None, description="Normal-equivalent significance of the displacement against zero (2-D chi2)")
+    p_vs_prediction: float | None = None
+
+
+class MotionFrame(Contract):
+    frame_id: str
+    observation_id: str
+    detector: int
+    season: int | None = None
+    mid_utc: str
+    lambda_um: float | None = None
+    stage1_snr: float | None = None
+    n_references: int
+    status: Literal["measured", "rejected", "excluded"]
+    reason: str
+    predicted_x_px: float
+    predicted_y_px: float
+    measured_x_px: float | None = None
+    measured_y_px: float | None = None
+    sigma_x_px: float | None = None
+    sigma_y_px: float | None = None
+    chi2_red: float | None = None
+    chi2_red_neighbour_modelled: float | None = None
+    residual_untied_arcsec: tuple[float, float] | None = None
+    residual_tied_arcsec: tuple[float, float] | None = None
+    sigma_total_untied_arcsec: tuple[float, float] | None = None
+    sigma_total_tied_arcsec: tuple[float, float] | None = None
+    analysis_choice_rms_px: tuple[float, float] | None = None
+
+
+class MotionCombined(Contract):
+    approach: Literal["tied", "untied"]
+    pairs: list[str]
+    along_ratio: float | None = None
+    along_ratio_sigma: float | None = None
+    sigma_vs_zero: float | None = None
+    p_vs_prediction: float | None = None
+    budget_validated: bool | None = None
+    robust_across_variants: bool | None = None
+    recovered: bool | None = None
+
+
+class MotionBudgetValidation(Contract):
+    approach: Literal["tied", "untied"]
+    test: str
+    chi2: float | None = None
+    dof: int
+    p: float | None = None
+    passed: bool
+
+
+class TargetMotionStudy(Contract):
+    """A recorded validation study of one known moving target (scripts/target_motion_stage2.py), served as recorded.
+
+    It is not a general target-measurement capability: source_measurement and astrometric_fit stay unavailable."""
+
+    dataset_id: str
+    target_name: str
+    gaia_source_id: str
+    generated_utc: str
+    source_hash: str
+    stale: bool = Field(description="True when the code or data changed since the study was computed")
+    recovered: bool
+    statement: str
+    plan_disclosure: str
+    combined: list[MotionCombined]
+    budget_validation: list[MotionBudgetValidation]
+    pairs: list[MotionPair]
+    frames: list[MotionFrame]
+    post_hoc: list[MotionCombined] = Field(default_factory=list, description="Neighbour-modelled estimator, defined after the stage-2 run (information only)")
+    post_hoc_note: str = ""
+    gaia_service: str | None = None
+    gaia_verification: str | None = None
+    gaia_crosscheck: str | None = None
+    evidence_files: list[str] = Field(default_factory=list)
+    limitations: list[str] = Field(default_factory=list)
+    measured_origin: Literal["derived_measurement"] = "derived_measurement"
+    predicted_origin: Literal["model_prediction"] = "model_prediction"
 
 
 class GaiaSourceDetail(Contract):
@@ -1361,6 +1459,11 @@ class DifferenceInfo(Contract):
 
 # Models exported to JSON Schema / TypeScript (scripts/export_contracts.py).
 EXPORTED_MODELS: list[type[Contract]] = [
+    MotionPair,
+    MotionFrame,
+    MotionCombined,
+    MotionBudgetValidation,
+    TargetMotionStudy,
     Quality,
     Provenance,
     Epoch,

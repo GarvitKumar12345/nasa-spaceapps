@@ -8,6 +8,11 @@
   - Truncation is signalled by a *trailing* `QUERY_STATUS=OVERFLOW` INFO; the leading INFO still says OK. All status INFOs are therefore checked, and a recorded `MAXREC=5` probe proves the check works.
   - CSV output would truncate silently, so it is used only for the 1-row `COUNT(*)`.
 - **Where queries run:** only `python -m skyshift.providers.gaia_dr3.fetch` makes requests. The API reads the committed response in `fixtures/gaia_dr3/<field>/` and never queries Gaia.
+- **Partner data centres (`--service ari|aip`, `--crosscheck`).** ESA is the archive of record. When it is unreachable, a Gaia partner data centre (ARI Heidelberg, AIP Potsdam) is used only if verified:
+  - It must first return the exact ADQL of the ESA-recorded Barnard's Star response with every row, value, NULL and source_id identical; otherwise nothing is recorded.
+  - Partners do not declare `RELEASE`, may write the COOSYS epoch as `2016`, and ARI delivers `duplicated_source` as 0/1. These are recorded as stated warnings, never silent passes.
+  - The loader accepts a partner record only with a passing verification against the ESA reference committed now.
+  - The van Maanen 2 field (2026-11-16) was recorded this way: ARI passed (3180 × 41 identical) and AIP's field response was identical. See [the motion review](../reviews/2026-11-16-van-maanen-2-motion.md).
 - **Source IDs:** `source_id` is a 64-bit integer (≤ 6.9e18 > 2^53). It is converted once from the VOTable `long` column to a decimal string and stays a string in contracts, JSON and the frontend.
   - A float or JSON number would already have lost digits (Barnard's Star 4472832130942575872 → 4472832130942575616), so the parser, the API (422) and the client refuse them.
 
