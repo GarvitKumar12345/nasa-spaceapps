@@ -4,12 +4,13 @@ import { create } from 'zustand'
 import { api, describeError } from '../api/client'
 import type { HealthStatus } from '../api/contracts.gen'
 
-export type Section = 'observatory' | 'motion' | 'evidence' | 'methods'
+export type Section = 'observatory' | 'motion' | 'evidence' | 'methods' | 'blinkir'
 export const SECTIONS: { id: Section; label: string }[] = [
   { id: 'observatory', label: 'Observatory' },
   { id: 'motion', label: 'Motion lab' },
   { id: 'evidence', label: 'Evidence notebook' },
   { id: 'methods', label: 'Methods' },
+  { id: 'blinkir', label: 'BlinkIR' },
 ]
 
 export type ApiState =

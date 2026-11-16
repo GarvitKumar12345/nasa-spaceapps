@@ -5,6 +5,7 @@ import { Observatory } from './sections/observatory'
 import { MotionLab } from './sections/motion'
 import { Evidence } from './sections/evidence'
 import { Methods } from './sections/methods'
+import { BlinkIR } from './sections/blinkir'
 
 function BrandMark() {
   // Two positions of one source joined by its displacement: the "shift".
@@ -47,6 +48,7 @@ const SECTION_COMPONENT: Record<Section, () => React.JSX.Element> = {
   motion: MotionLab,
   evidence: Evidence,
   methods: Methods,
+  blinkir: BlinkIR,
 }
 
 export function App() {

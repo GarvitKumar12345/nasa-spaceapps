@@ -725,3 +725,19 @@ circle.sky-gaia-no_motion {
   stroke: var(--text);
   stroke-width: 2;
 }
+.motion-study { min-width: 0; }
+.motion-hero { display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; padding:24px; border:1px solid var(--line-strong); border-radius:12px; background:linear-gradient(115deg,var(--panel-2),var(--violet-wash)); }
+.motion-hero h2 { font-size:clamp(23px,3vw,34px); margin:10px 0; letter-spacing:-.025em; }
+.motion-hero p { color:var(--text-2); }
+.motion-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.motion-metric { display:flex; flex-direction:column; gap:10px; padding:20px; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; }
+.motion-metric strong { font-size:clamp(23px,3vw,32px); font-family:var(--font-mono,monospace); color:var(--teal-strong); }
+.motion-metric > span:last-child { color:var(--muted); font-size:13px; }
+.motion-observations { padding:20px; border:1px solid var(--line); border-radius:8px; background:var(--panel); }
+.motion-stamp { margin:12px 0; padding:16px; background:var(--sky); border:1px solid var(--line); border-radius:8px; }
+.motion-stamp canvas { width: min(100%,234px); height:auto; image-rendering:pixelated; }
+.motion-stamp figcaption { margin-top:10px; color:var(--text-2); }
+.motion-study .table { display:block; max-width:100%; overflow-x:auto; }
+.motion-figures img { max-width:100%; height:auto; border-radius:6px; }
+.motion-figures figure { margin:16px 0; }
+@media(max-width:760px) { .motion-metrics { grid-template-columns:1fr; } .motion-hero { padding:16px; } }

@@ -2417,7 +2417,7 @@
           "type": "array"
         },
         "contracts_version": {
-          "default": "skyshift.contracts/1",
+          "default": "skyshift.contracts/1.1",
           "type": "string"
         },
         "created_utc": {
@@ -7488,6 +7488,67 @@
       "title": "SourceMeasurement",
       "type": "object"
     },
+    "StudyIntegrity": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_changed": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "cache_missing": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "cache_status": {
+          "enum": [
+            "verified",
+            "missing",
+            "changed",
+            "not_checked"
+          ],
+          "type": "string"
+        },
+        "problems": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "reference_commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "changed",
+            "unavailable"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "reference_commit",
+        "problems",
+        "cache_status",
+        "cache_missing",
+        "cache_changed"
+      ],
+      "title": "StudyIntegrity",
+      "type": "object"
+    },
     "SuiteRun": {
       "additionalProperties": false,
       "properties": {
@@ -7635,6 +7696,9 @@
         "generated_utc": {
           "type": "string"
         },
+        "integrity": {
+          "$ref": "#/$defs/StudyIntegrity"
+        },
         "limitations": {
           "items": {
             "type": "string"
@@ -7678,7 +7742,7 @@
           "type": "string"
         },
         "stale": {
-          "description": "True when the code or data changed since the study was computed",
+          "description": "Scientific integrity changed or could not be verified; independent of application test freshness",
           "type": "boolean"
         },
         "statement": {
@@ -7695,6 +7759,7 @@
         "generated_utc",
         "source_hash",
         "stale",
+        "integrity",
         "recovered",
         "statement",
         "plan_disclosure",
@@ -8596,7 +8661,7 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
-  "description": "Generated from backend/skyshift/contracts.py (skyshift.contracts/1). Do not edit.",
+  "description": "Generated from backend/skyshift/contracts.py (skyshift.contracts/1.1). Do not edit.",
   "properties": {
     "AlignmentReport": {
       "$ref": "#/$defs/AlignmentReport"

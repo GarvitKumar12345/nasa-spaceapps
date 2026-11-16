@@ -97,7 +97,8 @@ export function ObservedObservatory({ dataset, active }: { dataset: Dataset; act
         <span data-testid="observed-banner">
           <strong>Real SPHEREx {dataset.archive_query?.collection ?? dataset.release} data · read-only viewer.</strong> Frames are aligned for display with the archive's WCS only (not
           registered by SkyShift). Gaia DR3 sources are shown as predictions at each exposure (model, not measurements); reference-star residuals are in Analyze → Alignment.
-          Target measurement, photometry, motion fits and difference images are unavailable for observed data.
+          General target measurement, photometry, motion fits and difference images are unavailable for observed data.
+          {dataset.capabilities.some(c => c.id === 'target_motion_study' && c.status === 'available') && ' This field has a separate recorded study in Analyze → Target motion.'}
           {nUnavailable > 0 && ` ${nUnavailable} selected observation(s) are not available; see the timeline and the Observations tab.`}
         </span>
       </Callout>

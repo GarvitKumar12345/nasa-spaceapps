@@ -1,57 +1,33 @@
-# SkyShift demonstration (synthetic training investigation, ~3 minutes)
+# SkyShift five-minute submission demonstration
 
-Sections 1–4 use **simulated** data (badge "Simulated data" / "Simulated pixels"). Section 5 shows real SPHEREx DR1 images (badge "Observed"), read-only, with Gaia DR3 predictions and alignment diagnostics. No WISE or NEOSSat data are involved.
+SkyShift Discover comprises Observatory, Motion lab, Evidence notebook and Methods. BlinkIR Explore is the fifth navigation section, **BlinkIR**. Both products share one application.
 
-Start: `npm run dev` at the repository root, open http://127.0.0.1:5173. First load builds the investigation (~10 s).
+## Prepare before recording
 
-## 1. Notice a change — Observatory, Explore
-1. The Observatory opens on *Training field 01* in band G1. Note the origin badges and the timeline: nine available G1 epochs at their real dates (Jan 2025 – May 2027), one **missing** visit and one **failed** visit kept as gaps.
-2. Press **Blink A/B** (or key `B`): epoch A (2025-01-08) and epoch B (2027-05-14) alternate on the common sky grid. Background stars stay fixed; one star near the centre jumps.
-3. Click that star (or search `S003`). The inspector shows its measured position with 1σ uncertainty (~8.5 mas), flux and S/N, and the derived **position-change** statistic (χ²/dof ≫ 5) — a statistic, not a classification.
-4. Press **Play** (`P`) to step through the real frames in time order; nothing is interpolated between epochs.
+1. Keep `npm run dev` running from the repository root; open http://127.0.0.1:5173. The already-built local preview is also running at http://127.0.0.1:4173 with the API on 8000.
+2. Confirm both observed fields are ready. A fresh checkout lacks 30 cutouts: restore them using `docs/final-submission.md`. Do not fetch during recording.
+3. Preload Observatory → Data → van Maanen 2 → Analyze → Target motion. Wait for the native stamps and verified integrity status. Visit D2 tied and D3 tied once.
+4. In another browser tab, prepare a **synthetic training record**: Training field 01, select S003, Analyze → Motion fit, run the fit and save the investigation. Check that Evidence notebook can validate and reproduce it.
+5. Preload Motion lab, Methods and BlinkIR. Start BlinkIR on WISE 0855, Side by side. Confirm **Synthetic simulation** and **Illustrative model spectrum**. Pause playback.
+6. Close unrelated windows and notifications. Keep the evidence ZIP ready as a fallback. Do not rerun scientific fitting scripts or live archive checks before the deadline.
 
-## 2. Inspect the evidence — Observatory, Analyze
-1. Switch to **Analyze**: the same source, band, epoch and view are kept. A and B appear side by side; **Difference B − A** shows the moving source's dark/bright dipole (and the variable star S001), with its compatibility checks and a "display-only" label.
-2. **Measurements**: 18 PSF measurements from the native frames (both bands) plus 4 `missing frame` rows. Each has σ, flux, S/N and flags.
-3. **Motion fit** → *PM + parallax* → **Run fit**: proper motion ≈ (+637, −1111) mas/yr and parallax ≈ 165 ± 3 mas, χ²/dof ≈ 1, status *constrained*. Distance is shown only because ϖ/σ ≥ 10. The nested-model table shows why the static and proper-motion-only models fail.
-4. Untick one measurement: the fit is flagged **stale** until re-run.
-5. **Plots & residuals**: measured track (teal), model prediction (violet dashed), residuals within error bars. Toggle **Show simulation truth (validation only)** to compare with the injected values (amber diamonds) — truth is never part of the measurements.
-6. **Catalog**: the source matches its simulated-catalog entry at every epoch only after propagating the J2016.0 (TCB) catalog position ~10 yr forward; the close pair is reported as ambiguous.
+## Exactly five minutes
 
-## 3. Explain the cause — Motion lab
-1. In *Motion fit* press **Explain in Motion lab**. The *Nearby source* lesson opens with the fitted proper motion and parallax copied in (labelled as copied from the fit; the lesson's observer is a circular 1 AU orbit, an approximation).
-2. Toggle **proper motion** and **parallax** independently: the straight drift and the yearly ellipse combine into the looping track seen in Analyze. Change distance or ecliptic latitude to see the ellipse scale and flatten.
-3. Switch to **Orbit and observer** to show the separate Keplerian lesson: equal-time markers bunch near aphelion; the observer's sky view shows apparent retrograde intervals; changing eccentricity leaves the period unchanged.
+| Time | Screen and actions | Suggested narration |
+|---|---|---|
+| 0:00–0:25 | Show navigation and the two product identities. | “SkyShift connects astronomical evidence with accessible infrared exploration. Discover investigates recorded observations; BlinkIR Explore teaches through labelled simulations. Observations, predictions and simulations stay distinct.” |
+| 0:25–1:55 | Observatory → van Maanen 2 → Analyze → Target motion. Show seasonal dates and detector IDs; switch D2 tied to D3 tied. Point to prediction +, measurement ×, vectors and uncertainties. | “These are genuine SPHEREx DR1 pixels from two seasons. We found 216 image products and validated 13 cutouts. The primary reference-tied D2 and D3 analysis recovered 0.94 ± 0.14 of the Gaia-predicted seasonal displacement, at 5.8σ against zero and p = 0.93 agreement with the prediction. No individual pair reaches 5σ; D2 is 4.98σ. This is a recorded, non-blind displacement study, without an independent proper-motion or parallax fit. The separate 9.6σ neighbour-modelled analysis is exploratory.” |
+| 1:55–2:30 | Show integrity/cache status, expand recorded figures, click **Export evidence ZIP**. | “The package preserves original JSON, CSV, six figures, input records, provenance and limitations. Scientific integrity is checked against the original reference commit independently of application test freshness. Missing images are reported honestly. The historical execution-hash mismatch remains documented.” |
+| 2:30–3:15 | Motion lab: toggle proper motion and parallax. Evidence notebook: open the prepared synthetic record and show Validate/Reproduce and JSON/CSV export. | “The Motion lab explains drift and observer geometry. The notebook preserves reproducible synthetic investigations. Training records remain separate from the real study’s evidence ZIP.” |
+| 3:15–4:35 | BlinkIR: WISE 0855, blink A/B, pause, inspect Difference B − A, select a pixel, change detector context, inspect a model sample, export a lesson. | “BlinkIR is educational simulation. Its scenes illustrate motion and variability; its graph contains 102 model samples in arbitrary units, not measured channels. Pixel selection reports simulated intensity, not spectral extraction. Water and methane markers do not establish an atmosphere. The exported lesson is explicitly simulated.” |
+| 4:35–5:00 | Methods → Refresh status. Show counts and live checks marked not run. End on both products. | “The release passed 203 backend tests, 107 frontend unit tests and 30 browser checks; five live checks were skipped. Production build and typecheck passed. Discover preserves evidence; Explore makes the ideas approachable.” |
 
-## 4. Document it — Evidence notebook
-1. Back in the Observatory press **Save candidate** (or *Provenance & export → Save investigation*). The record is labelled **synthetic training record**.
-2. Open **Evidence notebook**: the record keeps source, frames, dates, measurements with uncertainties, exclusions, the fit and its current/stale status, assumptions, provenance, and the seed and truth separately.
-3. **Validate** (backend schema + fit freshness), **Reproduce** (regenerates from the seed and re-derives every value), **Export JSON** and **Export CSV**. Reload the page: the record persists in this browser.
+## Fallbacks and claims
 
-## 5. Real data — SPHEREx DR1 viewer (observed, read-only)
-Requires the cutout cache: `cd backend && uv run python -m skyshift.providers.spherex.fetch --field spherex-dr1-barnard --from-manifest`.
-1. In **Data** choose *SPHEREx DR1 · field around Barnard's Star*. The banner and badges say **Observed** and **read-only**.
-2. The inspector shows the mid-exposure time (UTC), observation ID, detector, the local wavelength and bandwidth at the field
-   centre (WCS-WAVE, visualization-grade), archive flags within 2.5 px (OVERFLOW, SUR_ERROR, BLOOM: the bright source there is
-   excluded from SPHEREx photometry by the documented rules), FINAST/L2 DQA, 21 file checks and provenance (collection,
-   processing tag, pipeline version, cutout URL, sha256). Toggle **Archive flags** to see flagged pixels.
-3. **Wavelength group** *D1 · 0.904 µm*: **Blink A/B** alternates 2025-08-30 and 2026-03-11 (same detector, local wavelengths
-   within 0.25 bandwidth). Choose *D1 · 0.883 µm · single*: same detector, different wavelength → blink is refused with the reason.
-4. **Analyze**: side-by-side A/B; *Difference B − A* is refused with the reason; tabs list the observations, the compatibility
-   table, the flag definitions read from the file, the exact SIA2 query (239 products) and the unavailable analyses with their
-   requirements. No target measurement, fit or difference is computed on these pixels.
-5. **Gaia DR3 predictions** (Explore): hollow squares are Gaia DR3 sources propagated to this exposure. They are model predictions,
-   not detections: violet = used reference, dashed = rejected candidate, amber ✕ = saturated (Barnard's Star). Click a violet square.
-   The inspector separates the *catalogue values* (J2016.0 TCB, pmRA* includes cos Dec), the *prediction at this exposure* (σ, observer
-   parallax, radial velocity used or assumed) and the *image measurement* (ePSF, measured − predicted ≈ 0.1–0.3″), plus the prediction's
-   limitations. Toggle *ePSF positions* and *Residuals ×100* to see the residual pattern.
-6. **Analyze → Alignment** (first run ~1 min, then cached; the computation time and cache key are shown at the bottom):
-   - The convention test (full aberration rejected; status *partially resolved*, because rejecting full aberration does not prove every convention).
-   - The reassessment note: no frame justifies a translation once shared errors are included.
-   - 17 frames with used/candidate counts, mean offsets ± SE, RMS east / north / 2-D, extra scatter, the shared σ, and p random-only → total. No translation is ever applied.
-   - Click a row for the residual plot, rejection reasons, the shared-error breakdown and the injection-recovery validation. Two frames are honestly "too few references".
-   - The uncertainty budget separates random per-star terms from shared per-frame terms.
-   - **Analyze → Gaia DR3** shows the exact ADQL, retrieval time, convention evidence, the convention aspects (documented / tested / bounded) and the error budget.
+- Use preloaded D2/D3 stamps and committed figures if a step is slow. Do not improvise a new fit.
+- Archive unavailability must not become simulated observations.
+- Keep the primary claim at **5.8σ**; **9.6σ** is post-hoc.
+- Synthetic lesson dates are simulated timesteps, not observed visits.
+- A local recording does not establish public deployment.
 
-## 6. Honest status — Methods
-Show the integration table (SPHEREx and Gaia DR3 implemented, with live statuses and notes from the last `--live` run; WISE and NEOSSat documented, live checks not run) and the validation report generated by `npm run validate`, grouped into mathematical, measurement, registration/alignment, catalog, pipeline, contract, archive, browser and live-data checks, plus the limitations list.
+Push, public-access verification, optional temporary sharing, cache restoration and the final checklist are in `docs/final-submission.md`.

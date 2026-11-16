@@ -87,7 +87,7 @@ test.describe('[browser] complete synthetic investigation', () => {
     await expect(providers.locator('[data-provider="gaia_dr3"]')).toContainText('implemented')
     await expect(providers.locator('[data-provider="wise"]')).toContainText('documented')
     await expect(page.getByTestId('live-group')).toContainText('not run')
-    await expect(page.getByTestId('limitations')).toContainText('Target measurements on synthetic data only')
+    await expect(page.getByTestId('limitations')).toContainText('General target measurements on synthetic data only')
     await expect(page.getByTestId('limitations')).toContainText('Gaia DR3 overlays are model predictions')
     await expect(page.locator('[data-group="Archive product checks (SPHEREx DR1, Gaia DR3)"]')).toBeVisible()
   })

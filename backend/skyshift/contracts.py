@@ -29,7 +29,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-CONTRACTS_VERSION = "skyshift.contracts/1"
+CONTRACTS_VERSION = "skyshift.contracts/1.1"
 EVIDENCE_SCHEMA_VERSION = "skyshift.evidence/1"
 VALIDATION_SCHEMA_VERSION = "skyshift.validation/1"
 
@@ -937,6 +937,15 @@ class MotionBudgetValidation(Contract):
     passed: bool
 
 
+class StudyIntegrity(Contract):
+    status: Literal["verified", "changed", "unavailable"]
+    reference_commit: str | None = None
+    problems: list[str] = Field(default_factory=list)
+    cache_status: Literal["verified", "missing", "changed", "not_checked"]
+    cache_missing: list[str] = Field(default_factory=list)
+    cache_changed: list[str] = Field(default_factory=list)
+
+
 class TargetMotionStudy(Contract):
     """A recorded validation study of one known moving target (scripts/target_motion_stage2.py), served as recorded.
 
@@ -947,7 +956,8 @@ class TargetMotionStudy(Contract):
     gaia_source_id: str
     generated_utc: str
     source_hash: str
-    stale: bool = Field(description="True when the code or data changed since the study was computed")
+    stale: bool = Field(description="Scientific integrity changed or could not be verified; independent of application test freshness")
+    integrity: StudyIntegrity
     recovered: bool
     statement: str
     plan_disclosure: str

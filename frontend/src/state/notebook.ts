@@ -30,7 +30,7 @@ import type {
 export const NOTEBOOK_STORAGE_KEY = 'skyshift.notebook.v1'
 export const NOTEBOOK_STORAGE_SCHEMA = 'skyshift.notebook-storage/1'
 export const EVIDENCE_SCHEMA_VERSION = 'skyshift.evidence/1'
-export const CONTRACTS_VERSION = 'skyshift.contracts/1'
+export const CONTRACTS_VERSION = 'skyshift.contracts/1.1'
 /** A truth source belongs to a record's detection when it lies within this radius of the measured reference position. */
 export const TRUTH_MATCH_RADIUS_ARCSEC = 0.5
 export const FRONTEND_SOFTWARE = { name: 'skyshift-frontend', version: '0.1.0' } as const

@@ -140,11 +140,11 @@ def test_recorded_van_maanen_2_results_keep_measurements_apart_from_predictions(
 @pytest.mark.api
 def test_target_motion_endpoint_serves_the_recorded_study_with_origins_and_staleness(monkeypatch):
     """[api] /target-motion serves the recorded stage-2 study as recorded: fixed origins, measured never equal to predicted,
-    D6 not measured, the conclusion as recorded, stale when the code/data hash differs; 409 for fields without a study and
+    D6 not measured, the conclusion as recorded, stale when scientific integrity differs; 409 for fields without a study and
     for simulated data. Generic target measurement stays 409."""
     from fastapi.testclient import TestClient
 
-    import skyshift.validation.report as rep_mod
+    import skyshift.validation.study_seal as seal_mod
     from skyshift.api.app import app
     from skyshift.pipeline.target_motion import study_path
 
@@ -152,7 +152,6 @@ def test_target_motion_endpoint_serves_the_recorded_study_with_origins_and_stale
         pytest.skip("no recorded stage-2 study")
     raw = json.loads(study_path(VM2).read_text(encoding="utf-8"))
     c = TestClient(app)
-    monkeypatch.setattr(rep_mod, "source_hash", lambda root=None: raw["source_hash"])
     s = c.get(f"/api/datasets/{VM2}/target-motion").json()
     assert s["stale"] is False and s["recovered"] == raw["conclusion"]["recovered"] and s["gaia_source_id"] == raw["target"]["source_id"]
     assert s["measured_origin"] == "derived_measurement" and s["predicted_origin"] == "model_prediction"
@@ -162,7 +161,7 @@ def test_target_motion_endpoint_serves_the_recorded_study_with_origins_and_stale
         if p["detector"] == 6:
             assert p["status"] == "not measured" and p["role"] == "excluded"
     assert "not a blind analysis" in s["plan_disclosure"] and s["limitations"]
-    monkeypatch.setattr(rep_mod, "source_hash", lambda root=None: "different")
+    monkeypatch.setattr(seal_mod, "integrity_status", lambda *args: {"status": "changed", "problems": ["changed scientific input"], "cache_status": "not_checked"})
     assert c.get(f"/api/datasets/{VM2}/target-motion").json()["stale"] is True
     for ds in ("spherex-dr1-barnard", "syn-nb-01"):
         r = c.get(f"/api/datasets/{ds}/target-motion")

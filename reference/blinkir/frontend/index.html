@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyShift — 4D SPHEREx Time-Machine & Citizen Spectrometer</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js" charset="utf-8"></script>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>SkyShift</h1>
+      <span class="badge-nasa">NASA SPHEREx DR1 + QR3 | 102-Band Citizen Observatory</span>
+    </div>
+    <div class="header-actions">
+      <button id="shareUrlBtn" title="Copy permalink with RA, Dec, FOV & Blink Mode">Share Permalink</button>
+      <button id="exportCardBtn" class="primary">Export Discovery Card (JSON)</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <!-- Left Panel: Mission Control & Official NASA Benchmark Targets -->
+    <section class="panel">
+      <h2>1. Sky Search &amp; Presets</h2>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Name or RA, Dec (e.g. WISE 0855 or 133.79, -7.24)" />
+        <div style="display:flex; gap:0.4rem; align-items:center;">
+          <label style="font-size:0.76rem; color:var(--text-muted); white-space:nowrap;">FOV (deg):</label>
+          <input type="text" id="fovInput" value="0.04" style="width:70px;" />
+          <label style="font-size:0.75rem; color:var(--text-muted); display:flex; align-items:center; gap:0.25rem;">
+            <input type="checkbox" id="liveToggle" /> Live IRSA
+          </label>
+          <button id="searchBtn" class="primary" style="flex:1;">Go</button>
+        </div>
+      </div>
+
+      <h2>Guided NASA Benchmark Targets</h2>
+      <div id="presetList" class="preset-list"></div>
+
+      <h2>All-Sky Context (Aladin Lite + AllWISE/Gaia)</h2>
+      <div id="aladinContainer"></div>
+    </section>
+
+    <!-- Center Panel: 4D Blink & Subtraction Canvas -->
+    <section class="panel">
+      <div class="viewport-header">
+        <div>
+          <strong id="targetTitle" style="font-size:1.05rem;">Loading target...</strong>
+          <div id="targetCoords" style="font-size:0.78rem; color:var(--text-muted);"></div>
+        </div>
+        <div style="display:flex; gap:0.4rem;">
+          <button id="modeBlinkBtn" class="active-mode">Blink Mode</button>
+          <button id="modeDiffBtn">Difference (QR3 - DR1)</button>
+          <button id="autoBlinkBtn">Auto-Blink: OFF</button>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="blinkCanvas" width="320" height="320"></canvas>
+      </div>
+
+      <div class="controls-grid">
+        <div class="control-group">
+          <label>
+            <span>Epoch Slider (DR1 &harr; QR3)</span>
+            <span id="blinkPctLabel">100% QR3</span>
+          </label>
+          <input type="range" id="blinkSlider" min="0" max="100" value="100" />
+        </div>
+
+        <div class="control-group">
+          <label>
+            <span>SPHEREx Detector Array</span>
+            <span id="bandLabel">All 6 Bands Co-Add</span>
+          </label>
+          <select id="bandSelect">
+            <option value="all">All 6 Bands Co-Added (Max SNR)</option>
+            <option value="1">Band 1: 0.75 - 1.09 &mu;m (R=39)</option>
+            <option value="2">Band 2: 1.10 - 1.62 &mu;m (R=41)</option>
+            <option value="3">Band 3: 1.63 - 2.41 &mu;m (R=41)</option>
+            <option value="4">Band 4: 2.42 - 3.82 &mu;m (R=35)</option>
+            <option value="5">Band 5: 3.83 - 4.41 &mu;m (R=112)</option>
+            <option value="6">Band 6: 4.42 - 5.00 &mu;m (R=128)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <label><input type="checkbox" id="overlayVectorsChk" checked /> 15-Yr AllWISE (2010) &amp; Gaia Motion Arrows</label>
+        <label><input type="checkbox" id="gaiaOverlayChk" checked /> Gaia DR3 Stars &amp; PM Trails</label>
+        <label><input type="checkbox" id="crosshairChk" checked /> Target Crosshair</label>
+      </div>
+
+      <div id="scienceHighlight" class="info-card"></div>
+    </section>
+
+    <!-- Right Panel: Live 102-Band Spectrometer & Artifact Shield -->
+    <section class="panel">
+      <h2>3. Instant 102-Band Spectrometer</h2>
+
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.78rem; color:var(--text-muted);">Artifact Shield (MEF FLAGS):</span>
+        <span id="flagBadge" class="pill pill-clean">CLEAN</span>
+      </div>
+      <div id="flagDetails" style="font-size:0.75rem; color:var(--text-muted);"></div>
+
+      <div id="spectrumChart"></div>
+
+      <div class="toggle-row">
+        <label><input type="checkbox" id="molMarkersChk" checked /> Show H<sub>2</sub>O (3.0 &mu;m) &amp; CH<sub>4</sub> (3.3 &mu;m) Dips</label>
+        <label><input type="checkbox" id="bgCompareChk" checked /> Compare vs. Background Star</label>
+      </div>
+
+      <h2>Kinematics &amp; Discovery Metrics</h2>
+      <div class="info-card" id="kinematicsBox">
+        <div><strong>Clicked Pixel:</strong> <span id="clickedPixelLabel">Center Target (32, 32)</span></div>
+        <div><strong>Proper Motion:</strong> <span id="pmValueLabel">-- arcsec/yr</span></div>
+        <div><strong>Data Pipeline:</strong> <span id="sourceModeLabel">--</span></div>
+        <div><strong>Optical Veto (Gaia DR3):</strong> <span id="optical-veto-status" style="font-size:0.82rem;">--</span><span id="pipelineStatus" style="display:none;"></span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

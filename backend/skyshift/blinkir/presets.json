@@ -1,0 +1,42 @@
+{
+  "WISE_0855": {
+    "id": "WISE_0855",
+    "name": "WISE 0855 (WISE J085510.83-071442.5)",
+    "category": "Coldest Known Brown Dwarf (~250 K)",
+    "ra": 133.795129,
+    "dec": -7.245147,
+    "fov_deg": 0.04
+  },
+  "Barnards_Star": {
+    "id": "Barnards_Star",
+    "name": "Barnard's Star (GJ 699)",
+    "category": "Fastest Proper-Motion Star in Earth's Sky",
+    "ra": 269.452083,
+    "dec": 4.693389,
+    "fov_deg": 0.05
+  },
+  "Epsilon_Indi_B": {
+    "id": "Epsilon_Indi_B",
+    "name": "Epsilon Indi Ba/Bb",
+    "category": "Nearby Binary Brown Dwarf System",
+    "ra": 331.043833,
+    "dec": -56.782694,
+    "fov_deg": 0.04
+  },
+  "RW_Aurigae": {
+    "id": "RW_Aurigae",
+    "name": "RW Aurigae",
+    "category": "Young Accreting Variable Star",
+    "ra": 76.956417,
+    "dec": 30.401417,
+    "fov_deg": 0.05
+  },
+  "R_Draconis": {
+    "id": "R_Draconis",
+    "name": "R Draconis",
+    "category": "Mira-Type Pulsating Variable Giant",
+    "ra": 248.167625,
+    "dec": 66.754889,
+    "fov_deg": 0.05
+  }
+}

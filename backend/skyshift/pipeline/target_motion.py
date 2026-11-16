@@ -1,8 +1,8 @@
 """Recorded target-motion studies (scripts/target_motion_stage2.py), served as recorded with a staleness check.
 
 The study is a validation of one named target; the API serves its recorded result (measurements and model predictions
-kept apart) and never recomputes or extends it. A study whose source hash differs from the current code and data is
-served with stale = True, never silently as current.
+kept apart) and never recomputes or extends it. Scientific integrity is verified against the committed reference seal independently of
+whole-application test freshness. Changed or unverifiable scientific evidence is flagged stale.
 """
 
 from __future__ import annotations
@@ -65,13 +65,14 @@ def _combined(approach: str, c: dict) -> MotionCombined:
 
 
 def load_study(dataset_id: str) -> TargetMotionStudy:
-    from skyshift.validation.report import source_hash
+    from skyshift.validation.study_seal import integrity_status
 
     raw = json.loads(study_path(dataset_id).read_text(encoding="utf-8"))
     v = raw["budget_validation"]
+    integrity = integrity_status(study_path(dataset_id), REPO_ROOT)
     return TargetMotionStudy(
         dataset_id=dataset_id, target_name=raw["target"]["name"], gaia_source_id=str(raw["target"]["source_id"]), generated_utc=raw["generated_utc"],
-        source_hash=raw["source_hash"], stale=raw["source_hash"] != source_hash(), recovered=bool(raw["conclusion"]["recovered"]),
+        source_hash=raw["source_hash"], stale=integrity["status"] != "verified", integrity=integrity, recovered=bool(raw["conclusion"]["recovered"]),
         statement=raw["conclusion"]["statement"], plan_disclosure=raw["plan"]["disclosure"],
         combined=[_combined(a, c) for a, c in raw["combined"].items() if c.get("pairs")],
         budget_validation=[MotionBudgetValidation(approach=a, test=x["test"], chi2=x.get("chi2"), dof=x["dof"], p=x.get("p"), passed=bool(x["passed"])) for a, x in v.items()],

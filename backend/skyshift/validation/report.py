@@ -23,12 +23,13 @@ RESULTS_DIR = REPO_ROOT / "validation" / "results"
 
 # Files whose content defines the behaviour under test.
 _HASH_GLOBS: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("backend/skyshift", (".py",)),
+    ("backend/skyshift", (".py", ".json")),
     ("backend/tests", (".py",)),
     ("backend/scripts", (".py",)),
     ("frontend/src", (".ts", ".tsx", ".css")),
     ("frontend/e2e", (".ts",)),
     ("fixtures", (".json", ".gz", ".fits")),
+    ("validation/plots", (".png",)),
 )
 
 _HASH_FILES = (
@@ -36,6 +37,8 @@ _HASH_FILES = (
     "frontend/package.json", "frontend/package-lock.json", "frontend/index.html",
     "frontend/vite.config.ts", "frontend/vitest.config.ts", "frontend/playwright.config.ts",
     "frontend/tsconfig.json", "frontend/tsconfig.app.json", "frontend/tsconfig.node.json",
+    "validation/vanmaanen2_motion_stage2.json", "validation/vanmaanen2_motion_stage2.seal.json",
+    "validation/vanmaanen2_motion_stage2_pairs.csv", "validation/vanmaanen2_stage1.json",
 )
 
 _TAG = re.compile(r"\[(math|coords|measurement|registration|catalog|pipeline|contracts|api|ui|browser|live|archive)\]", re.I)

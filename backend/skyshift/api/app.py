@@ -21,6 +21,7 @@ from fastapi import Body, FastAPI, Query, Request
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, Response
+from skyshift.blinkir.routes import router as blinkir_router
 
 from skyshift import __version__
 from skyshift.contracts import (
@@ -64,6 +65,7 @@ from skyshift.validation.report import report_with_staleness
 from skyshift.versions import software_versions
 
 app = FastAPI(title="SkyShift API", version=__version__, description="Local research API for the SkyShift observatory.")
+app.include_router(blinkir_router)
 app.add_middleware(GZipMiddleware, minimum_size=2048)
 
 
@@ -236,6 +238,27 @@ def target_motion(dataset_id: str) -> TargetMotionStudy:
         raise ApiException(409, "not_available", cap.reason or f"No target-motion study for {dataset_id}.",
                            {"capability": "target_motion_study", "requirements": cap.requirements, "origin": "observed"})
     return load_study(dataset_id)
+
+
+@app.get("/api/datasets/{dataset_id}/target-motion/evidence.zip")
+def target_motion_evidence(dataset_id: str) -> Response:
+    from skyshift.pipeline.target_motion import study_available
+    from skyshift.validation.study_export import evidence_zip
+    if not study_available(dataset_id):
+        raise ApiException(409, "not_available", "No recorded scientific study for this dataset.")
+    return Response(evidence_zip(dataset_id), media_type="application/zip",
+                    headers={"Content-Disposition": 'attachment; filename="skyshift-vanmaanen2-evidence.zip"'})
+
+
+@app.get("/api/studies/vanmaanen2/figures/{name}")
+def study_figure(name: str) -> Response:
+    from skyshift.validation.report import REPO_ROOT
+    if not re.fullmatch(r"vanmaanen2_stage2_[a-z_]+\.png", name):
+        raise ApiException(404, "not_found", "Unknown study figure.")
+    path = REPO_ROOT / "validation" / "plots" / name
+    if not path.is_file():
+        raise ApiException(404, "not_found", "Study figure unavailable.")
+    return Response(path.read_bytes(), media_type="image/png")
 
 
 def _difference(dataset_id: str, a: str, b: str) -> tuple[DifferenceInfo, np.ndarray | None]:

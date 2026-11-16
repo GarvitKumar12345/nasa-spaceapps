@@ -394,7 +394,7 @@ describe('[contracts] buildEvidenceRecord', () => {
     expect(schemaErrors({ ...record, extra: 1 }, DEFS.EvidenceRecord)).toContain('$.extra: unknown field')
     expect(schemaErrors({ ...record, record_label: 'discovery' }, DEFS.EvidenceRecord).length).toBeGreaterThan(0)
     expect(record.schema_version).toBe('skyshift.evidence/1')
-    expect(record.contracts_version).toBe('skyshift.contracts/1')
+    expect(record.contracts_version).toBe('skyshift.contracts/1.1')
     expect(record.created_utc).toBe(NOW)
     expect(record.updated_utc).toBe(NOW)
   })

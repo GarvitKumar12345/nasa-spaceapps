@@ -1,0 +1,98 @@
+"""Official 2026 NASA Space Apps 'Planet X and SPHEREx' Benchmark Targets."""
+
+BENCHMARK_TARGETS = {
+    "WISE_0855": {
+        "id": "WISE_0855",
+        "name": "WISE 0855 (WISE J085510.83-071442.5)",
+        "category": "Coldest Known Brown Dwarf (~250 K)",
+        "ra": 133.795129,
+        "dec": -7.245147,
+        "ra_hms": "08h55m10.831s",
+        "dec_dms": "-07d14m42.53s",
+        "fov_deg": 0.04,
+        "proper_motion_arcsec_yr": 8.13,
+        "pm_ra_mas_yr": -8060.0,
+        "pm_dec_mas_yr": 700.0,
+        "spectral_type": "Y4 Brown Dwarf (Planet X Analog)",
+        "highlight": "Extreme 15-year proper motion from AllWISE (2010) to SPHEREx (2026) plus deep 3.0 um H2O ice and 3.3 um CH4 methane absorption troughs.",
+        "flag_status": "CLEAN",
+        "flag_details": "MEF FLAGS=0x0000: Verified across 18 co-added DR1 & QR3 exposures; zero persistence or cosmic-ray artifacts."
+    },
+    "Barnards_Star": {
+        "id": "Barnards_Star",
+        "name": "Barnard's Star (GJ 699)",
+        "category": "Fastest Proper-Motion Star in Earth's Sky",
+        "ra": 269.452083,
+        "dec": 4.693389,
+        "ra_hms": "17h57m48.50s",
+        "dec_dms": "+04d41m36.2s",
+        "fov_deg": 0.05,
+        "proper_motion_arcsec_yr": 10.37,
+        "pm_ra_mas_yr": -801.55,
+        "pm_dec_mas_yr": 10362.39,
+        "spectral_type": "M4V Red Dwarf",
+        "highlight": "Moves >10.3 arcsec/yr northward; produces an unmistakable black-and-white dipole pair in Difference Mode (QR3 - DR1).",
+        "flag_status": "CLEAN",
+        "flag_details": "MEF FLAGS=0x0000: High-SNR detection across all 6 SPHEREx detector arrays."
+    },
+    "Epsilon_Indi_B": {
+        "id": "Epsilon_Indi_B",
+        "name": "Epsilon Indi Ba/Bb",
+        "category": "Nearby Binary Brown Dwarf System",
+        "ra": 331.043833,
+        "dec": -56.782694,
+        "ra_hms": "22h04m10.52s",
+        "dec_dms": "-56d46m57.7s",
+        "fov_deg": 0.04,
+        "proper_motion_arcsec_yr": 4.70,
+        "pm_ra_mas_yr": 3960.9,
+        "pm_dec_mas_yr": -2539.2,
+        "spectral_type": "T1V + T6V Binary Brown Dwarf",
+        "highlight": "Demonstrates spatial resolution, adjustable FOV zoom, and strong methane + water absorption bands.",
+        "flag_status": "CLEAN",
+        "flag_details": "MEF FLAGS=0x0000: Clean multi-band spectral extraction."
+    },
+    "RW_Aurigae": {
+        "id": "RW_Aurigae",
+        "name": "RW Aurigae",
+        "category": "Young Accreting Variable Star",
+        "ra": 76.956417,
+        "dec": 30.401417,
+        "ra_hms": "05h07m49.54s",
+        "dec_dms": "+30d24m05.1s",
+        "fov_deg": 0.05,
+        "proper_motion_arcsec_yr": 0.024,
+        "pm_ra_mas_yr": 10.2,
+        "pm_dec_mas_yr": -21.8,
+        "spectral_type": "Classical T Tauri Star + Circumstellar Disk",
+        "highlight": "Shows dramatic epoch-to-epoch brightness variations in Difference Mode and strong 3-5 um warm dust infrared excess.",
+        "flag_status": "PERSISTENCE_WARN",
+        "flag_details": "MEF FLAGS=0x0004: Minor bright-source persistence noted in Band 2; mitigated via median co-adding."
+    },
+    "R_Draconis": {
+        "id": "R_Draconis",
+        "name": "R Draconis",
+        "category": "Mira-Type Pulsating Variable Giant",
+        "ra": 248.167625,
+        "dec": 66.754889,
+        "ra_hms": "16h32m40.23s",
+        "dec_dms": "+66d45m17.6s",
+        "fov_deg": 0.05,
+        "proper_motion_arcsec_yr": 0.015,
+        "pm_ra_mas_yr": -6.4,
+        "pm_dec_mas_yr": 13.5,
+        "spectral_type": "M5e-M9e Mira Variable",
+        "highlight": "Stationary coordinate with huge infrared pulsation amplitude between DR1 and QR3, plus deep stellar H2O vapor bands.",
+        "flag_status": "CLEAN",
+        "flag_details": "MEF FLAGS=0x0000: Photometric variability verified across 24 exposures."
+    }
+}
+
+SPHEREX_BANDS = [
+    {"band": 1, "name": "Band 1 (0.75-1.09 um)", "min_um": 0.75, "max_um": 1.09, "r_power": 39},
+    {"band": 2, "name": "Band 2 (1.10-1.62 um)", "min_um": 1.10, "max_um": 1.62, "r_power": 41},
+    {"band": 3, "name": "Band 3 (1.63-2.41 um)", "min_um": 1.63, "max_um": 2.41, "r_power": 41},
+    {"band": 4, "name": "Band 4 (2.42-3.82 um)", "min_um": 2.42, "max_um": 3.82, "r_power": 35},
+    {"band": 5, "name": "Band 5 (3.83-4.41 um)", "min_um": 3.83, "max_um": 4.41, "r_power": 112},
+    {"band": 6, "name": "Band 6 (4.42-5.00 um)", "min_um": 4.42, "max_um": 5.00, "r_power": 128},
+]

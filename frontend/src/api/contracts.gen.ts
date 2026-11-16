@@ -1,7 +1,7 @@
 /* Generated from backend/skyshift/contracts.py (scripts/export_contracts.py + json2ts). Do not edit; run npm run gen:contracts. */
 
 /**
- * Generated from backend/skyshift/contracts.py (skyshift.contracts/1). Do not edit.
+ * Generated from backend/skyshift/contracts.py (skyshift.contracts/1.1). Do not edit.
  */
 export interface SkyShiftContracts {
   AlignmentReport?: AlignmentReport;
@@ -2037,6 +2037,7 @@ export interface TargetMotionStudy {
   gaia_source_id: string;
   gaia_verification: string | null;
   generated_utc: string;
+  integrity: StudyIntegrity;
   limitations: string[];
   measured_origin: "derived_measurement";
   pairs: MotionPair[];
@@ -2050,11 +2051,23 @@ export interface TargetMotionStudy {
   recovered: boolean;
   source_hash: string;
   /**
-   * True when the code or data changed since the study was computed
+   * Scientific integrity changed or could not be verified; independent of application test freshness
    */
   stale: boolean;
   statement: string;
   target_name: string;
+}
+/**
+ * This interface was referenced by `SkyShiftContracts`'s JSON-Schema
+ * via the `definition` "StudyIntegrity".
+ */
+export interface StudyIntegrity {
+  cache_changed: string[];
+  cache_missing: string[];
+  cache_status: "verified" | "missing" | "changed" | "not_checked";
+  problems: string[];
+  reference_commit: string | null;
+  status: "verified" | "changed" | "unavailable";
 }
 /**
  * This interface was referenced by `SkyShiftContracts`'s JSON-Schema

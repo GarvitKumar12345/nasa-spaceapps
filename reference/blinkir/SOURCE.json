@@ -1,0 +1,17 @@
+{
+  "archive": "skyshift hackathon.zip",
+  "sha256": "8385fa5e3d7e4c03db24aee7076e3ec6f826e34cc4330fe8d23e7b4b09d04f5c",
+  "selected_files": [
+    "backend/main.py",
+    "backend/irsa_pipeline.py",
+    "backend/targets.py",
+    "backend/gaia_catalog.py",
+    "frontend/index.html",
+    "frontend/app.js",
+    "frontend/styles.css",
+    "scripts/generate_benchmark_cache.py",
+    "tests/test_api.py",
+    "requirements.txt"
+  ],
+  "role": "Reference only; not served or executed. Bundled environments, caches and credentials excluded."
+}

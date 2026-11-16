@@ -49,7 +49,7 @@ def record(client, c1_id) -> dict:
 @pytest.mark.api
 def test_core_routes_return_contracts(client):
     """Health, providers, datasets, dataset and sources respond with contract-shaped JSON."""
-    assert client.get("/api/health").json()["contracts_version"] == "skyshift.contracts/1"
+    assert client.get("/api/health").json()["contracts_version"] == "skyshift.contracts/1.1"
     assert [p["id"] for p in client.get("/api/providers").json()] == ["synthetic", "spherex", "gaia_dr3", "wise", "neossat"]
     listed = client.get("/api/datasets").json()
     assert listed[0]["id"] == "syn-nb-01" and listed[0]["origin"] == "simulated"  # synthetic training data stays the default

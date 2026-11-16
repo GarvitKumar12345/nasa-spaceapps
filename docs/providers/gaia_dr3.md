@@ -230,3 +230,10 @@ RMS columns are given per axis (east, north) and as the two-dimensional RMS √(
 - **Still unavailable:** photometry, target astrometry and motion fits, and difference imaging for SPHEREx data (dataset capabilities and API 409).
 - **Credit:** "This work has made use of data from the European Space Agency (ESA) mission Gaia (https://www.cosmos.esa.int/gaia), processed by the Gaia Data Processing and Analysis Consortium (DPAC, https://www.cosmos.esa.int/web/gaia/dpac/consortium). Funding for the DPAC has been provided by national institutions, in particular the institutions participating in the Gaia Multilateral Agreement."
   - Cite Gaia Collaboration, Vallenari et al. 2023, A&A 674, A1 and Gaia Collaboration, Prusti et al. 2016, A&A 595, A1.
+
+
+## Stage 3 scope update
+
+The separately recorded van Maanen 2 Stage 2 study is now visible at Observatory → Analyze → Target motion, with genuine seasonal images, measured/predicted displacement, uncertainties and evidence export. Its primary tied D2 + D3 result is 0.94 ± 0.14 of the prediction at 5.8σ, p = 0.93 against the prediction. It is not blind and does not fit proper motion/parallax independently. This limited recorded study does not enable generic target astrometry, calibrated photometry or difference imaging. Earlier Barnard-only descriptions above refer to that saturated field. Both DR1 fields are present. van Maanen 2 uses the verified ARI Gaia record (AIP cross-check); ESA connectivity was unavailable in the recorded live validation. See the unchanged `2026-11-16-van-maanen-2-stage2.md` research record and Stage 3 handoff.
+
+BlinkIR is an explicitly synthetic educational module. Its model curves and reference markers do not add calibrated archive spectra or new observed epochs.

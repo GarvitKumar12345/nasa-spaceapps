@@ -148,3 +148,10 @@ Notes:
   cutout corners, so frames that are compatible at the centre are not necessarily compatible near the cutout edges.
 - The field-centre source is affected by early overflow/bloom in every frame; any future measurement there needs special treatment.
 - Only one field and one release; QR3 data (2026 survey 3–4) are not combined with DR1.
+
+
+## Stage 3 scope update
+
+The separately recorded van Maanen 2 Stage 2 study is now visible at Observatory → Analyze → Target motion, with genuine seasonal images, measured/predicted displacement, uncertainties and evidence export. Its primary tied D2 + D3 result is 0.94 ± 0.14 of the prediction at 5.8σ, p = 0.93 against the prediction. It is not blind and does not fit proper motion/parallax independently. This limited recorded study does not enable generic target astrometry, calibrated photometry or difference imaging. Earlier Barnard-only descriptions above refer to that saturated field. Both DR1 fields are present. van Maanen 2 uses the verified ARI Gaia record (AIP cross-check); ESA connectivity was unavailable in the recorded live validation. See the unchanged `2026-11-16-van-maanen-2-stage2.md` research record and Stage 3 handoff.
+
+BlinkIR is an explicitly synthetic educational module. Its model curves and reference markers do not add calibrated archive spectra or new observed epochs.

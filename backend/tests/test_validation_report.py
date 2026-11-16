@@ -93,7 +93,7 @@ def test_staleness_detects_source_change(tmp_path):
     assert source_hash(tmp_path) != report.source_hash
 
 
-@pytest.mark.parametrize("rel", ["backend/uv.lock", "frontend/package-lock.json", "frontend/playwright.config.ts", "fixtures/gaia_dr3/field/response.xml.gz"])
+@pytest.mark.parametrize("rel", ["backend/uv.lock", "frontend/package-lock.json", "frontend/playwright.config.ts", "fixtures/gaia_dr3/field/response.xml.gz", "backend/skyshift/blinkir/presets.json", "validation/vanmaanen2_motion_stage2.seal.json", "validation/plots/vanmaanen2_stage2_positions.png"])
 def test_staleness_includes_dependencies_runner_config_and_recorded_data(tmp_path, rel):
     """Changing test inputs or their execution configuration invalidates an otherwise unchanged source tree."""
     path = tmp_path / rel

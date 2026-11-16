@@ -30,7 +30,7 @@ export function stretchStamp(values: number[]): number[] {
 }
 
 function DisplacementPlot({ pairs }: { pairs: MotionPair[] }) {
-  const size = 220
+  const size = 300
   const limit = 2.2
   const measured = pairs.filter((p) => p.measured_arcsec && p.predicted_arcsec)
   return (
@@ -170,14 +170,27 @@ export function TargetMotionTab({ dataset }: { dataset: Dataset }) {
   if (load.status === 'error' || load.status === 'unavailable') return <ErrorState message={load.message} />
   const s = load.data
   const measuredPairs = s.pairs.filter((p) => p.measured_arcsec)
-  const shown = measuredPairs.find((p) => p.label === pick) ?? measuredPairs.find((p) => p.role === 'primary' && p.approach === 'tied') ?? measuredPairs[0]
+  const shown = measuredPairs.find((p) => `${p.label}:${p.approach}` === pick) ?? measuredPairs.find((p) => p.role === 'primary' && p.approach === 'tied') ?? measuredPairs[0]
   return (
-    <div className="stack" data-testid="target-motion-tab">
+    <div className="stack motion-study" data-testid="target-motion-tab">
+      <div className="motion-hero">
+        <div><div className="eyebrow">SkyShift Discover · recorded scientific study</div><h2>A nearby star, six months later.</h2><p>van Maanen 2 · SPHEREx DR1 · two seasons of genuine infrared observations</p></div>
+        <a className="btn" href={`/api/datasets/${encodeURIComponent(dataset.id)}/target-motion/evidence.zip`} download data-testid="motion-export">Export evidence ZIP</a>
+      </div>
+      <div className="motion-metrics" aria-label="Primary reference-tied D2 and D3 result">
+        {s.combined.filter(c => c.approach === 'tied').map(c => <div className="motion-metric" key={c.approach}><span className="eyebrow">Primary detection · D2 + D3</span><strong>{fmt(c.sigma_vs_zero, 1)}σ</strong><span>against zero displacement</span></div>)}
+        {s.combined.filter(c => c.approach === 'tied').map(c => <div className="motion-metric" key={c.approach}><span className="eyebrow">Measured / predicted</span><strong>{fmt(c.along_ratio, 2)} ± {fmt(c.along_ratio_sigma, 2)}</strong><span>amplitude along Gaia prediction</span></div>)}
+        {s.combined.filter(c => c.approach === 'tied').map(c => <div className="motion-metric" key={c.approach}><span className="eyebrow">Agreement with prediction</span><strong>p = {fmt(c.p_vs_prediction, 2)}</strong><span>two-dimensional residual test</span></div>)}
+      </div>
       <Callout tone={s.recovered ? 'info' : 'warning'}>
         <strong data-testid="motion-verdict">{s.recovered ? 'Motion recovered from SPHEREx pixels.' : 'Motion not recovered at the required significance.'}</strong>{' '}
         <span data-testid="motion-statement">{s.statement}</span> {s.plan_disclosure}
       </Callout>
-      {s.stale && <Callout tone="warning">The code or data changed since this study was computed ({fmtUtc(s.generated_utc)} UTC): re-run scripts/target_motion_stage2.py before relying on it.</Callout>}
+      <Callout tone={s.stale ? 'warning' : 'info'}>
+        <strong data-testid="study-integrity">Scientific integrity: {s.integrity.status}.</strong> Compared with reference commit {s.integrity.reference_commit?.slice(0, 7) ?? 'unavailable'}; application test freshness is reported separately in Methods.
+        {s.integrity.problems.map(p => <p key={p}>{p}</p>)}
+        <p>Local cutouts: {s.integrity.cache_status}. {s.integrity.cache_missing.length > 0 && `${s.integrity.cache_missing.length} files missing; the recorded evidence remains available, but native image viewing and reproduction require those files.`}</p>
+      </Callout>
       <div className="row" style={{ gap: 12, flexWrap: 'wrap' }} data-testid="motion-legend">
         <span className="small">
           <OriginBadge origin="derived_measurement" label="SPHEREx measurement" /> ePSF position from native pixels ({s.measured_origin})
@@ -186,6 +199,14 @@ export function TargetMotionTab({ dataset }: { dataset: Dataset }) {
           <OriginBadge origin="model_prediction" label="Gaia DR3 prediction" /> {s.target_name}, Gaia DR3 {s.gaia_source_id}, propagated to each exposure ({s.predicted_origin})
         </span>
       </div>
+      {shown && <section className="motion-observations" aria-label="Observed seasonal images">
+        <div className="row" style={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <div><div className="eyebrow">Observed seasonal images</div><h3>Two visits to the same star</h3></div>
+          <label>Detector pair <select aria-label="Study detector pair" value={`${shown.label}:${shown.approach}`} onChange={e => setPick(e.target.value)}>{measuredPairs.map(p => <option key={`${p.label}:${p.approach}`} value={`${p.label}:${p.approach}`}>D{p.detector} · {p.approach} · {p.role}</option>)}</select></label>
+        </div>
+        <p className="small muted">Native 13 × 13 pixel stamps, detector orientation. + Gaia prediction · × measured position. Each image is stretched independently for visibility; brightness is not a flux comparison.</p>
+        <TwoSeasons dataset={dataset} pair={shown} frames={s.frames} />
+      </section>}
       <div className="row" style={{ gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <div>
           <div className="eyebrow">Season 2 minus season 1 (filled: tied to reference stars; open: archive WCS)</div>
@@ -221,6 +242,7 @@ export function TargetMotionTab({ dataset }: { dataset: Dataset }) {
               ))}
             </tbody>
           </table>
+          <p className="small muted">No individual pair reaches 5σ. The primary claim combines the reference-tied D2 and D3 pairs; the neighbour-modelled result below is post-hoc.</p>
           <ul className="obs-list small" data-testid="motion-budget-validation">
             {s.budget_validation.map((v) => (
               <li key={v.approach}>
@@ -237,7 +259,7 @@ export function TargetMotionTab({ dataset }: { dataset: Dataset }) {
             <th>Epochs (UTC)</th>
             <th className="num nocase">Predicted E, N (″)</th>
             <th className="num nocase">Measured E, N (″)</th>
-            <th className="num nocase">σ stat · sys (″)</th>
+            <th className="num nocase">σ stat E,N · sys E,N (″)</th>
             <th className="num nocase">Residual (″)</th>
             <th className="num nocase">Ratio · σ vs 0</th>
             <th>Status</th>
@@ -245,18 +267,18 @@ export function TargetMotionTab({ dataset }: { dataset: Dataset }) {
         </thead>
         <tbody>
           {s.pairs.map((p) => (
-            <tr key={`${p.label}-${p.approach}`} data-status={p.status} data-role={p.role} onClick={() => p.measured_arcsec && setPick(p.label)} style={{ cursor: p.measured_arcsec ? 'pointer' : 'default' }}>
+            <tr key={`${p.label}-${p.approach}`} data-status={p.status} data-role={p.role}>
               <td className="small">
-                D{p.detector} {p.approach} ({p.role})
+                {p.measured_arcsec ? <button className="btn btn-sm" onClick={() => setPick(`${p.label}:${p.approach}`)}>D{p.detector} {p.approach} ({p.role})</button> : <>D{p.detector} {p.approach} ({p.role})</>}
               </td>
               <td className="small mono">{p.epochs_utc.map((e) => e.slice(0, 10)).join(' → ') || '—'}</td>
               <td className="num mono">{p.predicted_arcsec ? `${fmtSigned(p.predicted_arcsec[0], 3)}, ${fmtSigned(p.predicted_arcsec[1], 3)}` : '—'}</td>
               <td className="num mono">{p.measured_arcsec ? `${fmtSigned(p.measured_arcsec[0], 3)}, ${fmtSigned(p.measured_arcsec[1], 3)}` : '—'}</td>
               <td className="num mono">
-                {p.sigma_stat_arcsec && p.sigma_sys_arcsec ? `${fmt(Math.hypot(...p.sigma_stat_arcsec) / Math.SQRT2, 2)} · ${fmt(Math.hypot(...p.sigma_sys_arcsec) / Math.SQRT2, 2)}` : '—'}
+                {p.sigma_stat_arcsec && p.sigma_sys_arcsec ? `${p.sigma_stat_arcsec.map(v => fmt(v, 2)).join(', ')} · ${p.sigma_sys_arcsec.map(v => fmt(v, 2)).join(', ')}` : '—'}
               </td>
               <td className="num mono">{p.residual_arcsec ? `${fmtSigned(p.residual_arcsec[0], 2)}, ${fmtSigned(p.residual_arcsec[1], 2)}` : '—'}</td>
-              <td className="num mono">{p.along_ratio != null ? `${fmt(p.along_ratio, 2)} ± ${fmt(p.along_ratio_sigma, 2)} · ${fmt(p.sigma_vs_zero, 1)}σ` : '—'}</td>
+              <td className="num mono">{p.along_ratio != null ? `${fmt(p.along_ratio, 2)} ± ${fmt(p.along_ratio_sigma, 2)} · ${fmt(p.sigma_vs_zero, 2)}σ` : '—'}</td>
               <td>
                 <StatusPill status={STATUS_PILL[p.status]} label={p.status} title={p.status_reason} />
               </td>
@@ -264,14 +286,6 @@ export function TargetMotionTab({ dataset }: { dataset: Dataset }) {
           ))}
         </tbody>
       </table>
-      {shown && (
-        <div>
-          <div className="eyebrow">
-            Two seasons, D{shown.detector} — native pixels (13 × 13 px, detector orientation, not north-up); + Gaia DR3 prediction, × ePSF measurement
-          </div>
-          <TwoSeasons dataset={dataset} pair={shown} frames={s.frames} />
-        </div>
-      )}
       <table className="table" data-testid="motion-frames">
         <thead>
           <tr>
@@ -310,6 +324,7 @@ export function TargetMotionTab({ dataset }: { dataset: Dataset }) {
           {s.post_hoc.map((c) => `${c.approach}: ${fmt(c.along_ratio, 2)} ± ${fmt(c.along_ratio_sigma, 2)}, ${fmt(c.sigma_vs_zero, 1)}σ vs 0`).join('; ')}.
         </p>
       )}
+      <details className="motion-figures"><summary>Recorded scientific figures</summary><p className="small muted">Original Stage 2 figures, also included in the evidence package.</p>{['positions', 'detector_estimates', 'residuals', 'fits', 'diagnostics'].map(name => <figure key={name}><img loading="lazy" src={`/api/studies/vanmaanen2/figures/vanmaanen2_stage2_${name}.png`} alt={`Recorded van Maanen 2 study: ${name.replaceAll('_', ' ')}`} /><figcaption>{name.replaceAll('_', ' ')}</figcaption></figure>)}</details>
       <div className="small">
         <div className="eyebrow">Provenance and limitations</div>
         <p>
